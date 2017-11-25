@@ -1,0 +1,157 @@
+
+\documentclass[10pt]{article}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{etoolbox}
+\usepackage{booktabs}
+\usepackage[parfill]{parskip}
+\usepackage[numbers]{natbib}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{caption}
+\usepackage{url}
+% \usepackage[T1,T2A]{fontenc}
+% \usepackage{lmodern}
+% \usepackage[utf8]{inputenc}
+% \usepackage[russian,english]{babel}
+% 
+% \renewcommand{\thesection}{\bfseries\arabic{section}}
+% \renewcommand{\thesubsection}{\bfseries\arabic{subsection}}
+% \renewcommand{\thesubsubsection}{\bfseries\arabic{subsubsection}}
+
+\newcommand\mgin{0.5in}
+\geometry{
+    left=\mgin,
+    right=\mgin,
+    bottom=\mgin,
+    top=\mgin
+}
+
+% Set path to import figures from
+\graphicspath{{../../img/sparsity/}}
+
+% Place converted graphics in current directory
+\usepackage[outdir=./]{epstopdf}
+
+% Define multicolumn figure-like environment
+% from http://tex.stackexchange.com/questions/12262/multicol-and-figures
+\newenvironment{mcfig}
+    {\par\medskip\noindent\minipage{\linewidth}}
+    {\endminipage\par\medskip}
+
+% Define error function for math mode
+\newcommand{\erf}{\mbox{erf}}
+% Sign function
+\newcommand{\sign}{\mbox{sign}}
+% Natural numbers
+\newcommand\NN{\mathbb{N}}
+% Real numbers
+\newcommand\RR{\mathbb{R}}
+% Complex numbers
+\newcommand\CC{\mathbb{C}}
+% Curly B for basis
+\newcommand\BB{\mathcal{B}}
+% Curly D for diagonal dominance quantity
+\newcommand\DD{\mathcal{D}}
+\newcommand\QQ{\mathcal{Q}}
+% Norm
+\newcommand\norm[1]{\left\lVert #1 \right\rVert}
+% Uniform Norm
+\newcommand\unorm[1]{\left\lVert #1 \right\rVert_\infty}
+% Inner Product
+\newcommand\ip[1]{\left\langle #1 \right\rangle}
+% Absolute value
+\newcommand\abs[1]{\left| #1 \right|}
+% Complex Conjugate
+\newcommand\conj\overline
+% Partial derivative
+\newcommand\pd[2]{\frac{\partial #1}{\partial #2}}
+% Iteration superscript w/ parentheses
+\newcommand{\iter}[1]{^{(#1)}}
+% Disable paragraph indentation
+\setlength{\parindent}{0pt}
+% End of proof
+\newcommand\qed{\hfill$\blacksquare$\hspace{0.5in}}
+
+% Number this equation
+\newcommand\eqnum{\addtocounter{equation}{1}\tag{\theequation}}
+
+% arara: pdflatex
+\begin{document}
+
+\section{Introduction}
+\subsection{Coordinate System}
+\subsection{Radiative Transfer Equation}
+\begin{equation}
+  \label{eq:RTE}
+  \vec{\omega} \cdot \nabla L(\vec{r},\vec{\omega})
+  = -(a(\vec{r}) + b(\vec{r}) + b\int_{4\pi}
+  \beta(\vec{\omega} \cdot \vec{\omega'})
+  L(\vec{r},\vec{\omega'}) \, d\vec{\omega'})
+\end{equation}
+
+\subsection{Boundary conditions}
+Downwelling light:
+\begin{equation}
+  L(x,y,0, \vec{\omega}) = f(\vec{\omega})
+\end{equation}
+
+Upwelling light:
+\begin{equation}
+  L(x,y,M, \vec{\omega}) = 0
+\end{equation}
+
+\subsection{All angles are coupled by scattering}
+
+\section{Nondimensionalization}
+\subsection{Assumptions}
+\subsection{Scattering constant (same for kelp/water)}
+\subsection{Table of variables}
+\subsection{Rescale space, time}
+
+\section{Limitations of Discrete Ordinates}
+\subsection{Memory}
+\subsection{CPU}
+\subsection{GMRES unreliable}
+\subsection{Also, need an initial guess for GMRES}
+  
+\section{Asymptotics}
+\subsection{Solve each angular problem independently}
+\subsection{Relatively computationally cheap}
+\subsection{Much lower memory cost}
+\subsection{Known number of operations}
+\subsection{Low and high accuracy available}
+  
+\section{Mathematical Procedure}
+\subsection{Substitute asymptotic series}
+\newcommand{\Lasym}{L_0(\vec{r},\vec{\omega}) + b L_1(\vec{r},\vec{\omega}) + b^2 L_2(\vec{r},\vec{\omega}) + \cdots}
+\newcommand{\Lasymp}{L_0(\vec{r},\vec{\omega'}) + b L_1(\vec{r},\vec{\omega'}) + b^2 L_2(\vec{r},\vec{\omega'}) + \cdots}
+\begin{equation}
+  L(\vec{r},\vec{\omega}) = \Lasym
+\end{equation}
+
+\begin{equation}
+  \vec{\omega} \cdot \nabla \left[ \Lasym \right]
+  = -(a(\vec{r}) + b(\vec{r})) + b\int_{4\pi}
+  \beta(\vec{\omega} \cdot \vec{\omega'})
+  \left[ \Lasymp \right] \, d\vec{\omega'}
+\end{equation}
+ 
+\subsection{Group like powers of b}
+\subsection{Boundary conditions}
+\subsection{Rewrite as ODE along ray path}
+\subsection{Solve ODE as 1st order linear via I.F.}
+  
+\section{Numerical Implementation}
+\subsection{Discrete grid}
+\subsection{Numerical integration}
+\subsection{Storing pole values}
+\subsection{Loop rolling}
+\subsection{Scattering integral}
+  
+\end{document}
