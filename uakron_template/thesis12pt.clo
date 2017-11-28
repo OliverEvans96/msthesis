@@ -1,0 +1,36 @@
+\renewcommand\normalsize{%
+   \@setfontsize\normalsize\@xiipt{14.5}%
+   \abovedisplayskip 12\p@ \@plus3\p@ \@minus7\p@
+   \abovedisplayshortskip \z@ \@plus3\p@
+   \belowdisplayshortskip 6.5\p@ \@plus3.5\p@ \@minus3\p@
+   \belowdisplayskip \abovedisplayskip
+   \let\@listi\@listI}
+\renewcommand\small{%
+   \@setfontsize\small\@xipt{13.6}%
+   \abovedisplayskip 11\p@ \@plus3\p@ \@minus6\p@
+   \abovedisplayshortskip \z@ \@plus3\p@
+   \belowdisplayshortskip 6.5\p@ \@plus3.5\p@ \@minus3\p@
+   \def\@listi{\leftmargin\leftmargini
+               \topsep 9\p@ \@plus3\p@ \@minus5\p@
+               \parsep 4.5\p@ \@plus2\p@ \@minus\p@
+               \itemsep \parsep}%
+   \belowdisplayskip \abovedisplayskip
+}
+\renewcommand\footnotesize{%
+   \@setfontsize\footnotesize\@xpt\@xiipt
+   \abovedisplayskip 10\p@ \@plus2\p@ \@minus5\p@
+   \abovedisplayshortskip \z@ \@plus3\p@
+   \belowdisplayshortskip 6\p@ \@plus3\p@ \@minus3\p@
+   \def\@listi{\leftmargin\leftmargini
+               \topsep 6\p@ \@plus2\p@ \@minus2\p@
+               \parsep 3\p@ \@plus2\p@ \@minus\p@
+               \itemsep \parsep}%
+   \belowdisplayskip \abovedisplayskip
+}
+\renewcommand\scriptsize{\@setfontsize\scriptsize\@viiipt{9.5}}
+\renewcommand\tiny{\@setfontsize\tiny\@vipt\@viipt}
+\renewcommand\large{\@setfontsize\large\@xivpt{18}}
+\renewcommand\Large{\@setfontsize\Large\@xviipt{22}}
+\renewcommand\LARGE{\@setfontsize\LARGE\@xxpt{25}}
+\renewcommand\huge{\@setfontsize\huge\@xxvpt{30}}
+\let\Huge=\huge

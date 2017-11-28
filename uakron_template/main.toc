@@ -1,0 +1,32 @@
+\contentsline {part}{\MakeUppercase {List of Tables}}{vii}
+\contentsline {part}{\MakeUppercase {List of Figures}}{viii}
+\MakeUppercase {Chapter} \newline 
+\contentsline {chapter}{\numberline {I.}{\MakeUppercase {INTRODUCTION}}}{1}
+\contentsline {chapter}{\numberline {II.}{\MakeUppercase {THE TWO DIMENSIONAL WAVE EQUATION}}}{2}
+\contentsline {section}{\numberline {2.1}Recurrence Relation}{2}
+\contentsline {section}{\numberline {2.2}Second Section Long Subtitle Second Section Long Subtitle Second Section Long Subtitle}{3}
+\contentsline {subsection}{\numberline {2.2.1}First Subsection}{3}
+\contentsline {section}{\numberline {2.3}Third Section}{3}
+\contentsline {chapter}{\numberline {III.}{\MakeUppercase {YOU NAME ANY CHAPTER HERE. MAKE SURE THEY'RE IN ALL CAPS}}}{4}
+\contentsline {chapter}{\numberline {IV.}{\MakeUppercase {EXAMPLE OF A TABLE AND A FIGURE}}}{5}
+\contentsline {section}{\numberline {4.1}First Section}{6}
+\contentsline {section}{\numberline {4.2}Second Section}{6}
+\contentsline {subsection}{\numberline {4.2.1}First Subsection}{7}
+\contentsline {section}{\numberline {4.3}Third Section}{7}
+\contentsline {section}{\numberline {4.4}Forth Section}{8}
+\contentsline {part}{\MakeUppercase {Bibliography}}{9}
+\contentsline {part}{\MakeUppercase {Appendix}}{10}
+\contentsline {section}{\numberline {A.1}First Section}{10}
+\contentsline {section}{\numberline {A.2}Second Section}{10}
+\contentsline {subsection}{\numberline {A.2.1}First Subsection}{10}
+\contentsline {section}{\numberline {A.3}Third Section}{11}
+\contentsline {part}{\MakeUppercase {Appendix}}{12}
+\contentsline {section}{\numberline {B.1}Recurrence Relation}{12}
+\contentsline {section}{\numberline {B.2}Second Section}{12}
+\contentsline {subsection}{\numberline {B.2.1}First Subsection}{13}
+\contentsline {section}{\numberline {B.3}Third Section}{13}
+\contentsline {part}{\MakeUppercase {Appendix}}{14}
+\contentsline {section}{\numberline {C.1}First Section}{15}
+\contentsline {section}{\numberline {C.2}Second Section}{16}
+\contentsline {subsection}{\numberline {C.2.1}First Subsection}{16}
+\contentsline {section}{\numberline {C.3}Third Section}{16}

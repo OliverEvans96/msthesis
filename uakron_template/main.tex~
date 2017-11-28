@@ -1,0 +1,76 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is the name of the style file.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% phd  -> for a PhD dissertation
+% ms   -> for an MS thesis
+% If both phd and ms are used then phd will overide.  If none are used,
+% then ms will be active by default.
+%
+% cpyr -> generate a copyright page
+% lof  -> generate List of Figures
+% lot  -> generate List of Tables
+\documentclass[phd,cpyr,lof,lot]{uathesis}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% List of any packages you use.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{changebar}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% List of definitions you define.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\def\ds{\displaystyle}
+\def\E{\epsilon}
+%
+
+\title{DISSERTATION OR THESIS TITLE}
+\author{First Middle Last}
+\conferraldate{Month}{Year}
+
+%The following commands specify the names and titles of people that
+%will appear on the signature page.
+%
+%These four will always be needed.
+\advisor{Name of Advisor}
+\chair{Name of Chair}
+\collegedean{Name of Coll Dean}
+\gradschdean{Name of Grad Schl Dean}
+%
+%For a PhD dissertation, specify a coadvisor and three committee
+%members, or four committee members only.  For an MS thesis use either
+%one coadvisor or one faculty reader, not both.
+%
+%Typical commands for a PhD dissertation (uncomment only 4).
+%\coadvisor{Name of Coadvisor}
+\committee{Name of 1st Comm Member}
+\committee{Name of 2nd Comm Member}
+\committee{Name of 3rd Comm Member}
+\committee{Name of 4th Comm Member}
+%
+%Typical commands for an MS thesis (uncomment only 1).
+%\coadvisor{Name of Coadvisor}
+%\facreader{Name of Fac Reader}
+
+\begin{document}
+
+\maketitle
+\input{chap1}
+\input{chap2}
+\input{chap3}
+\input{chap4}
+\bibliographystyle{unsrt}
+\bibliography{bio}
+%If you have n appendices, then use the \appendices{n} command below
+%followed by n \input{filename} commands, similar to the \input{chapx}
+%commands above.
+\appendix{1}
+\input{appendixa}
+\input{appendixb}
+\input{appendixc}
+\end{document}

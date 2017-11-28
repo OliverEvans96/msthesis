@@ -1,0 +1,39 @@
+ Editing the file main.tex.
+
+     As options to the \documentclass declaration
+     you will include lot and lof for list of tables and list of figures (if
+     you include tables and figures in you thesis), phd for a PhD
+     dissertation style or ms for an MS style, and cpyr if you desire
+     a copyright page.
+
+
+     To generate the Title Page type in your thesis title in 
+     \title{ }, your name in \author{ }, \conferraldate{month}{year} for the
+     conferral date, \advisor{ }, \chair{ }, \collegedean{ },
+     \gradschdean{ }, \coadvisor{ },\committee{ }.
+
+     To include an abstract or acknowledgments page in your thesis
+     you need to edit the abstract.tex file or respectively,
+     acknowledgments.tex file.  If you do not desire an
+     acknowledgments page remove the acknowledgments.tex file from
+     your working directory.
+
+     Input the chapters as separate tex files using the input command
+     \input{chap1}, \input{chap2}, etc. For more chapters include
+     more input statements. Each chapter is written in its file, for
+     example your chapter 1 is written in the file chap1.tex.
+
+     The \bibliography{bio} is a database your write and from which
+     your bibliography will be generated. You will
+     include all your references in the standard latex bibliography
+     commands. See the example file bio.bib for examples..
+
+     The \bibliographystyle{unsrt} is used to generate your
+     bibliography. Run latex main.tex twice. Then run bibtex main.tex
+     once, and then latex main.tex  twice. This generates
+     the file main.dvi, which can be read using xdvi main.dvi. Please
+     read the currently generated main.dvi for other hints.
+
+    
+     If you have n appendices, then use the \appendices{n} command
+     followed by n \input{ ), just as is done for chapters.
