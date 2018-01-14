@@ -86,6 +86,10 @@
 
 \section{Introduction}
 \subsection{Coordinate System}
+We use a downward-facing right-handed Cartesian coordinate system.
+For spherical coordinates, we denote polar declenation from the positive $z$
+axis by $\phi$ and azimuthal angle from the positive x-axis towards the positive
+y-axis by $\theta$.
 \subsection{Radiative Transfer Equation}
 \begin{equation}
   \label{eq:RTE}
@@ -107,18 +111,32 @@ Upwelling light:
 \end{equation}
 
 \subsection{All angles are coupled by scattering}
+A major disadvantage of this formulation is that at each point in space,
+radiances in all angles are coupled. By asymptotic expansion, the solution can
+be broken up into independent scattering events, in which angles are decoupled
+by replacing the scattering integral with an integral over the radiance from the
+previous scattering event, which is already known.
 
 \section{Nondimensionalization}
+We nondimensionalize following Chandrasekhar.
 \subsection{Assumptions}
+We assume that the scattering coefficient is constant over space; that the
+primary difference in the optical effects of kelp and water is absorption, not
+scattering.
+
 \subsection{Scattering constant (same for kelp/water)}
 \subsection{Table of variables}
 \subsection{Rescale space, time}
 
 \section{Limitations of Discrete Ordinates}
 \subsection{Memory}
+GMRES is very memory-intensive.
 \subsection{CPU}
+It's very CPU-intensive as well.
 \subsection{GMRES unreliable}
+It also might never converge!
 \subsection{Also, need an initial guess for GMRES}
+Especially if we start from zero.
   
 \section{Asymptotics}
 \subsection{Solve each angular problem independently}
@@ -149,9 +167,17 @@ Upwelling light:
   
 \section{Numerical Implementation}
 \subsection{Discrete grid}
+We choose a uniform rectangular spatial grid dividing each dimension into $n_x$,
+$n_y$, and $n_z$ grid points respectively.
+We also use a uniformly spaced angular grid.
+
 \subsection{Numerical integration}
+We use the trapezoid rule for numerical integration as it allows for even or odd
+numbers of points, and places no restriction on the symmetry of the grid.
 \subsection{Storing pole values}
+We store pole values in the $(1,1)$ and $(1,n_\phi)$ positions.
 \subsection{Loop rolling}
 \subsection{Scattering integral}
+We do not include the current direction in the scattering integral.
   
 \end{document}

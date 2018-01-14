@@ -1,0 +1,128 @@
+\message{ !name(intro.tex)}
+
+\documentclass[10pt]{article}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{etoolbox}
+\usepackage{booktabs}
+\usepackage[parfill]{parskip}
+\usepackage[numbers]{natbib}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{caption}
+\usepackage{url}
+% \usepackage[T1,T2A]{fontenc}
+% \usepackage{lmodern}
+% \usepackage[utf8]{inputenc}
+% \usepackage[russian,english]{babel}
+% 
+% \renewcommand{\thesection}{\bfseries\arabic{section}}
+% \renewcommand{\thesubsection}{\bfseries\arabic{subsection}}
+% \renewcommand{\thesubsubsection}{\bfseries\arabic{subsubsection}}
+
+\newcommand\mgin{0.5in}
+\geometry{
+    left=\mgin,
+    right=\mgin,
+    bottom=\mgin,
+    top=\mgin
+}
+
+% Set path to import figures from
+\graphicspath{{../../img/sparsity/}}
+
+% Place converted graphics in current directory
+\usepackage[outdir=./]{epstopdf}
+
+% Define multicolumn figure-like environment
+% from http://tex.stackexchange.com/questions/12262/multicol-and-figures
+\newenvironment{mcfig}
+    {\par\medskip\noindent\minipage{\linewidth}}
+    {\endminipage\par\medskip}
+
+% Define error function for math mode
+\newcommand{\erf}{\mbox{erf}}
+% Sign function
+\newcommand{\sign}{\mbox{sign}}
+% Natural numbers
+\newcommand\NN{\mathbb{N}}
+% Real numbers
+\newcommand\RR{\mathbb{R}}
+% Complex numbers
+\newcommand\CC{\mathbb{C}}
+% Curly B for basis
+\newcommand\BB{\mathcal{B}}
+% Curly D for diagonal dominance quantity
+\newcommand\DD{\mathcal{D}}
+\newcommand\QQ{\mathcal{Q}}
+% Norm
+\newcommand\norm[1]{\left\lVert #1 \right\rVert}
+% Uniform Norm
+\newcommand\unorm[1]{\left\lVert #1 \right\rVert_\infty}
+% Inner Product
+\newcommand\ip[1]{\left\langle #1 \right\rangle}
+% Absolute value
+\newcommand\abs[1]{\left| #1 \right|}
+% Complex Conjugate
+\newcommand\conj\overline
+% Partial derivative
+\newcommand\pd[2]{\frac{\partial #1}{\partial #2}}
+% Iteration superscript w/ parentheses
+\newcommand{\iter}[1]{^{(#1)}}
+% Disable paragraph indentation
+\setlength{\parindent}{0pt}
+% End of proof
+\newcommand\qed{\hfill$\blacksquare$\hspace{0.5in}}
+
+% Number this equation
+\newcommand\eqnum{\addtocounter{equation}{1}\tag{\theequation}}
+
+% arara: pdflatex
+\begin{document}
+
+\message{ !name(intro.tex) !offset(-3) }
+
+
+\section{Introduction}
+An accurate representation of the underwater light field is essential in
+estimating production rates in aquatic biological models. While it may suffice
+to use a simple model for downward attenuation in certain circumstances, such as
+modeling the growth of phytoplankton, some situations which are characterized by
+significant spatial variance and angular asymmetries such as macroalgae
+populations may require a more sophisticated optical model in order to account
+for self-shading, especially considering the dynamic spatial configuration of
+the kelp in an environment with significantly time-varying water velocity.
+
+On the other hand, ocean-scale hydrodynamical models such as SINMOD generally require
+computations over large spatial domains, which significantly limit the share of
+computational resources which can be devoted to any particular aspect of the
+model. Light models in particular can be very computationally intensive due to
+the large number of dimensions involved ignoring symmetries (three spatial, two
+angular). Verily, no benefit will be derived from a realistic model which
+computational scientists reject for it's computational intensity.
+
+Our objective, then, is to devise a computational technique which accurately
+depicts the underwater radiation field, while providing a significant
+improvement over the model of additive vertical exponential decay, which is
+prevelant throughout biological models. The approches considered here are
+sourced from the theory of radiative transfer, a macroscopic first-principles
+formalism. While this approach is widely used in stellar astrophysics, its use
+in oceanography is scarce and has been largely pioneered by Curtis Mobley in the
+past half-century.
+
+In particular, we consider the techniques of discrete ordinates, which provides
+high accuracy at high computational cost; analytical solutions from horizontal
+homogenization, which is the usual over-simplification used in biology; and the
+asymptotic techniques of dividing computation into distinct scattering
+events, which provides excellent approximations with reasonable expense, and
+whose economy can be variable increased depending on the acceptible error in
+the solution.
+  
+\end{document}
+
+\message{ !name(intro.tex) !offset(-128) }

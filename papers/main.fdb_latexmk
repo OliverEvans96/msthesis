@@ -1,0 +1,10 @@
+# Fdb version 3
+["pdflatex"] 1515870643 "uakron_template/main.tex" "main.pdf" "main" 1515870643
+  "/usr/share/texmf-dist/web2c/texmf.cnf" 1510784374 32585 d82bbcf7626b7842c87671687479e852 ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1511363566 7736839 629dcb38ccc97a114545f0cdc4d7d461 ""
+  "main.aux" 1515870643 8 a94a2480d3289e625eea47cd1b285758 ""
+  "uakron_template/main.tex" 1515870612 2159 561176192e8a7837bc8a202578ffe8fd ""
+  "uathesis.cls" 0 -1 0 ""
+  (generated)
+  "main.log"
+  "main.pdf"

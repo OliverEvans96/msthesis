@@ -15,18 +15,7 @@
 \contentsline {section}{\numberline {4.3}Third Section}{7}
 \contentsline {section}{\numberline {4.4}Forth Section}{8}
 \contentsline {part}{\MakeUppercase {Bibliography}}{9}
-\contentsline {part}{\MakeUppercase {Appendix}}{10}
-\contentsline {section}{\numberline {A.1}First Section}{10}
-\contentsline {section}{\numberline {A.2}Second Section}{10}
-\contentsline {subsection}{\numberline {A.2.1}First Subsection}{10}
-\contentsline {section}{\numberline {A.3}Third Section}{11}
-\contentsline {part}{\MakeUppercase {Appendix}}{12}
-\contentsline {section}{\numberline {B.1}Recurrence Relation}{12}
-\contentsline {section}{\numberline {B.2}Second Section}{12}
-\contentsline {subsection}{\numberline {B.2.1}First Subsection}{13}
-\contentsline {section}{\numberline {B.3}Third Section}{13}
-\contentsline {part}{\MakeUppercase {Appendix}}{14}
-\contentsline {section}{\numberline {C.1}First Section}{15}
-\contentsline {section}{\numberline {C.2}Second Section}{16}
-\contentsline {subsection}{\numberline {C.2.1}First Subsection}{16}
-\contentsline {section}{\numberline {C.3}Third Section}{16}
+\contentsline {part}{\MakeUppercase {Appendices}}{10}
+\contentsline {appendices}{\numberline {\MakeUppercase {Appendix} A.}{\MakeUppercase {APPENDIX TITLE GOES HERE}}}{11}
+\contentsline {appendices}{\numberline {\MakeUppercase {Appendix} B.}{\MakeUppercase {SECOND APPENDIX: THE TWO DIMENSIONAL WAVE EQUATION}}}{12}
+\contentsline {appendices}{\numberline {\MakeUppercase {Appendix} C.}{\MakeUppercase {EXAMPLE OF A TABLE AND A FIGURE}}}{13}
