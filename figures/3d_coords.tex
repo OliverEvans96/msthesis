@@ -1,0 +1,40 @@
+\documentclass[tikz]{standalone}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+
+% Set latex arrowheads by default
+\tikzset{>=latex}
+
+% arara: pdflatex
+\begin{document}
+\tdplotsetmaincoords{-110}{-30}
+\begin{tikzpicture}[tdplot_main_coords,scale=1.5]
+	% Axes
+	\draw[thick,->] (0,0,0) -- (3,0,0) node[anchor=north east]{$x$};
+	\draw[thick,->] (0,0,0) -- (0,3,0) node[anchor=north west]{$y$};
+	\draw[thick,->] (0,0,0) -- (0,0,3) node[anchor=south west]{$z$};
+
+	% Theta arc (azimuth)
+	\tdplotdrawarc{(0,0,0)}{1}{0}{26.5646}{anchor=west,xshift=3,yshift=-4}{$\theta$};
+
+	% Phi arc (zenith)
+	\tdplotsetthetaplanecoords{26.5646};
+	\tdplotdrawarc[tdplot_rotated_coords]{(0,0,0)}{0.5}{0}{65}{anchor=north west,xshift=-3,yshift=3}{$\phi$};
+
+	% Radial distance (s)
+	\draw[dashed] (0,0,1) -- (2,1,1)node[anchor=north east,midway,yshift=2]{$s$};
+
+	% Line from origin (r)
+	\draw[->] (0,0,0) -- (2,1,1) node[anchor=west,midway]{$r$};
+
+	% Dotted lines
+	\draw[dashed] (2,0,0) -- (2,1,0);
+	\draw[dashed] (0,1,0) -- (2,1,0);
+	\draw[dashed] (0,0,0) -- (2,1,0);
+	\draw[dashed] (2,1,0) -- (2,1,1);
+
+	% Right angle
+	\draw (0,0,1-0.1) -- ({0.1*2/sqrt(3)},{0.1/sqrt(3)},1-0.1) -- ({0.1*2/sqrt(3)},{0.1/sqrt(3)},1);
+
+\end{tikzpicture}
+\end{document}

@@ -6,4 +6,15 @@ auto/
 *~
 *.fdb_latexmk
 *.fls
-
+*.lot
+*.lof
+*.dvi
+*.vb
+*.fdb_latexmk
+*.bbl
+*.blg
+*.toc
+*.ps
+*.cb
+.#*
+.ipynb_checkpoints/

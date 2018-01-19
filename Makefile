@@ -2,6 +2,8 @@
 
 .PHONY: all clean thesis papers/asymptotics.pdf main.pdf
 
+thesis: main.pdf
+
 all: papers/asymptotics.pdf main.pdf
 
 clean:

@@ -16,19 +16,104 @@
 % List of any packages you use.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
+
+%% FROM REU SUMMARY
+
+
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{gensymb}
+\usepackage{mathtools}
+\usepackage{etoolbox}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{caption}
+
+%% FROM RTE PAPER
+
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{epsfig}
+%\usepackage{epsfig}
 \usepackage{graphicx}
 \usepackage{changebar}
+
+\usepackage{mathtools}
+\usepackage{etoolbox}
+\usepackage{booktabs}
+\usepackage[parfill]{parskip}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{url}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % List of definitions you define.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-\def\ds{\displaystyle}
-\def\E{\epsilon}
-%
+
+% Place converted graphics in current directory
+\usepackage[outdir=./eps2pdf/]{epstopdf}
+\graphicspath{
+  {figures/}
+  {figures/goals/}
+  {figures/light_data/}
+  {figures/attenuation/}
+}
+
+\DeclareMathOperator{\atantwo}{atan2}
+
+
+%% FROM GOALS
+\newcommand\plotwidth{7in}
+
+%% FROM REU SUMMARY
+
+\newcommand{\ds}{\displaystyle}
+
+% Define error function for math mode
+\newcommand{\erf}{\mbox{erf}}
+% Sign function
+\newcommand{\sign}{\mbox{sign}}
+% Real numbers
+\newcommand\R{\mathbb{R}}
+% Norm
+\newcommand\norm[1]{||#1||}
+% Length matrix entries
+\newcommand\LL{\mathcal{L}}
+% Frond population
+\newcommand\FF{\mathcal{F}}
+
+%% FROM RTE PAPER
+
+% Natural numbers
+\newcommand\NN{\mathbb{N}}
+% Real numbers
+\newcommand\RR{\mathbb{R}}
+% Complex numbers
+\newcommand\CC{\mathbb{C}}
+% Curly B for basis
+\newcommand\BB{\mathcal{B}}
+% Curly D for diagonal dominance quantity
+\newcommand\DD{\mathcal{D}}
+\newcommand\QQ{\mathcal{Q}}
+% Uniform Norm
+\newcommand\unorm[1]{\left\lVert #1 \right\rVert_\infty}
+% Inner Product
+\newcommand\ip[1]{\left\langle #1 \right\rangle}
+% Absolute value
+\newcommand\abs[1]{\left| #1 \right|}
+% Complex Conjugate
+\newcommand\conj\overline
+% Partial derivative
+\newcommand\pd[2]{\frac{\partial #1}{\partial #2}}
+% Iteration superscript w/ parentheses
+\newcommand{\iter}[1]{^{(#1)}}
+% Disable paragraph indentation
+%\setlength{\parindent}{0pt}
+% End of proof
+\newcommand\qed{\hfill$\blacksquare$\hspace{0.5in}}
+
 
 \title{Modelling the Radiation Field in Macroalgae Aquaculture}
 \author{Oliver Graham Evans}
@@ -66,14 +151,16 @@
 \input{chap2}
 \input{chap3}
 \input{chap4}
+\input{chap5}
+\input{chap6}
 \bibliographystyle{unsrt}
 \bibliography{bio}
 %If you have n appendices, then use the \appendices{n} command below
 %followed by n \input{filename} commands, similar to the \input{chapx}
 %commands above.
 % DO NOT USE SECTIONS OR SUBSECTIONS IN AN APPENDIX OR APPENDICES
-\appendix{3}
-\input{appendixa}
-\input{appendixb}
-\input{appendixc}
+% \appendix{3}
+% \input{appendixa}
+% \input{appendixb}
+% \input{appendixc}
 \end{document}

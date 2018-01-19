@@ -1,0 +1,58 @@
+\documentclass[tikz]{standalone}
+\usepackage{tikz}
+\usepackage{xcolor} % for easier color definition
+
+% Define color of kelp
+\definecolor{kelp-color}{rgb}{.37,.8,.37}
+
+% arara: pdflatex
+\begin{document}
+
+% Define primary variables
+\newcommand{\LL}{7}
+\newcommand{\fr}{2}
+\newcommand{\fs}{0.5}
+
+% Calculate secondary variables
+\newcommand{\w}{\LL/\fr}
+\newcommand{\fb}{\LL/(1+\fs)}
+\newcommand{\fa}{\fs*\fb}
+\newcommand{\angalpha}{atan((1+\fs)/(2*\fr*\fs))}
+
+% Measure offset
+\newcommand{\mofst}{7pt}
+
+\begin{tikzpicture}
+
+	% Fill
+	\fill[kelp-color] (0,0) -- (-\w/2,{\fa}) -- (0,{\LL}) -- (\w/2,{\fa}) -- (0,0);
+
+	% Cross
+	\draw[dashed] (0,0) -- (0,{\LL});
+	\draw[dashed] (-\w/2,{\fa}) -- (\w/2,{\fa});
+
+	% Outline
+	\draw[thick] (0,0) -- (-\w/2,{\fa}) -- (0,{\LL}) -- (\w/2,{\fa}) -- (0,0);
+	
+	% Labels
+	% L
+	\draw[|-|,xshift=\mofst] (\w/2,0) -- (\w/2,\LL) 
+		node [midway,fill=white]{$l$};
+	% w
+	\draw[|-|,yshift=-\mofst] (-\w/2,0) -- (\w/2,0) 
+		node [midway,fill=white]{$w$};
+	% fa
+	\draw[|-|,xshift=-\mofst] (-\w/2,0) -- (-\w/2,{\fa}) 
+		node [midway,fill=white]{$f_a$};
+	% fb
+	\draw[|-|,xshift=-\mofst] (-\w/2,{\fa}) -- (-\w/2,{\LL}) 
+		node [midway,fill=white]{$f_b$};
+	
+	% Angle alpha
+	\draw (0,{\fa/3}) arc (90:{90-\angalpha}:{\fa/3});
+	\node at ({\fa/2.5*cos(90-\angalpha/2},{\fa/2.5*sin(90-\angalpha/2}) 
+		{$\alpha$};
+
+\end{tikzpicture}
+	
+\end{document}
