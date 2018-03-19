@@ -1,7 +1,27 @@
 \chapter{INTRODUCTION} \label{ch:intro}
 
 \section{Motivation}
-I spent this summer participating in an REU at Clarkson University developing a mathematical model for the light field in a macroalgae aquaculture environment. The impetus for this project was as follows: Dr. Rogers was approached by the operator of a wastewater treatment plant in Boothbay Harbor, Maine, who is facing increasingly demanding EPA regulations limiting the concentration of certain nutrients permissible to be released into the ocean via wastewater treatment outfalls.
+  Given the global rise in population, efficient and innovative resource utilization is increasingly important.
+In particular, food and fuel are clearly in high demand.
+Meanwhile, growing concern for the negative environmental impacts of petroleum-based fuel is generating a market for biofuel, especially corn-based ethanol.
+However, corn-based ethanol has been heavily criticized for diverting land usage away from food production.
+At the same time, a great deal of unutilized saltwater coastline is available for both food and fuel production through seaweed cultivation.
+Specifically, the sugar kelp \textit{Saccharina Latissima} is known to be a viable source of food, both for direct human consumption and for fish cultivation, as well as for biofuel production.
+Industrial scale macroalgae cultivation has long existed in Eastern Asia due to the popularity of seaweed in Asian cuisine.
+
+  More recently, kelp aquaculture has been developing in Scandanavia and in the Northeastern United States.
+The MACROSEA project is a four year international research collaboration funded by the Research Council of Norway targeting ``successful and predictable production of high quality biomass thereby making significant steps towards industrial macroalgae cultivation in Norway.''
+The project includes both cultivators and scientists, working to develop a precise understanding of the full lifecycle of kelp and its interaction with its environment.
+A fundamental aspect of this understanding is the development of mathematical models to describe the growth of kelp.
+Work is underway at SINTEF, a private Norwegian research institution, to develop such models.
+One aspect of the model which is has yet to be fully developed is the availability of light, considering factors such as absorption and scattering by the aquatic medium, as well as by the kelp itself.
+
+  In this thesis, the aquatic light field is investigated.
+As a first step, a model for the spatial distribution of kelp is developed.
+Radiative Transfer Theory is then applied to determine the effects of the kelp and water on the availability of light throughout the medium.
+We pursue a numerical finite difference solution to the Radiative Transfer Equation, and subsequently discuss asymptotic approximations which prove to be sufficiently accurate and less computationally intensive.
+
+Frame as application: Dr. Rogers was approached by the operator of a wastewater treatment plant in Boothbay Harbor, Maine, who is facing increasingly demanding EPA regulations limiting the concentration of certain nutrients permissible to be released into the ocean via wastewater treatment outfalls.
 In order to adhere to these stricter requirements using conventional nutrient remediation, a significant quantity of specialized equipment would be necessary, which is not currently present in the Boothbay Harbor plant.
 Being surrounded on all sides by water and private property, the treatment plant lacks the necessary space for the additional equipment, and would therefore need to move their entire facility to a new location in order to conform to these new nutrient regulations.
 
@@ -47,28 +67,22 @@ In the last five years, a team at SINTEF, a research organization associated wit
 In 2012, Ole Jacob Broch, whom I have been working with for the last few weeks, published a paper with Dag Slagstad describing the model they created of the growth and composition of \textit{S. latissima} over the course of the year \cite{broch_modelling_2012}.
 Their model works in conjunction with SINMOD, a 3D hydrodynamic ecosystem model developed at SINTEF which generates data on water temperature, water velocity, light intensity, and phytoplankton concentrations among other valuable quantities \cite{wassmann_modelling_2006}.
 This detailed information has allowed Ole Jacob to consider many factors which influence the growth and decay of kelp in greater detail than has previously been explored. \\[-0.75em]
-
-The aspect of the model that he has asked me to help develop is how light is attenuated by kelp plants and by environmental factors, and how that affects the kelp's ability to photosynthesize and grow. 
-This will allow us to estimate how deep and how densely kelp can be grown. This work is being done as a part of the MacroSea project, funded by the Norwegian Research Council, which intends to further develop the potential industrial kelp production through collaboration among industry and academia both in Norway and abroad. SINTEF and Clarkson are both involved in the project. \\[-0.75em]
-
-In my model, I intend to combine the probabilistic aspects of models such as the one developed by \cite{burgman_stage-structured_1990} with numerically solving a system of differential equations such as is done by \cite{anderson_mathematical_1974} and \cite{broch_modelling_2012}
-For example, the concept of a Lefkovitch model, which is essentially a Markov chain model which describes the change size distribution of a biological population which is broken up into discreet size classes, may prove to be very useful \cite{caswell_matrix_1983}. Combining the idea of a probabilistic model of shading based on the distribution of frond lengths and angles with differential equations describing the growth and decay of kelp fronds as a function of light availability may prove to be very powerful. I intend to analyze experimental data collected here in Norway, as well as in Maine and elsewhere in the literature to verify the model. \\[-0.75em]
+*** Remove 1st person? ***
 
 \section{Background on Radiative Transfer}
+In terms of optical quantities, our primary interest is in the radiance at each point from all directions, which affects the photosynthetic rate of the kelp, and therefore the total amount of biomass producible in a given area as well as the total nutrient absorption potential.
+The equation governing the radiance throughout the system is known as the Radiative Transfer Equation (RTE), which has been largely unutilized in the fields of oceanography and aquaculture.
+Meanwhile, it has been studied extensively in two fields: stellar astrophysics and computer graphics.
+In its full form, radiance is a function of 3 spatial dimensions, 2 angular dimensions, and frequency, making for an incredibly complex problem.
+Thus far, I have ignored the dependence on frequency, and have only considered monochromatic radiation.
+The RTE states that along a given path, radiance is decreased by absorption and scattering out of the path, while it is increased by emission and scattering into the path.
+In our situation, emission is negligible, owing only perhaps to some small luminescent phytoplankton or some such anomaly, and can therefore be safely ignored.
 
 We use monochromatic radiative transfer in order to model the light field in an aqueous environment populated by vegetation.
 The vegetation (kelp) is modeled by a spatial probability distribution, which we assume to be given.
 The two quantities we seek to compute are \textit{radiance} and \textit{irradiance}.
 Radiance is the intensity of light in at a particular point in a particular direction, while irradiance is the total light intensity at a point in space, integrated over all angles.
 The Radiative Transfer Equation is an integro-partial differential equation for radiance, which has been used primarily in stellar astrophysics; it's application to marine biology is fairly recent \cite{mobley_radiative_2001}.
-
-We study various methods for solving the system of linear equations resulting from discretizing the Radiative Transfer Equation.
-In particular, we consider direct methods, stationary iterative methods, and nonstationary iterative methods.
-Numerical experiments are performed using Python's \texttt{scipy.sparse} \cite{jones_scipy:_2001} package for sparse linear algebra.
-\texttt{IPython} \cite{perez_ipython:_2007} was used for interactive numerical experimentation.
-
-Among those implemented, the nonstationary \texttt{LGMRES} \cite{baker_technique_2005} algorithm is the only algorithm determined to be suitable for this application without further work.
-We discuss limitations and potential improvements, including preconditioning, alternative discretization, and reformulation of the RTE.
 
 Understanding the growth rate and nutrient recovery by
 kelp cultures has important marine biological implications. For example, recent
@@ -80,5 +94,6 @@ place little emphasis on the way in which nearby plants shade one another.
 Self-shading may be a significant model feature, though, as light availability
 may impact the growth and composition of the kelp biomass, and thus the mixture
 of goods that may be derived.
+
 
 \section{Summary of Main Results}

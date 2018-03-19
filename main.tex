@@ -11,6 +11,12 @@
 % lof  -> generate List of Figures
 % lot  -> generate List of Tables
 \documentclass[ms,cpyr,lof,lot]{uathesis}
+
+% Subsections in TOC
+%% ONLY FOR PLANNING, NOT FOR FINAL COPY %%
+%\setcounter{tocdepth}{4}
+%\setcounter{secnumdepth}{4}
+
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % List of any packages you use.
@@ -46,6 +52,13 @@
 
 \DeclareMathOperator{\atantwo}{atan2}
 
+% Domain
+\newcommand\xmin{x_{\mbox{min}}}
+\newcommand\xmax{x_{\mbox{max}}}
+\newcommand\ymin{y_{\mbox{min}}}
+\newcommand\ymax{y_{\mbox{max}}}
+\newcommand\zmin{z_{\mbox{min}}}
+\newcommand\zmax{z_{\mbox{max}}}
 
 %% FROM GOALS
 \newcommand\plotwidth{7in}
@@ -58,6 +71,8 @@
 \newcommand{\erf}{\mbox{erf}}
 % Sign function
 \newcommand{\sign}{\mbox{sign}}
+\newcommand{\ceil}{\mbox{ceil}}
+\newcommand{\floor}{\mbox{floor}}
 % Real numbers
 \newcommand\R{\mathbb{R}}
 % Norm
@@ -98,7 +113,7 @@
 \newcommand\qed{\hfill$\blacksquare$\hspace{0.5in}}
 
 
-\title{Modelling the Radiation Field in Macroalgae Aquaculture}
+\title{Modelling the Light Field in Macroalgae Aquaculture}
 \author{Oliver Graham Evans}
 \conferraldate{May}{2018}
 
@@ -130,12 +145,14 @@
 \begin{document}
 
 \maketitle
-\input{chap1}
-\input{chap2}
-\input{chap3}
-\input{chap4}
-\input{chap5}
-\input{chap6}
+\input{introduction}
+\input{model_development}
+\input{math_solution}
+\input{numerical_implementation}
+\input{model_analysis}
+\input{experiment}
+\input{results}
+\input{conclusions}
 \bibliographystyle{unsrt}
 \bibliography{bio}
 %If you have n appendices, then use the \appendices{n} command below

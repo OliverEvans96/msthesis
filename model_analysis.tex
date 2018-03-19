@@ -1,0 +1,24 @@
+\chapter{NUMERICAL ANALYSIS} \label{ch:model_analysis}
+
+\section{Grid Study}
+Run many grid sizes with GMRES, using asymptotic solution as initial guess.
+Compare CPU times and accuracy, assuming largest grid is ``true'' solution.
+Determine necessary grid size to achieve reasonable accuracy.
+
+\section{Asymptotics vs. Finite Difference}
+Compare asymptotic solutions to GMRES with reasonable grid size as determined
+above. Compare CPU time and accuracy. Determine ideal number of scatters to
+include (number of terms in asymptotic series). Repeat for a few values of
+scattering coefficient.
+
+\section{Parameter Study}
+Vary parameters and measure average differences in radiance for full grid, as
+well as average irradance over depth.
+
+- absorption coefficient
+
+- scattering coefficient
+
+- VSF
+
+- frond bending coefficient

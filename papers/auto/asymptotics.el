@@ -4,7 +4,7 @@
    (TeX-add-to-alist 'LaTeX-provided-class-options
                      '(("article" "10pt")))
    (TeX-add-to-alist 'LaTeX-provided-package-options
-                     '(("parskip" "parfill") ("natbib" "numbers") ("epstopdf" "outdir=./")))
+                     '(("parskip" "parfill") ("natbib" "numbers") ("epstopdf" "outdir=./eps2pdf/")))
    (add-to-list 'LaTeX-verbatim-macros-with-braces-local "url")
    (add-to-list 'LaTeX-verbatim-macros-with-braces-local "path")
    (add-to-list 'LaTeX-verbatim-macros-with-delims-local "url")
@@ -45,11 +45,19 @@
     "QQ"
     "conj"
     "qed"
+    "xmin"
+    "xmax"
+    "ymin"
+    "ymax"
+    "zmin"
+    "zmax"
     "eqnum"
     "Lasym"
     "Lasymp")
    (LaTeX-add-labels
-    "eq:RTE")
+    "eqn:rte1d"
+    "fig:spatial_grid"
+    "fig:angular_grid")
    (LaTeX-add-environments
     "mcfig"))
  :latex)

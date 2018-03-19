@@ -4,15 +4,15 @@
 
 thesis: main.pdf
 
+papers/asymptotics.pdf: papers/asymptotics.tex
+	cd papers && latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make asymptotics.tex
+
 outline: outline.pdf
 
 all: papers/asymptotics.pdf main.pdf
 
 clean:
 	latexmk -CA
-
-papers/asymptotics.pdf: papers/asymptotics.tex
-	cd papers && latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make asymptotics.tex
 
 main.pdf:
 	latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make main.tex
