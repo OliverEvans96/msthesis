@@ -106,10 +106,21 @@ It is possible, then, to redefine $w$, $f_a$ and $f_b$ as follows from the prece
 	f_b &= \frac{l}{1+f_s}
 \end{align}
 
-The angle $\alpha$, half of the angle at the base corner, will be important in our analysis.
+The angle $\alpha$, half of the angle at the base corner, is also important in our analysis.
 Using the above equations,
 \begin{equation}
 	\alpha = \tan^{-1}\left(\frac{2f_rf_s}{1+f_s}\right)
+\end{equation}
+
+The area of the frond is given by
+\begin{equation}
+  A = \frac{lw}{2} = \frac{l^2}{2f_r}.
+\end{equation}
+
+Likewise, if the area is known, then the length is
+\begin{equation}
+  l = \sqrt{2Af_r}
+  \label{eqn:length-from-area}
 \end{equation}
 
 \subsection{Length distribution}
@@ -262,11 +273,20 @@ proportional loss of radiance per unit length.
 The scattering coefficient $b$ (units m$^{-1}$), defines the proportional loss
 of radiance per unit length, and is assumed to be constant over space.
 
-The volume scattering function (VSF) $\beta(\Delta): [0, \pi] \to \RR^+$ (units sr$^{-1}$) defines the
-proportion of radiance scattered at an angle $\Delta$ from it's original
-direction.
-The VSF is normalized such that $\int_0^{\pi}\beta(\Delta)\,d\Delta = 1$.
-The scattering coefficient $b$ can be considered the magnitude of the unnormalized VSF.
+The volume scattering function (VSF) $\beta(\Delta): [-1, 1] \to \RR^+$ (units sr$^{-1}$) defines the probability of light scattering at any given angle from its source.
+Formally, given two directions $\vec{\omega}$ and $\vec{\omega}'$, $\beta(\vec{\omega} \cdot \vec{\omega}')$ is the probability density of light scattering from $\vec{\omega}$ into $\vec{\omega}'$ (or vice-versa).
+Of course, since a single direction subtends no solid angle, the probability of scattering occuring exactly from $\vec{\omega}$ to $\vec{\omega}'$ is 0.
+Rather, we say that the probability of radiance being scattered from a direction $\omega$ into an element of solid angle $\Omega$ is $\int_\Omega \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'$.
+
+The VSF is normalized such that
+\begin{equation}
+  \int_{-1}^1\beta(\Delta)\, d\Delta=\frac{1}{2\pi},
+\end{equation}
+so that for any $\omega$,
+\begin{equation}
+  \int_{4\pi}\beta(\vec{\omega}\cdot\vec{\omega}')\, d\vec{\omega}' = 1.
+\end{equation}
+i.e., the probability of light being scattered to some direction on the unit sphere is 1.
 
 \subsection{Equation of Transfer}
 Then, combining these phenomena, the Radiative Transfer equation along
@@ -275,17 +295,17 @@ $\vec{l}(\vec{x}, \vec{\omega})$ becomes
   \label{eqn:rte1d}
   \frac{dL}{ds}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega})
   = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
-  + b \int_{4\pi} \beta(|\vec{\omega} - \vec{\omega}'|) L(\vec{x})\, d\omega',
+  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x})\, d\omega',
 \end{equation}
 where $\int_{4\pi}$ denotes integration over the unit sphere and
-$|\vec{\omega}-\vec{\omega}'| = \cos^{-1}(\abs{\vec{\omega} - \vec{\omega}'})$.
+$\vec{\omega}\cdot\vec{\omega}' = \cos^{-1}(\vec{\omega}\cdot\vec{\omega}')$.
 
 \subsection{RTE: Vector}
 
 Now, we have
 \begin{align*}
   \frac{dL}{ds}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega})
-    &= \frac{d\vec{l}}{ds}(\vec{x}, \vec{\omega}, s) \cdot \nabla L(\vec{x, \vec{\omega}'}, \vec{\omega}) \\
+    &= \frac{d\vec{l}}{ds}(\vec{x}, \vec{\omega}, s) \cdot \nabla L(\vec{x}, \vec{\omega}', \vec{\omega}) \\
     &= \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
 \end{align*}
 
@@ -293,7 +313,7 @@ Then, the general form of the Radiative Transfer Equation is
 \begin{equation}
   \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
   = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
-  + b \int_{4\pi} \beta(|\vec{\omega} - \vec{\omega}'|) L(\vec{x}, \vec{\omega}')\, d\omega'
+  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\omega'
 \end{equation}
 
 or, equivalently,
@@ -301,7 +321,7 @@ or, equivalently,
   \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
   + a(\vec{x})L(\vec{x}, \vec{\omega})
   = b \left(
-    \int_{4\pi} \beta(|\vec{\omega} - \vec{\omega}'|) L(\vec{x}, \vec{\omega}')\, d\omega'
+    \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\omega'
     - L(\vec{x}, \vec{\omega})
   \right)
 \end{equation}
@@ -326,56 +346,3 @@ Further, we assume that no upwelling light enters the domain from the bottom.
 \end{align}
  
 
-\subsection{Radiative Transfer}
-Let $n$ be the number of spatial dimensions for the problem (i.e., 2 or 3).
-Let $x \in \RR^n$.
-Let $\Omega$ be the unit sphere in $\RR^n$.
-Let $\omega \in \Omega$ be a unit vector in $\RR^n$.
-Let $L(x,\omega)$ denote \textit{radiance} position $x$ in the direction $\omega$.
-Let $I(x)$ denote \textit{irradiance} at position $x$.
-Let $P_k(x)$ be the probability density of kelp at position $x$.
-Let $a_w$ and $a_k$ be the absorption coefficients of water and kelp respectively.
-Let $b_w$ and $b_k$ be the scattering coefficients of water and kelp respectively.
-Then we define the effective absorption and scattering coefficients as
-\begin{align}
-	\label{eq:abs}
-	a(x) &= P_k(x) a_k + (1-P_k(x)) a_w \\
-	\label{eq:sct}
-	b(x) &= P_k(x) b_k + (1-P_k(x)) b_w
-\end{align}
-Then, the Monochromatic Time-Independent Radiative Transfer Equation (RTE) is
-\begin{equation}
-    \tag{RTE}
-    \label{eq:rte}
-    \begin{aligned}
-        \omega \cdot \nabla_x L(x,\omega) &= -(a(x) + b(x)) L(x,\omega) \\
-        &\qquad + b \int_\Omega \beta(\omega \cdot \omega') L(x,\omega')\, d\omega'
-    \end{aligned}
-\end{equation}
-
-Note that in 2 spatial dimensions, this is a 3-dimensional problem ($x,y,\theta$).
-Likewise, in 3 spatial dimensions, it is a 5-dimensional problem ($x,y,z,\theta,\phi$).
-
-In this paper, we consider only the 2-dimensional problem, with the hope that sufficiently robust solution techniques for the 2-dimensional problem will be effective in the solution of the 3-dimensional problem as well.
-
-\subsection{Boundary Conditions}
-We assume that the downwelling light from the surface is known, and is defined to be uniform in space by the Dirichlet boundary condition
-\begin{equation}
-    L(x,0,\theta) = f(\theta), \quad \mbox{for} \quad \theta \in [0,\pi).
-    \label{eq:surf_bc}
-\end{equation}
-
-Note that we cannot apply the same idea to upwelling light at the surface, as it cannot be specified from information about the atmospheric light field.
-Therefore, we apply the PDE at $y=0$ for $\theta \in [\pi,2\pi)$.
-
-At $y=1$, we assume no upwelling light.
-That is,
-\begin{equation}
-    L(x,0,\theta) = 0, \quad \mbox{for} \quad \theta \in [\pi,2\pi).
-    \label{eq:bottom_bc}
-\end{equation}
-
-As with the upper $y$-boundary, we apply the PDE for $\theta \in [0,\pi)$ so as not to prohibit downwelling light.
-
-In the horizontal direction, we assume periodic boundary conditions.
-Assuming that a single discrete group of plants is being simulated, adjusting the width of the domain effectively modifies the spacing between adjacent groups of plants.

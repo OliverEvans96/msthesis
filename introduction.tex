@@ -7,39 +7,40 @@ Meanwhile, growing concern for the negative environmental impacts of petroleum-b
 However, corn-based ethanol has been heavily criticized for diverting land usage away from food production.
 At the same time, a great deal of unutilized saltwater coastline is available for both food and fuel production through seaweed cultivation.
 Specifically, the sugar kelp \textit{Saccharina Latissima} is known to be a viable source of food, both for direct human consumption and for fish cultivation, as well as for biofuel production.
-Industrial scale macroalgae cultivation has long existed in Eastern Asia due to the popularity of seaweed in Asian cuisine.
 
-  More recently, kelp aquaculture has been developing in Scandanavia and in the Northeastern United States.
-The MACROSEA project is a four year international research collaboration funded by the Research Council of Norway targeting ``successful and predictable production of high quality biomass thereby making significant steps towards industrial macroalgae cultivation in Norway.''
-The project includes both cultivators and scientists, working to develop a precise understanding of the full lifecycle of kelp and its interaction with its environment.
-A fundamental aspect of this understanding is the development of mathematical models to describe the growth of kelp.
-Work is underway at SINTEF, a private Norwegian research institution, to develop such models.
-One aspect of the model which is has yet to be fully developed is the availability of light, considering factors such as absorption and scattering by the aquatic medium, as well as by the kelp itself.
-
-  In this thesis, the aquatic light field is investigated.
-As a first step, a model for the spatial distribution of kelp is developed.
-Radiative Transfer Theory is then applied to determine the effects of the kelp and water on the availability of light throughout the medium.
-We pursue a numerical finite difference solution to the Radiative Transfer Equation, and subsequently discuss asymptotic approximations which prove to be sufficiently accurate and less computationally intensive.
-
-Frame as application: Dr. Rogers was approached by the operator of a wastewater treatment plant in Boothbay Harbor, Maine, who is facing increasingly demanding EPA regulations limiting the concentration of certain nutrients permissible to be released into the ocean via wastewater treatment outfalls.
+%TODO: Nitrogen concerns, wastewater treatment.
+Furthermore, nitrogen leakage into water bodies is a significant ecological danger, and is especially relevant near large conventional agriculture facilities due to run-off from nitrogen-based fertilizers, as well as near wastewater treatment plants.
+As a specific example, there is a wastewater treatment plant in Boothbay Harbor, Maine which is facing increasingly demanding EPA regulations limiting the concentration of certain nutrients permissible to be released into the ocean via wastewater treatment outfalls.
 In order to adhere to these stricter requirements using conventional nutrient remediation, a significant quantity of specialized equipment would be necessary, which is not currently present in the Boothbay Harbor plant.
 Being surrounded on all sides by water and private property, the treatment plant lacks the necessary space for the additional equipment, and would therefore need to move their entire facility to a new location in order to conform to these new nutrient regulations.
+As an alternative to conventional nutrient remediation techniques, the cultivation of the macroalgae \textit{Saccharina Latissima} (sugar kelp) near the outfall site has been proposed.
+The purpose of such an undertaking would be twofold: to prevent eutrophication of the surrounding ecosystem by sequestering the nutrients in question, and to reduce the need for nutrient input, which is one of the largest costs in macroalgae cultivation. %TODO: Cite
 
-As an alternative to conventional nutrient remediation techniques, Dr. Rogers has proposed the cultivation of the macroalgae \textit{Saccharina Latissima} (sugar kelp) near the outfall site.
-The purpose of such an undertaking would be twofold: to prevent eutrophication of the surrounding ecosystem by sequestering the nutrients in question, and to reduce one of the primary expenses in macroalgae cultivation: nutrient input.
 Once grown, a variety of products can be derived from macroalgae, including biofuel, fish/cattle feedstock, and high value chemical materials such as alginate and agar.
 Food for human consumption is also a common product of kelp aquaculture, though it may not be ideal for a wastewater treatment application.
+Thus, there is an ongoing investigate the feasibility, and optimal implementation of kelp farming in wastewater treatment operations. 
 
-Thus, we seek to investigate the feasibility, and optimal implementation of kelp farming in wastewater treatment operations. 
-Specifically, I seek to develop an accurate model of the light field in a kelp farming environment as a function of both the spacing and depth of the kelp plants, and of the quality of the water itself.
-Ole Jacob Broch is a mathematician at SINTEF, a research organization in Trondheim, Norway, who has been working to model the growth of \textit{Saccharina Latissima} using SINMOD, a large-scale 3D hydrodynamical ocean model developed at SINTEF.
-Ultimately, my aim is that my light model can be used both independently and in conjunction with Dr. Broch's SINMOD model.
+Industrial scale macroalgae cultivation has long existed in Eastern Asia due to the popularity of seaweed in Asian cuisine.
+  More recently, kelp aquaculture has been developing in Scandanavia and in the Northeastern United States.
+The MACROSEA project is a four year international research collaboration funded by the Research Council of Norway targeting ``successful and predictable production of high quality biomass thereby making significant steps towards industrial macroalgae cultivation in Norway.'' %TODO: Cite this
+The project includes both cultivators and scientists, working to develop a precise understanding of the full lifecycle of kelp and its interaction with its environment.
+A fundamental aspect of this endeavor is the development of mathematical models to describe the growth of kelp.
+Work is underway at SINTEF, a private Norwegian research institution, to develop such models.
+Ole Jacob Broch is a mathematician at SINTEF, a research organization in Trondheim, Norway, who has been working to model the growth of \textit{Saccharina Latissima} using SINMOD, a large-scale 3D hydrodynamical ocean model developed at SINTEF which generates data on water temperature, water velocity, light intensity, and phytoplankton concentrations among other valuable quantities \cite{wassmann_modelling_2006}.
+
+One aspect of the model which has yet to be fully developed is the availability of light, considering factors such as absorption and scattering by the aquatic medium, as well as by the kelp itself.
+In this thesis, we contribute to this effort by developing a first-principles model of the light field in a kelp farming environment.
+As a first step, a model for the spatial distribution of kelp is developed.
+Radiative transfer theory is then applied to determine the effects of the kelp and water on the availability of light throughout the medium.
+We pursue a numerical finite difference solution to the Radiative Transfer Equation, and subsequently discuss asymptotic approximations which prove to be sufficiently accurate and less computationally intensive.
+We also provide a detailed description of the numerical solution of this model, accompanied by source code for a fortran implementation of the solution.
+This model can be used independently, or in conjunction with a lifecycle kelp model to determine the amount of light available for photosynthesis at a single time step.
 
 \section{Background on Kelp Models}
 
 Mathematical modeling of macroalgae growth is not a new topic, although it is a reemerging one.
 Several authors in the second half of the twentieth century were interested in describing the growth and composition of the macroalgae \textit{Macrocystis pyrifera}, commonly known as ``giant kelp,'' which grows prolifically off the coast of southern California.
-The very first such mathematical model was developed by W.J. North for the Kelp Habitat Improvement Project at the California Institute of Technology in 1968 using seven variables.
+The first such mathematical model was developed by W.J. North for the Kelp Habitat Improvement Project at the California Institute of Technology in 1968 using seven variables.
 By 1974, Nick Anderson greatly expanded on North's work, and created the first comprehensive model of kelp growth which he programmed using FORTRAN \cite{anderson_mathematical_1974}.
 In his model, he accounts for solar radiation intensity as a function of time of year and time of day, and refraction on the surface of the water.
 He uses a simple model for shading, simply specifying a single parameter which determines the percentage of light which is allowed to pass through the kelp canopy floating on the surface of the water.
@@ -50,7 +51,7 @@ Over a decade later in 1987, G.A.
 Jackson expanded on Anderson's model for \textit{Macrocystis pyrifera}, with an emphasis on including more environmental parameters and a more complete description of the growth and decay of the kelp \cite{jackson_modelling_1987}. 
 He takes into account respiration, frond decay, and most importantly for my work, sub-canopy light attenuation due to self-shading.
 He simply adds a coefficient to the exponential decay of light as a function of depth to represent shading from kelp fronds.
-He doesn't seem to consider and radial nor angular dependence on shading.
+He doesn't consider and radial nor angular dependence on shading. %TODO:  Check this. Was previously ambiguous.
 Jackson also expands Anderson's definition of canopy shading, treating the canopy not as a single layer, but as 0, 1, or 2 discrete layers, each composed of individual fronds.
 While this is a significant improvement over Anderson's light model, it is still rather simplistic. \\[-0.75em]
 
@@ -63,18 +64,12 @@ In 1996 and 1998 respectively, P. Duarte and J.G. Ferreira used the size-class a
 These were the some of the first models of kelp growth that did not specifically relate to \textit{Macrocystis pyrifera} (``giant kelp''). 
 Initially, there was a great deal of excitement about this species due to it's incredible size and growth rate, but difficulties in harvesting and negative environmental impacts have caused scientists to investigate other kelp species. \\[-0.75em]
 
-In the last five years, a team at SINTEF, a research organization associated with the Norwegian University of Technology and Science (NTNU), based in Trondheim, Norway, has become interested in the aquaculture potential of the kelp \textit{Saccharina latissima} for use as food, animal feed, nutrient remediation, biofuel production, and high-value chemical production among other uses. 
-In 2012, Ole Jacob Broch, whom I have been working with for the last few weeks, published a paper with Dag Slagstad describing the model they created of the growth and composition of \textit{S. latissima} over the course of the year \cite{broch_modelling_2012}.
-Their model works in conjunction with SINMOD, a 3D hydrodynamic ecosystem model developed at SINTEF which generates data on water temperature, water velocity, light intensity, and phytoplankton concentrations among other valuable quantities \cite{wassmann_modelling_2006}.
-This detailed information has allowed Ole Jacob to consider many factors which influence the growth and decay of kelp in greater detail than has previously been explored. \\[-0.75em]
-*** Remove 1st person? ***
-
 \section{Background on Radiative Transfer}
 In terms of optical quantities, our primary interest is in the radiance at each point from all directions, which affects the photosynthetic rate of the kelp, and therefore the total amount of biomass producible in a given area as well as the total nutrient absorption potential.
 The equation governing the radiance throughout the system is known as the Radiative Transfer Equation (RTE), which has been largely unutilized in the fields of oceanography and aquaculture.
 Meanwhile, it has been studied extensively in two fields: stellar astrophysics and computer graphics.
 In its full form, radiance is a function of 3 spatial dimensions, 2 angular dimensions, and frequency, making for an incredibly complex problem.
-Thus far, I have ignored the dependence on frequency, and have only considered monochromatic radiation.
+In this work, frequency is ignored, only monochromatic radiation is considered.
 The RTE states that along a given path, radiance is decreased by absorption and scattering out of the path, while it is increased by emission and scattering into the path.
 In our situation, emission is negligible, owing only perhaps to some small luminescent phytoplankton or some such anomaly, and can therefore be safely ignored.
 
