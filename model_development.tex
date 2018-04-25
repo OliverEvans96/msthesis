@@ -70,16 +70,24 @@ Let the surface and bottom of the domain be denoted respectively by
   B &= \left\{\vec{x_b} \in D: \vec{x_b} \cdot \hat{z} = 0 \right\}
 \end{align}
 
-
 \section{Kelp Model}
 
 \subsection{Frond shape}
 \label{sec:shape}
 
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.7\textwidth]{kelp_photo/kite}
+%   \caption{Kite-like shape of \textit{Saccharina Latissima}}
+% \end{figure}
+
 \begin{figure}[h]
 	\centering
+  \includegraphics[width=1.2in]{kelp_photo/kite}
+  %TODO: Cite this?
+  \qquad
 	\includegraphics[width=2in]{frond}
-	\captionof{figure}{Model frond diagram}
+	\captionof{figure}{Simplified kite-shaped frond}
 	\label{fig:frond}
 \end{figure}
 
@@ -126,6 +134,8 @@ Likewise, if the area is known, then the length is
 \subsection{Length distribution}
 
 % TODO: Normal distribution
+We assume that frond lengths are normally distributed.
+
 \subsection{Frond angle distribution}
 \label{sec:angle_dist}
 We assume the frond angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution.
@@ -209,24 +219,11 @@ That is,
 \end{equation}
 We must now define a few inherent optical properties (IOPs) which depend only on the medium of propagation.
 
-Consider a beam of light traveling through the water in the direction $\underline{\omega} = (\theta,\phi)$.
-As it travels, there will be some decrease in the radiance due to scattering and absorption.
-Let $a_w$ and $b_w$ be the coefficients of absorption and scattering respectively due solely to the water.
-Similarly, define $a_k$ and $b_k$ to be the absorption and scattering coefficients due solely to kelp.
-The loss due to scattering or absorption, whether by kelp or water, is proportional to radiance, and $a_w,b_w,a_k,b_k$ all have units of inverse meters.
-
-There will also be some gain into the path of the beam due to scattering from other directions, as determined by the \textit{volume scattering function},
-$\displaystyle \beta(\Delta\theta): [0,\pi) \rightarrow \R^+$, which gives the proportion of incident radiance scattered at an angle $\Delta\theta$ from its original direction due to only water.
-The units of $\beta$ are $\mbox{m}^{-1}\mbox{sr}^{-1}$.
-
-For convenience, let $\displaystyle \beta(\underline{\omega}_1,\underline{\omega}_2) = \beta\left(\cos^{-1}\left(\frac{\underline{\omega}_1\cdot\underline{\omega}_2}{\norm{\underline{\omega}_1}\norm{\underline{\omega}_1}}\right)\right)$. 
-
-\subsection{RTE: 1D}
+\subsection{Characteristic Rays}
 Consider a fixed position $\vec{x}$ and direction $\vec{\omega}$ such that
 $\vec{\omega} \cdot \hat{z} \neq 0$.
 
-% TODO: This
-** Just call $\vec{x_0}$ a point, not a function. Call it the projection to the surface.
+% TODO: Just call $\vec{x_0}$ a point, not a function. Call it the projection to the surface.
 
 Let $\vec{l}(\vec{x}, \vec{\omega}, s)$ denote the linear path containing $\vec{x}$
 with initial z coordinate given by
@@ -298,10 +295,7 @@ $\vec{l}(\vec{x}, \vec{\omega})$ becomes
   = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
   + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x})\, d\omega',
 \end{equation}
-where $\int_{4\pi}$ denotes integration over the unit sphere and
-$\vec{\omega}\cdot\vec{\omega}' = \cos^{-1}(\vec{\omega}\cdot\vec{\omega}')$.
-
-\subsection{RTE: Vector}
+where $\int_{4\pi}$ denotes integration over the unit sphere.
 
 Now, we have
 \begin{align*}
@@ -337,9 +331,7 @@ We use periodic boundary conditions in the $x$ and $y$ directions.
 
 In the $z$ direction, we specify a spatially uniform downwelling light just
 under the surface of the water by a function $f(\vec{\omega})$.
-
-% TODO: Address this
-* $\zmin$ could also be much lower, e.g. 5m.
+Or if $\zmin>0$, then the radiance at $z=\zmin$ should be specified instead (as opposed to the radiance at the first grid cell center).
 
 Further, we assume that no upwelling light enters the domain from the bottom.
 \begin{align}
@@ -347,4 +339,12 @@ Further, we assume that no upwelling light enters the domain from the bottom.
   L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0
 \end{align}
  
+\section{Total Light Absorption}
+Once the radiance $L$ is calculated everywhere, the irradiance is
+\begin{equation}
+  I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\omega.
+\end{equation}
 
+Then, the light absorbed by the fronds is calculated by multiplying the kelp distribution by the irradiance.
+(This needs to be explained more, and needs to come after the super-individual section).
+%TODO: Do this right.

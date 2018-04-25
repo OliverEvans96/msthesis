@@ -36,6 +36,15 @@ We pursue a numerical finite difference solution to the Radiative Transfer Equat
 We also provide a detailed description of the numerical solution of this model, accompanied by source code for a fortran implementation of the solution.
 This model can be used independently, or in conjunction with a lifecycle kelp model to determine the amount of light available for photosynthesis at a single time step.
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{kelp_photo/kelp_photo1}
+  \caption{\textit{Saccharina Latissima} being harvested}
+  % https://blogs.qub.ac.uk/qubio/files/2016/04/H5-5.jpg
+  %TODO: Cite properly or replace with photo from Shane
+\end{figure}
+
+
 \section{Background on Kelp Models}
 
 Mathematical modeling of macroalgae growth is not a new topic, although it is a reemerging one.
@@ -65,7 +74,7 @@ These were the some of the first models of kelp growth that did not specifically
 Initially, there was a great deal of excitement about this species due to it's incredible size and growth rate, but difficulties in harvesting and negative environmental impacts have caused scientists to investigate other kelp species. \\[-0.75em]
 
 \section{Background on Radiative Transfer}
-In terms of optical quantities, our primary interest is in the radiance at each point from all directions, which affects the photosynthetic rate of the kelp, and therefore the total amount of biomass producible in a given area as well as the total nutrient absorption potential.
+In terms of optical quantities, our primary interest is in the radiance at each point from all directions, which affects the photosynthetic rate of the kelp, and therefore the total amount of biomass producible in a given area as well as the total nutrient remediation potential.
 The equation governing the radiance throughout the system is known as the Radiative Transfer Equation (RTE), which has been largely unutilized in the fields of oceanography and aquaculture.
 Meanwhile, it has been studied extensively in two fields: stellar astrophysics and computer graphics.
 In its full form, radiance is a function of 3 spatial dimensions, 2 angular dimensions, and frequency, making for an incredibly complex problem.

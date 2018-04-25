@@ -12,9 +12,8 @@ The first component is described here.
 
 \subsection{Length Distribution}
 
-It is assumed that the kelp population in the lifecycle model is represented by super-individuals, as described in \citep{scheffer_super-individuals_1994}.
-Rather than model each kelp frond, a subset of the population, called super-individuals, are modelled explicitly, and are considered to represent many identical iniividuals.
-Specifically, at each depth $k$, we have $n$ super-individuals, indexed by $i$.
+Rather than model each kelp frond, a subset of the population, called super-individuals, are modelled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
+Specifically, at each depth $k$, there are $n$ super-individuals, indexed by $i$.
 Super-individual $i$ has a frond area $A_{ki}$ and represents $n_{ki}$ individual fronds.
 
 From \eqref{eqn:length-from-area}, the frond length of the super-individual is $l_{ki} = \sqrt{2A_{ki}f_r}$.
@@ -52,7 +51,7 @@ It is convenient, however, to use a single index $p$ to refer to directions $\ve
 Then, the center of a generic grid cell will be denoted as
 $(x_i, y_j, z_k, \vec{\omega}_p)$, and the boundaries between adjacent grid cells
 will be referred to as \textit{edges}.
-One-indexing will be employed throughout this document.
+One-indexing is employed throughout this document.
 
 \subsection{Spatial Grid}
 \begin{figure}[H]
@@ -214,17 +213,25 @@ Define the \textit{angular characteristic function}
 
 Specifically, we integrate $\beta$ to determine the amount of light scattered between angular grid cells.
 
-Given a position $(x,y,z)$ and a direction $\vec{\omega}$, the radiance is $L_{ijkp}$.
+Consider two angular grid cells, $\Omega$ and $\Omega'$.
+The average probability density of scattering from $\vec{\omega} \in \Omega$ to $\vec{\omega}' \in \Omega'$ (or vice versa) is
+\begin{equation}
+  \beta_{pp'} = \frac{1}{\abs{\Omega}\abs{\Omega'}} \int_\Omega\int_{\Omega'}\beta(\vec{\omega}\cdot\vec{\omega}')\, d\vec{\omega'}\, d\vec{\omega}
+\end{equation}
 
+Denote the radiance at $(x_i, y_j, z_k, \vec{\omega}_p)$ by $L_{ijkp}$.
+% TODO: Be more careful here.
+Then, the total radiance scattered into $\Omega_p$ from $\Omega_{p'}$ is
 \begin{align}
-  \int_{4\pi}\beta(\vec{\omega} \cdot \vec{\omega}')f(\vec{\omega}')\, d\vec{\omega}' &= \sum_{p'=1}^\nomega f_{p'} \int_{\Omega_{p'}} \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}' \\
+  \int_{\Omega}\int_{\Omega'}\beta(\vec{\omega} \cdot \vec{\omega}')L(\vec{x},\vec{\omega}')\, d\vec{\omega}'\, d\vec{\omega}
+  &= L_{ijkp'} \int_\Omega\int_{\Omega_{p'}} \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'\, d\vec{\omega} \\
+  &= \beta_{pp'}\abs{\Omega}\abs{\Omega'}L_{ijkp'}.
 \end{align}
-
-\subsection{Discrete Variable Notation}
-
-$L_{ijkp}$, $a_{ijk}$, $f_p$
+Hence, the average radiance scattered is $\beta_{pp'}\abs{\Omega'}L_{ijkp'}.$
 
 \section{Finite Difference}
+
+We now discuss the discretization of derivatives on the spatial grid.
 
 \subsection{Discretization}
 
@@ -508,7 +515,7 @@ Consider $i,j,k$ fixed (denoting the current grid cell).
 
 Then,
 % TODO: Fix this
-* Incorrect use of left brace
+* This doesn't quite make sense yet.
 \begin{align}
   \begin{cases}
     i = i+\delta_x, & \mbox{if } d=x \\

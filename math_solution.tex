@@ -2,7 +2,7 @@
 \section{Calculate Kelp Density}
 \subsection{Relative coordinate system}
 \label{sec:rel_coords}
-To determine under what conditions a frond will shade a given point, we begin by
+To determine under what conditions a frond will occupy a given point, we begin by
 describing the shape of the frond in Cartesian and then converting to polar coordinates.
 Of primary interest are the edges connected to the frond tip.
 For convenience, we will use a relative coordinate system $(\theta',s)$ such that the line connecting the base to the tip is vertical, with the base at $(0,0)$.
@@ -91,9 +91,9 @@ Any frond longer than these at the same angle will also occupy the point.
 \end{figure}
 
 \subsection{Probability of occupancy}
-NOT SO SURE ABOUT THIS
-%We are interested in the probability that, given a fixed point $(\theta,s)$, values of $l$ and $\theta_f$ chosen from the distributions described in section \ref{sec:dist} will fall in the occupancy region.
-%$This is found by integrating $P_{2D}$ over the occupancy region for $(\theta,s)$, as depicted in figure \ref{fig:cart_shade}.
+% TODO: Double check
+We are interested in the probability that, given a fixed point $(\theta,s)$, values of $l$ and $\theta_f$ chosen from the distributions described in section \ref{sec:dist} will fall in the occupancy region.
+This is found by integrating $P_{2D}$ over the occupancy region for $(\theta,s)$, as depicted in figure \ref{fig:cart_shade}.
 
 \begin{figure}[h]
 	\centering
@@ -104,16 +104,29 @@ NOT SO SURE ABOUT THIS
 	\label{fig:cart_shade}
 \end{figure}
 
-Now, we are able to define the probability of a frond occupying the point $(\theta,s)$ at a depth $z$ at time $t$ by
+Now, integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ yields the proportion of the population occupying the point $(\theta,s)$.
 \begin{align}
-		P_k(\theta,s,z,t)	&= \iint_{R_s(\theta,s,z,t)}
+		\tilde{P}_k(\theta,s,z)	&= \iint_{R_s(\theta,s)}
 								P_{2D}(\theta_f,l)
-								\;dl\;d\theta_f \nonumber \\
+								\,dl\,d\theta_f \nonumber \\
 							&= \int_{\theta-\alpha}^{\theta+\alpha} 
-								\int_{l_{min}(\theta_f,z,t)}^\infty
+								\int_{l_{min}(\theta_f)}^\infty
 								P_{2D}(\theta_f,l)
-								\;dl\;d\theta_f
+								\,dl\,d\theta_f
 \end{align}
+
+% TODO: Revise. This is the first mention of grid cells.
+Then, multiplying $\tilde{P}_k$ by the number of fronds in the population $n$ of the depth layer gives the expected number of fronds occupying the point.
+Now, assuming a uniform thickness $t$ for all fronds, and a thickness $dz$ of the depth layer, we find proportion of the grid cell occupied by kelp to be
+\begin{equation}
+  P_k = \frac{nt}{dz}\tilde{P}.
+\end{equation}
+
+Then, the effective absorption coefficien can be calculated at any point in space as
+\begin{equation}
+  a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w
+\end{equation}
+% TODO: Calculate absorption coefficient grid.
 
 \begin{figure}[h]
 	\centering
@@ -158,22 +171,7 @@ Now, grouping like powers of $b$, we have the decoupled set of equations
 
 \subsection{Boundary Conditions}
 
-We use periodic boundary conditions in the $x$ and $y$ directions.
-\begin{align}
-  L\left((\xmin, y, z), \vec{\omega}\right) &= L\left((\xmax, y, z), \vec{\omega}\right) \\
-  L\left((x, \ymin, z), \vec{\omega}\right) &= L\left((x, \ymax, z), \vec{\omega}\right)
-\end{align}
-
-In the $z$ direction, we specify a spatially uniform downwelling light just
-under the surface of the water by a function $f(\vec{\omega})$.
-
-* $\zmin$ could also be much lower, e.g. 5m.
-
-Further, we assume that no upwelling light enters the domain from the bottom.
-\begin{align}
-  L(\vec{x_s}, \vec{\omega}) &= f(\omega) \mbox{ if } \vec{\omega} \cdot \hat{z} > 0\\ 
-  L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0
-\end{align}
+% TODO: Asymptotic boundary conditions
  
 \subsection{Rewrite as ODE along ray path}
 For all $\vec{x}, \vec{\omega}$, let
