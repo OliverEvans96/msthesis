@@ -386,18 +386,32 @@ Similarly, for downwelling light at the lowest depth layer, we have
 
 \subsection{Structure of Linear System}
 
+%TODO: This
 Describe layout of matrix.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{p{\linewidth/3}p{\linewidth/3}p{\linewidth/3}}
+    \toprule
+    \textbf{Derivative case} & \textbf{\# nonzero/row} & \textbf{\# of rows} \\
+    \midrule
+    interior & $\nomega+6$ & $n_xn_y(n_z-2)\nomega$ \\
+    surface downwelling & $\nomega+5$ & $n_xn_y\nomega/2$ \\
+    bottom upwelling & $\nomega+5$ & $n_xn_y\nomega/2$ \\
+    surface upwelling & $\nomega+6$ & $n_xn_y\nomega/2$ \\
+    bottom downwelling & $\nomega+6$ & $n_xn_y\nomega/2$ \\
+  \end{tabular}
+  \caption{Breakdown of nonzero matrix elements by derivative case}
+\end{table}
 
 Number of rows/columns: $n_xn_yn_zn_{\vec{\omega}}$
 
 Number of nonzero RHS entries: $n_xn_yn_z/2$
 
-** Table with number of nonzero matrix entries in each type of row (interior,
-exterior-BC, exterior non-BC)
-
-Number of nonzero matrix entries: $n_xn_yn_{\vec{\omega}} \left[n_z(n_{\vec{\omega}}+6)-1 \right]$
+Total number of nonzero matrix entries: $n_xn_yn_{\vec{\omega}} \left[n_z(n_{\vec{\omega}}+6)-1 \right]$
 
 \section{GMRES}
+% TODO: Fill this in
 GMRES is a Krylov Subspace method. These work like this. Here's what's special
 about GMRES. Advantages. Drawbacks. Not practical for running in SINMOD.
 
@@ -483,6 +497,7 @@ $z$ edge-planes.
 Then, we move to the next grid cell in that dimension.
 That is,
 
+% TODO: Check
 * We also track $s$, the path length.
 
 Consider $i,j,k$ fixed (denoting the current grid cell).
@@ -492,6 +507,7 @@ Consider $i,j,k$ fixed (denoting the current grid cell).
 \end{align}
 
 Then,
+% TODO: Fix this
 * Incorrect use of left brace
 \begin{align}
   \begin{cases}
@@ -515,6 +531,7 @@ and
 Then, move to the adjacent grid cell in the dimension which requires the shortest
 step to reach an edge. Save $ds$ of the path through this cell. Also save abs.
 coef. and source.
+% TODO: Improve
 ** Definitely needs more work**
 
 - absorption coefficient ($\tilde{a}(s)$)
