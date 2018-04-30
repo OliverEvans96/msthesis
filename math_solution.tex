@@ -136,6 +136,20 @@ Then, the effective absorption coefficien can be calculated at any point in spac
 	\label{fig:prob_shade}
 \end{figure}
 
+\subsection{Absorbed Light}
+% TODO: This.
+** ADD WORDS
+
+\newcommand{\abslight}{\mathcal{L}}
+\begin{align}
+  \abslight_{kq} &= \frac{dz_k}{t}
+  \cdot \left(\frac{A_{kq}\mbox{ind}_{kq}}{\sum_{q'}A_{kq'}\mbox{ind}_{kq'}}\right)
+  \cdot \frac{1}{\mbox{ind}_{kq}}
+  \cdot \sum_{i=1}^{n_x}\sum_{j=1}^{n_y}P_{ijk}I_{ijk} \\
+  &= \frac{dz_k A_{kq}}{t}
+  \cdot \frac{\sum_{ij}P_{ijk}I_{ijk}}{\sum_{q'}A_{kq'}\mbox{ind}_{kq'}}
+\end{align}
+
 
 \section{Asymptotics}
 \subsection{Substitute asymptotic series}
