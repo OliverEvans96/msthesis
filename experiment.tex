@@ -8,7 +8,6 @@ citing literature and reporting values obtained by others.
 % TODO: Fill in table
 \section{Parameters from Literature}
 \begin{table}
-  \caption{Parameter values}
   \centering
   \begin{tabular}{p{2\textwidth/7} p{\textwidth/7} p{\textwidth/6} p{\textwidth/6} p{2\textwidth/7}}
     \toprule
@@ -17,11 +16,17 @@ citing literature and reporting values obtained by others.
     Kelp Absorptance & $A_k$ & 0.8 & \cite{colombo-pallotta_photosynthetic_2006} & Actually for \textit{Macrocystis Pyrifera}\\
     Scattering coefficient & $b$ & 0.366 & \cite{sokolov_parameterization_2010} & Table 2, $b_{\lambda 0}$, mean \\
     VSF & $\beta$ & tabulated & \cite{petzold_volume_1972,sokolov_parameterization_2010}, & Currently using Petzold\\ 
+    Water absorption coefficient & $a_w$ & 0.03 \SI{1}{1\per\m} & \cite{hamre_parameterization_2003} & Fig. 6, dense cluster. Samnanger Fjord, Western Norway. \\
+    Water scattering coefficient & $a_w$ & 0.5 \SI{1}{1\per\m} & \cite{hamre_parameterization_2003} & Fig. 7, dense cluster. Samnanger Fjord, Western Norway. \\
+    Surface solar irradiance & $I_0$ & \SI{50}{\W\per\m\squared} & \cite{broch_modelling_2012} & Irradiance for maximal photosynthesis, converted from photons \\
     \bottomrule
   \end{tabular}
+  \caption{Parameter values}
 \end{table}
 
 * More to come
+
+* CONVERT IRRADIANCE: \SI{1}{\W\per\m^2} = \SI{4.2}{\micro\mole \,photons\per\second}
 
 \section{Optical Properties}
 \subsection{Absorption Coefficients}
