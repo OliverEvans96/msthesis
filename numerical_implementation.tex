@@ -499,7 +499,7 @@ Now, we calculate the distance from $p_0$ along the path to edges in each dimens
   s_k^z = \hat{s}\frac{z_k^e-p_{0z}}{p_{1z}-p_{0z}}
 \end{align}
 
-For each grid cell, we check the path lengths required to cross an $x$, $y$, and
+For each grid cell, we check the path lengths required to cross the next $x$, $y$, and
 $z$ edge-planes.
 Then, we move to the next grid cell in that dimension.
 That is,
@@ -513,7 +513,7 @@ Consider $i,j,k$ fixed (denoting the current grid cell).
   d = \mbox{argmin}_{x,y,z} \left\{ s_i^x-s, s_j^y-s, s_k^z \right\}
 \end{align}
 
-Then,
+%Then,
 % TODO: Fix this
 * This doesn't quite make sense yet.
 \begin{align}
@@ -607,3 +607,19 @@ Then,
 \begin{equation}
   u_n(\tilde{s}) = \sum_{i=1}^{N-1} g_{ni}d_i e^{b_i}
 \end{equation}
+
+\subsection{Perceived Irradiance}
+\label{sec:perceived_irrad}
+
+The average irradiance experienced by a kelp frond in depth layer $k$ is
+\newcommand{\Iperk}{\tilde{I}_k}
+\begin{equation}
+   \Iperk = \frac{\sum_{ij}P_{ijk}I_{ijk}}{\sum_{ij}P_{ijk}}
+\end{equation}
+
+The irradiance perceived by a the kelp is expected to be slightly lower than the average irradiance,
+\begin{equation}
+  \bar{I}_k = \frac{\sum_{ij}I_{ijk}}{n_x n_y}
+\end{equation}
+since the kelp is more densely located at the center of the domain where the light field is reduced,
+whereas the simple average is influenced by regions of higher irradiance at the edges of the domain where kelp is not present.

@@ -122,7 +122,7 @@ Now, assuming a uniform thickness $t$ for all fronds, and a thickness $dz$ of th
   P_k = \frac{nt}{dz}\tilde{P}.
 \end{equation}
 
-Then, the effective absorption coefficien can be calculated at any point in space as
+Then, the effective absorption coefficient can be calculated at any point in space as
 \begin{equation}
   a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w
 \end{equation}
@@ -136,31 +136,17 @@ Then, the effective absorption coefficien can be calculated at any point in spac
 	\label{fig:prob_shade}
 \end{figure}
 
-\subsection{Absorbed Light}
-% TODO: This.
-** ADD WORDS
-
-\newcommand{\abslight}{\mathcal{L}}
-\begin{align}
-  \abslight_{kq} &= \frac{dz_k}{t}
-  \cdot \left(\frac{A_{kq}\mbox{ind}_{kq}}{\sum_{q'}A_{kq'}\mbox{ind}_{kq'}}\right)
-  \cdot \frac{1}{\mbox{ind}_{kq}}
-  \cdot \sum_{i=1}^{n_x}\sum_{j=1}^{n_y}P_{ijk}I_{ijk} \\
-  &= \frac{dz_k A_{kq}}{t}
-  \cdot \frac{\sum_{ij}P_{ijk}I_{ijk}}{\sum_{q'}A_{kq'}\mbox{ind}_{kq'}}
-\end{align}
-
-
 \section{Asymptotics}
+In clear waters where absorption is more important than scattering, an asymptotic expansion can be used whereby the light field is generated through a sequence of discrete scattering events.
 \subsection{Substitute asymptotic series}
+Taking $b$ to be small, we introduce the asymptotic series
 \newcommand{\Lasym}{L_0(\vec{x},\vec{\omega}) + b L_1(\vec{x},\vec{\omega}) + b^2 L_2(\vec{x},\vec{\omega}) + \cdots}
+\newcommand{\Lasyms}{L_0(\vec{x_s},\vec{\omega}) + b L_1(\vec{x_s},\vec{\omega}) + b^2 L_2(\vec{x_s},\vec{\omega}) + \cdots}
 \newcommand{\Lasymp}{L_0(\vec{x},\vec{\omega}') + b L_1(\vec{x},\vec{\omega}') + b^2 L_2(\vec{x},\vec{\omega}') + \cdots}
 \begin{align}
-  L(\vec{x},\vec{\omega}) = \Lasym
+  L(\vec{x},\vec{\omega}) = \Lasym.
 \end{align}
-
 Then, substituting the above into the RTE,
-
 \begin{equation}
   \begin{split}
     &\vec{\omega} \cdot \nabla \left[ \Lasym \right] \\
@@ -172,8 +158,7 @@ Then, substituting the above into the RTE,
     \Bigg)
     \end{split}
 \end{equation}
-
-Now, grouping like powers of $b$, we have the decoupled set of equations
+Then, grouping like powers of $b$, we have the decoupled set of equations
 \begin{align}
   \vec{\omega} \cdot \nabla L_0(\vec{x}, \vec{\omega}) + a(\vec{x})L_0(\vec{x}) &= 0 \\
   \vec{\omega} \cdot \nabla L_1(\vec{x}, \vec{\omega}) + a(\vec{x})L_1(\vec{x})
@@ -183,9 +168,27 @@ Now, grouping like powers of $b$, we have the decoupled set of equations
   &\vdots \nonumber
 \end{align}
 
-\subsection{Boundary Conditions}
+For boundary conditions, let $x_s$ be a point on the surface of the domain.
+Then, 
+\begin{equation}
+  \Lasyms =
+  \begin{cases}
+    f(\omega), & \hat{z}\cdot\omega > 0 \\
+    0, & \mbox{otherwise},
+  \end{cases}
+\end{equation}
+which becomes
+\begin{align}
+  L_0(\vec{x}, \vec{\omega}) &=
+  \begin{cases}
+    f(\omega), & \hat{z}\cdot\omega > 0, \\
+    0, & \mbox{otherwise},
+  \end{cases} \\
+  L_1(\vec{x}, \vec{\omega}) &= 0 \\
+  L_2(\vec{x}, \vec{\omega}) &= 0. \\
+  &\vdots \nonumber
+\end{align}
 
-% TODO: Asymptotic boundary conditions
  
 \subsection{Rewrite as ODE along ray path}
 For all $\vec{x}, \vec{\omega}$, let

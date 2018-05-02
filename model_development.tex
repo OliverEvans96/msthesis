@@ -18,13 +18,20 @@ In addition, light will be naturally absorbed by the water to varying degrees as
 	\captionof{figure}{$4\times 4$ array of vertical kelp ropes}
 \end{figure}
 \subsection{Coordinate System}
-For all of our three dimensional analysis, we will use the absolute coordinate system defined in figure \ref{fig:3dcoords}.
-In the following sections, we will wish to convert between Cartesian and spherical coordinates, which we will do using the following formulas.
+
+Consider the rectangular domain
+\begin{align*}
+  \xmin &\leq x \leq \xmax, \\
+  \ymin &\leq y \leq \ymax, \\
+  \zmin &\leq z \leq \zmax.
+\end{align*}
+For all three dimensional analysis, we use the absolute coordinate system defined in figure \ref{fig:3dcoords}.
+In the following sections, it is necessary to convert between Cartesian and spherical coordinates, which we do using the relations
 \begin{align}
 	\begin{split}
-		x & = r\sin\phi\cos\theta \\
-		y & = r\sin\phi\sin\theta \\
-		z & = r\cos\phi \\
+		x & = r\sin\phi\cos\theta, \\
+		y & = r\sin\phi\sin\theta, \\
+		z & = r\cos\phi. \\
 	\label{eqn:coords}
 	\end{split}
 \end{align}
@@ -36,12 +43,12 @@ Therefore, for some function $f(x,y,z)$, we can write its derivative along a pat
 	+ \frac{\partial f}{\partial y}\frac{\partial y}{\partial r} 
 	+ \frac{\partial f}{\partial z}\frac{\partial z}{\partial r}
 \end{equation}
-Then, calculating derivatives from \eqref{eqn:coords}, we get
+Then, calculating derivatives from \eqref{eqn:coords} yields
 \begin{equation}
 	\frac{\partial f}{\partial r} 
 	=\frac{\partial f}{\partial x}\sin\phi\cos\theta
 	+ \frac{\partial f}{\partial y}\sin\phi\sin\theta
-	+ \frac{\partial f}{\partial z}\cos\phi
+	+ \frac{\partial f}{\partial z}\cos\phi.
 	\label{eqn:partials}
 \end{equation}
 \begin{figure}[H]
@@ -51,24 +58,6 @@ Then, calculating derivatives from \eqref{eqn:coords}, we get
 	\label{fig:3dcoords}
 \end{figure}
 
-\subsection{Domain}
-
-Let the domain be defined as
-\begin{equation}
-  \begin{split}
-    D = \big\{
-    \vec{x} \in \RR^3 :\, &\xmin \leq \vec{x} \cdot \hat{x} \leq \xmax \\
-    \mbox{ and } &\ymin \leq \vec{x} \cdot \hat{y} \leq \ymax \\
-    \mbox{ and } &\zmin \leq \vec{x} \cdot \hat{z} \leq \zmax
-    \big\}
-  \end{split}
-\end{equation}
-
-Let the surface and bottom of the domain be denoted respectively by
-\begin{align}
-  S &= \left\{\vec{x_s} \in D: \vec{x_s} \cdot \hat{z} = 0 \right\} \\
-  B &= \left\{\vec{x_b} \in D: \vec{x_b} \cdot \hat{z} = 0 \right\}
-\end{align}
 
 \section{Kelp Model}
 
@@ -131,19 +120,15 @@ Likewise, if the area is known, then the length is
   \label{eqn:length-from-area}
 \end{equation}
 
-\subsection{Length distribution}
-
-% TODO: Normal distribution
-We assume that frond lengths are normally distributed.
-
-\subsection{Frond angle distribution}
+\subsection{Length and angle distributions}
 \label{sec:angle_dist}
-We assume the frond angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution.
-It is defined on $[-\pi,\pi]$ rather than $(-\infty,\infty)$.
-It has two parameters, $\mu$ and $\kappa$, which shift and sharpen the
-distribution respectively.
+We assume that frond lengths are normally distributed with mean $\mu_l$ and standard deviation $\sigma_l$.
+We assume the frond angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution, defined on $[-\pi,\pi]$ rather than $(-\infty,\infty)$.
+The von Mises distribution has two parameters, $\mu$ and $\kappa$, which shift and sharpen its peak respectively, as shown in Figure \ref{fig:vonmises}.
 $\kappa$ can be considered analogous to $1/\sigma$ in the normal distribution.
 Here, we use $\mu = \theta_w$ and $\kappa = v_w$.
+That is, in the case of zero current velocity, the frond angles are be distributed uniformly, while as current velocity increases, they become increasingly likely to be pointing in the direction of the current.
+Note that $\theta_w$ and $v_w$ vary over depth.
 
 The PDF for this distribution is
 \begin{equation}
@@ -154,9 +139,6 @@ Notice that unlike the normal distribution, the von Mises distribution approache
 \begin{equation}
 	\displaystyle \lim_{v_w \to 0}P_{\theta_f}(\theta_f) = \frac{1}{2\pi} \;\forall\, \theta_f \in [-\pi,\pi]
 \end{equation}
-The idea behind using this distribution is that with zero current velocity, the frond angles should be distributed uniformly, while as current velocity increases, they should be increasingly likely to be pointing in the direction of the current.
-Note that $\theta_w$ and $v_w$ are functions of position.
-For a given depth layer, we will use the average water velocity for that depth.
 
 \begin{figure}[h]
 	\centering
@@ -209,6 +191,8 @@ This is currently not taken into consideration in this model.
 
 
 \section{Light Model}
+
+Now that we have formulated the distribution of kelp throughout the medium, we introduce the radiative transfer equation, which is used to calculate the light field.
 
 \subsection{Optical Definitions}
 One of the most fundamental quantities in optics is radiant flux $\Phi$, which is the has units of energy per time.
@@ -339,12 +323,14 @@ Further, we assume that no upwelling light enters the domain from the bottom.
   L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0
 \end{align}
  
-\section{Total Light Absorption}
+\section{Irradiance}
 Once the radiance $L$ is calculated everywhere, the irradiance is
 \begin{equation}
   I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\omega.
 \end{equation}
-
-Then, the light absorbed by the fronds is calculated by multiplying the kelp distribution by the irradiance.
-(This needs to be explained more, and needs to come after the super-individual section).
-%TODO: Do this right.
+Integrating $I(\vec{x})$, which has units \SI{}{\W/m^2}, over the surface of a frond, produces the power (with units \SI{}{\W}) transmitted to the frond.
+This is discussed further in Section \ref{sec:perceived_irrad}
+This can be converted to moles of photons (also called einsteins) per second as
+\begin{equation}
+  \SI{1}{\W\per\m^2} = \SI{4.2}{\micro\mole \,photons\per\second}.
+\end{equation}
