@@ -20,13 +20,12 @@ Once the radiance $L$ is calculated everywhere, the irradiance is
   I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\omega.
 \end{equation}
 Integrating $I(\vec{x})$, which has units \SI{}{\W/m^2}, over the surface of a frond, produces the power (with units \SI{}{\W}) transmitted to the frond.
-This is discussed further in Section \ref{sec:perceived_irrad}
+For details, see Section \ref{sec:perceived_irrad}.
 
-Irradiance can be converted to moles of photons (also called Einsteins) per second as
+Irradiance is sometimes given in units of moles of photons (a mole of photons is also called an Einstein) per second, with the conversion \cite{mobley_light_1994} given by
 \begin{equation}
   \SI{1}{\W\per\m^2} = \SI{4.2}{\micro\mole \,photons\per\second}.
 \end{equation}
-
 
 \subsection{Inherent Optical Properties}
 % TODO: Edit
@@ -56,6 +55,7 @@ i.e., the probability of light being scattered to some direction on the unit sph
 
 \section{The Radiative Transfer Equation}
 % TODO: Blurb
+We now present the radiative transfer equation, whose solution is the radiance in the medium as a function of position and angle.
 
 \subsection{Ray Notation}
 Consider a fixed position $\vec{x}$ and direction $\vec{\omega}$ such that
@@ -76,6 +76,7 @@ with initial z coordinate given by
 Then,
 \begin{equation}
   \vec{l}(\vec{x}, \vec{\omega}, s) = \frac{1}{\tilde{s}} (s\vec{x} + (\tilde{s} - s)\vec{x_0}(\vec{x}, \vec{\omega}))
+  \label{eqn:ray_path}
 \end{equation}
 
 where
@@ -170,7 +171,7 @@ Then, substituting the above into the RTE,
     &\vec{\omega} \cdot \nabla \left[ \Lasym \right] \\
     &+ a(\vec{x}) \left[ \Lasym \right] \\
     &= b\Bigg(
-      \int_{4\pi} \beta(\abs{\vec{\omega} - \vec{\omega}'})
+      \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}')
       \left[ \Lasymp \right] \, d\vec{\omega}' \\
     &- \left[ \Lasym \right]
     \Bigg)
@@ -178,13 +179,20 @@ Then, substituting the above into the RTE,
 \end{equation}
 Then, grouping like powers of $b$, we have the decoupled set of equations
 \begin{align}
-  \vec{\omega} \cdot \nabla L_0(\vec{x}, \vec{\omega}) + a(\vec{x})L_0(\vec{x}) &= 0 \\
+  \vec{\omega} \cdot \nabla L_0(\vec{x}, \vec{\omega}) + a(\vec{x})L_0(\vec{x}) &= 0
+  \label{eqn:asymptotics_0}\\
   \vec{\omega} \cdot \nabla L_1(\vec{x}, \vec{\omega}) + a(\vec{x})L_1(\vec{x})
-  &= \int_{4\pi} \beta(\abs{\vec{\omega} - \vec{\omega}'}) L_0(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_0(\vec{x}, \vec{\omega}) \\ 
+  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_0(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_0(\vec{x}, \vec{\omega}) \\ 
   \vec{\omega} \cdot \nabla L_2(\vec{x}, \vec{\omega}) + a(\vec{x})L_2(\vec{x})
-  &= \int_{4\pi} \beta(\abs{\vec{\omega} - \vec{\omega}'}) L_1(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_1(\vec{x}, \vec{\omega}) \\ 
+  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_1(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_1(\vec{x}, \vec{\omega}) \\ 
   &\vdots \nonumber
 \end{align}
+In general, for $n \geq 1$, we have
+\begin{equation}
+  \vec{\omega} \cdot \nabla L_n(\vec{x}, \vec{\omega}) + a(\vec{x})L_n(\vec{x})
+  = \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_{n-1}(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_{n-1}(\vec{x}, \vec{\omega})
+  \label{eqn:asymptotics_n}
+\end{equation}
 
 For boundary conditions, let $x_s$ be a point on the surface of the domain.
 Then, 
@@ -202,34 +210,77 @@ which becomes
     f(\omega), & \hat{z}\cdot\omega > 0, \\
     0, & \mbox{otherwise},
   \end{cases} \\
+  \label{eqn:asymptotics_bc_0}
   L_1(\vec{x}, \vec{\omega}) &= 0 \\
   L_2(\vec{x}, \vec{\omega}) &= 0. \\
   &\vdots \nonumber
 \end{align}
+In general, for $n \geq 1$,
+\begin{equation}
+  L_n(\vec{x}, \vec{\omega}) = 0.
+  \label{eqn:asymptotics_bc_n}
+\end{equation}
 
  
 \subsection{Analytical Solution}
 \label{sec:asymptotic_sol}
 
-For all $\vec{x}, \vec{\omega}$, let
+For all $\vec{x}, \vec{\omega}$, we consider the path $l(\vec{x}, \vec{\omega}, s)$ from \eqref{eqn:ray_path}.
+We extract the absorption coefficient along the path,
+\begin{equation}
+  \tilde{a}(s) = a(\vec{l}(\vec{x}, \vec{\omega}), s).
+\end{equation}
+Then, the first equation from the asymptotic expansion, \eqref{eqn:asymptotics_0} and its associated boundary condition, \eqref{eqn:asymptotics_bc_0}, can be rewritten as
+\begin{empheq}[left = \empheqlbrace]{align}
+  0 &= \frac{du_0}{ds}(s) + \tilde{a}(s) u_0(s) \\
+  u_0(0) &= f(\vec{\omega}),
+\end{empheq}
+which we can solve by multiplying by the appropriate integrating factor, as follows.
 \begin{align}
-  \tilde{a}(s) &= a(\vec{l}(\vec{x}, \vec{\omega}), s), \\ 
-  \frac{du_0}{ds}(s) + \tilde{a}(s) u_0(s) &= 0, u_0(0) = f(\vec{\omega})
+  0 &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \frac{du_0}{ds} + \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \tilde{a}(s) u_0(s) \\
+  &= \frac{d}{ds}\left[\exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_0(s)\right].
 \end{align}
-Then,
+Then, integrating both sides yields
 \begin{align}
-  u_0(s) = f(\omega) \exp\left(-\int_0^s \tilde{a}(s)\, ds\right), \\
-  L_0(\vec{l}(\vec{x}, \vec{\omega},s), \vec{\omega}) = u_0(s)
+  0 &= \int_0^s \frac{d}{ds'}\left[\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) u_0(s')\right]\, ds' \\
+  &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_0(s) - f(\vec{\omega}).
 \end{align}
+Hence,
+\begin{equation}
+  u_0(s) = f(\omega) \exp\left(-\int_0^s \tilde{a}(s)\, ds\right).
+\end{equation}
+Then, we convert back from path length $s$ to the spatial coordinate $\vec{x}$ using
+\begin{equation}
+  L_0(\vec{l}(\vec{x}, \vec{\omega},s), \vec{\omega}) = u_0(s).
+\end{equation}
 
+Now, the $n \geq 1$ equations have a nonzero right-hand side, which we call the effective source, $g_n(s)$.
+This can be similarly extracted along a ray path as
+\begin{equation}
+  g_n(s) = \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}')
+  L_{n-1}(\vec{l}(\vec{x}, \vec{\omega'}, s), \vec{\omega}')\,d\vec{\omega}' - L_{n-1}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}).
+\end{equation}
+Then, since $g_n$ depends only on $L_{n-1}$, it is independent of $u_n$, which allows \eqref{eqn:asymptotics_n} and its boundary condition, \eqref{eqn:asymptotics_bc_n}, to be written as the first order, linear ordinary differential equation along the ray path,
+\begin{empheq}[left = \empheqlbrace]{align}
+  g_n(s) &= \frac{du_n}{ds}(s) + \tilde{a}(s)u_n(s) \\
+  u_n(0) &= 0
+\end{empheq}
+As with the $n=0$ equation, the solution is found by multiplying by the appropriate integrating factor.
 \begin{align}
-  g_n(s) = \int_{4\pi} \beta(\abs{\vec{\omega} - \vec{\omega}'})
-  L_{n-1}(\vec{l}(\vec{x}, \vec{\omega'}, s), \vec{\omega}')\,d\vec{\omega}' - L_{n-1}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}) \\ 
-  \frac{du_n}{ds}(s) + \tilde{a}(s)u_n(s) = g_n(s), u_n(0) = 0
+  \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) g_n(s) &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \frac{du_n}{ds} + \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \tilde{a}(s) u_n(s) \\
+  &= \frac{d}{ds}\left[\exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_n(s)\right].
 \end{align}
-
-Then,
+Then, integrating both sides yields
 \begin{align}
-  u_n(s) = \int_0^sg_n(s')\exp\left( -\int_{s''}^{s'}\tilde{a}(s'')\,ds'' \right)\, ds' \\
-  L_n(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}) = u_n(s)
+  \int_0^s\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) g_n(s')\, ds' &= \int_0^s \frac{d}{ds'}\left[\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) u_n(s')\right]\, ds' \\
+  &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_n(s).
 \end{align}
+Hence,
+\begin{align}
+  u_n(s) &= \exp\left(-\int_0^s \tilde{a}(s')\, ds'\right) \int_0^s\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) g_n(s')\, ds' \\
+  &= \int_0^sg_n(s')\exp\left( -\int_{s''}^{s'}\tilde{a}(s'')\,ds'' \right)\, ds'.
+\end{align}
+As before, the conversion back to spatial coordinates is
+\begin{equation}
+  L_n(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}) = u_n(s).
+\end{equation}

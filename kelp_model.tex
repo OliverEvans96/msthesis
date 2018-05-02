@@ -6,22 +6,21 @@ We take a probabilistic approach to describing the kelp.
 We begin by describing the distribution of kelp fronds, and through algebraic manipulation, we are able to assign to each point in space a probability that kelp occupies the location.
 
 \section{Physical Setup}
-Being a salt water species, macroalgae cultivation occurs primarily in the ocean, with the exception of the initial stage of growth, where microscopic kelp spores are inoculated onto a thread in a small laboratory pool.
-This thread is then wrapped around a large rope, which is placed in the ocean and generally suspended by buoys in one of two configurations: horizontal or vertical.
-Thus far, I am primarily concerned with modeling the vertical rope case, in which the kelp plants extend radially outward from the rope in all directions, which are made up of a single frond (leaf), stipe (stem) and holdfast (root structure).
-We consider a rectangular grid of such vertical ropes. 
+The life of cultivated macroalgae generally begins in the laboratory, where microscopic kelp spores are inoculated onto a thread in a small laboratory pool. % TODO: Cite
+This thread is wrapped around a large rope, which is placed in the ocean and generally suspended by buoys in one of two configurations: horizontal or vertical.
+We consider only the vertical rope case, in which the kelp plants extend radially outward from the rope in all directions.
+The mature \textit{Saccharina latissima} plant consists of a single frond (leaf), a stipe (stem) and a holdfast (root structure).
 Plants extending from each rope will shade both themselves and their neighbors
 to varying degrees based on the depth of the kelp, the rope spacing, the angle
-of incident light on the surface and the nature of scattering in the water.
-In addition, light will be naturally absorbed by the water to varying degrees as determined by the clarity of the water.
+of incident light on the surface of the water, and the optical properties of the medium.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=3.5in]{kelp_array}
-	\captionof{figure}{$4\times 4$ array of vertical kelp ropes}
+	\captionof{figure}{Rendering of four nearby vertical kelp ropes}
 \end{figure}
-\section{Coordinate System}
 
+\section{Coordinate System}
 Consider the rectangular domain
 \begin{align*}
   \xmin &\leq x \leq \xmax, \\
@@ -67,12 +66,6 @@ Then, calculating derivatives from \eqref{eqn:coords} yields
 \subsection{Frond Shape}
 \label{sec:shape}
 
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.7\textwidth]{kelp_photo/kite}
-%   \caption{Kite-like shape of \textit{Saccharina Latissima}}
-% \end{figure}
-
 \begin{figure}[h]
 	\centering
   \includegraphics[width=1.2in]{kelp_photo/kite}
@@ -85,7 +78,8 @@ Then, calculating derivatives from \eqref{eqn:coords} yields
 
 We assume the frond is a kite with length $l$ from base to tip, and width $w$ from left to right.
  %In figure \ref{fig:frond}, the base is shown at the bottom and the tip is shown at the top.
- The shortest distance from the base to the diagonal connecting the left and right corners is called $f_a$, and the shortest distance from that diagonal to the tip is called $f_b$.
+The proximal length is the shortest distance from the base to the diagonal connecting the left and right corners, and is notated as $f_a$
+Likewise, the distal length is the shortest distance from that diagonal to the tip, notated $f_b$.
  We have
  \begin{equation}
 	 f_a + f_b = l
@@ -126,6 +120,11 @@ Likewise, if the area is known, then the length is
 \subsection{Length and Angle Distributions}
 \label{sec:dist}
 We assume that frond lengths are normally distributed with mean $\mu_l$ and standard deviation $\sigma_l$.
+That is, the frond length distribution has the probability density function (PDF)
+\begin{equation}
+  P_l(l) = \frac{1}{\sqrt{2\pi\sigma_l^2}}\exp\left(\frac{(l-\mu_l)^2}{2\sigma_l^2}\right).
+\end{equation}
+
 We assume the frond angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution, defined on $[-\pi,\pi]$ rather than $(-\infty,\infty)$.
 The von Mises distribution has two parameters, $\mu$ and $\kappa$, which shift and sharpen its peak respectively, as shown in Figure \ref{fig:vonmises}.
 $\kappa$ can be considered analogous to $1/\sigma$ in the normal distribution.
@@ -133,7 +132,7 @@ Here, we use $\mu = \theta_w$ and $\kappa = v_w$.
 That is, in the case of zero current velocity, the frond angles are be distributed uniformly, while as current velocity increases, they become increasingly likely to be pointing in the direction of the current.
 Note that $\theta_w$ and $v_w$ vary over depth.
 
-The PDF for this distribution is
+The PDF for the von Mises distribution is
 \begin{equation}
 	P_{\theta_f}(\theta_f) = \frac{\exp\left(v_w\cos(\theta_f-v_w)\right)}{2\pi I_0(v_w)}
 \end{equation}
@@ -162,7 +161,7 @@ Given independent events $A$ and $B$,
 \end{equation}
 Then the probability of frond length $l$ and frond angle $\theta_f$ coinciding is 
 \begin{equation}
-	P_{2D}(\theta_f,l) = P_{\theta_f}(\theta_f) \cdot L(l)
+	P_{2D}(\theta_f,l) = P_{\theta_f}(\theta_f) \cdot P_l(l)
 \end{equation}
 A contour plot of this 2D distribution for a specific set of parameters is shown in figure \ref{fig:dist_2d}, where probability is represented by color in the 2D plane.
 Darker green represents higher probability, while lighter beige represents lower probability.
@@ -312,7 +311,7 @@ Now, integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ yields the proportion
 Then, multiplying $\tilde{P}_k$ by the number of fronds in the population $n$ of the depth layer gives the expected number of fronds occupying the point.
 Now, assuming a uniform thickness $t$ for all fronds, and a thickness $dz$ of the depth layer, we find the proportion of the grid cell occupied by kelp to be
 \begin{equation}
-  P_k = \frac{nt}{dz}\tilde{P}.
+  P_k = \frac{nt}{dz}\tilde{P}_k.
 \end{equation}
 
 Then, the effective absorption coefficient can be calculated at any point in space as
