@@ -1,140 +1,148 @@
-\chapter{SOLUTION PROCEDURE}
-\section{Calculate Kelp Density}
-\subsection{Relative coordinate system}
-\label{sec:rel_coords}
-To determine under what conditions a frond will occupy a given point, we begin by
-describing the shape of the frond in Cartesian and then converting to polar coordinates.
-Of primary interest are the edges connected to the frond tip.
-For convenience, we will use a relative coordinate system $(\theta',s)$ such that the line connecting the base to the tip is vertical, with the base at $(0,0)$.
-The Cartesian analogue of this coordinate system, $(x',y')$, has the following properties.
-\begin{align}
-	x' &= s\cos\theta' \\ 
-	y' &= s\sin\theta'
-\end{align}
-and
-\begin{align}
-	s &= \sqrt{x'^2+y'^2}
-\end{align}
-\vspace{-1em}
-\begin{align}
-	\theta' &= \atantwo(y, x)
-\end{align}
+\chapter{LIGHT MODEL}
+\label{chap:light}
 
-\subsection{Functional description of frond edge}
-With this coordinate system established, we can describe the outer two edges of the frond in Cartesian coordinates as a piecewise linear function connecting the left corner: $(-w/2,f_a)$, the tip: $(0,l)$, and the right corner: $(w/2,f_a)$.
-This function has the form
+Now that we have formulated the distribution of kelp throughout the medium, we introduce the radiative transfer equation, which is used to calculate the light field.
+
+\subsection{Optical Definitions}
+One of the most fundamental quantities in optics is radiant flux $\Phi$, which is the has units of energy per time.
+The quantity of primary interest in modeling the light field is radiance $L$, which is defined as the radiant flux per steradian per projected surface area perpendicular to the direction of propagation of the beam.
+That is,
 \begin{equation}
-	y'_f(x') = l-\sign(x')\frac{f_b}{w/2}x'.
+	L = \frac{d^2\Phi}{dA d\omega}
+\end{equation}
+We must now define a few inherent optical properties (IOPs) which depend only on the medium of propagation.
+
+\subsection{Characteristic Rays}
+Consider a fixed position $\vec{x}$ and direction $\vec{\omega}$ such that
+$\vec{\omega} \cdot \hat{z} \neq 0$.
+
+% TODO: Just call $\vec{x_0}$ a point, not a function. Call it the projection to the surface.
+
+Let $\vec{l}(\vec{x}, \vec{\omega}, s)$ denote the linear path containing $\vec{x}$
+with initial z coordinate given by
+\begin{equation}
+  z_0 =
+   \begin{cases}
+    0, & \vec{\omega} \cdot \hat{z} < 0 \\
+    \zmax, & \vec{\omega} \cdot \hat{z} > 0
+  \end{cases}
 \end{equation}
 
-Using the equations in section \ref{sec:rel_coords}, this can be written in polar coordinates after some rearrangement as
+Then,
 \begin{equation}
-	s_f'(\theta') = \frac{l}{\sin\theta' + S(\theta')\frac{2f_b}{w}\cos\theta'}
+  \vec{l}(\vec{x}, \vec{\omega}, s) = \frac{1}{\tilde{s}} (s\vec{x} + (\tilde{s} - s)\vec{x_0}(\vec{x}, \vec{\omega}))
 \end{equation}
+
 where
 \begin{equation}
-	S(\theta') = \sign(\theta'-\pi/2)
+  \vec{x_0}(\vec{x}, \vec{\omega}) = \vec{x} - \tilde{s} \vec{\omega}
 \end{equation}
+is the origin of the ray, and 
 
-Then, using the relationships in section \ref{sec:shape}, we can rewrite the above equation in terms of our frond ratios $f_s$ and $f_r$.
 \begin{equation}
-	\label{eq:rf_rel}
-	s_f'(\theta') = \frac{l}{\sin\theta' + S(\theta')\frac{2f_r}{1+f_s}\cos\theta'}
+  \tilde{s} = \frac{\vec{x} \cdot \hat{z} - z_0}{\vec{\omega} \cdot \hat{z}}
 \end{equation}
+is the path length from $\vec{x_0}(\vec{x}, \vec{\omega})$ to $\vec{x}$.
 
-\subsection{Absolute coordinates}
-\label{sec:abs_coords}
-To generalize to a frond pointed at an angle $\theta_f$, we will use the coordinate system $(\theta,s)$ such that
+\subsection{Colloquial Description}
+Denote the radiance at $\vec{x}$ in the direction $\vec{\omega}$ by $L(\vec{x}, \vec{\omega})$.
+As light travels along $\vec{l}(\vec{x}, \vec{\omega}, s)$, interaction with the
+medium produces three phenomena of interest:
+\begin{enumerate}
+  \item Radiance is decreased due to absorption.
+  \item Radiance is decreased due to scattering out of the path to other
+    directions.
+  \item Radiance is increased due to scattering into the path from other
+      directions.
+\end{enumerate}
+
+\subsection{IOPs}
+These phenomena are governed by three inherent optical properties (IOPs) of the
+medium.
+The absorption coefficient $a(\vec{x})$ (units m$^{-1}$) defines the
+proportional loss of radiance per unit length.
+The scattering coefficient $b$ (units m$^{-1}$), defines the proportional loss
+of radiance per unit length, and is assumed to be constant over space.
+
+The volume scattering function (VSF) $\beta(\Delta): [-1, 1] \to \RR^+$ (units sr$^{-1}$) defines the probability of light scattering at any given angle from its source.
+Formally, given two directions $\vec{\omega}$ and $\vec{\omega}'$, $\beta(\vec{\omega} \cdot \vec{\omega}')$ is the probability density of light scattering from $\vec{\omega}$ into $\vec{\omega}'$ (or vice-versa).
+Of course, since a single direction subtends no solid angle, the probability of scattering occuring exactly from $\vec{\omega}$ to $\vec{\omega}'$ is 0.
+Rather, we say that the probability of radiance being scattered from a direction $\omega$ into an element of solid angle $\Omega$ is $\int_\Omega \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'$.
+
+The VSF is normalized such that
 \begin{equation}
-	\theta = \theta' + \theta_f - \frac{\pi}{2}
+  \int_{-1}^1\beta(\Delta)\, d\Delta=\frac{1}{2\pi},
 \end{equation}
-Then, for a frond pointed at the arbitrary angle $\theta_f$, the function for the outer edges can be written as 
+so that for any $\omega$,
 \begin{equation}
-	\label{eq:rf_abs}
-	s_f(\theta) = s_f'\left(\theta - \theta_f + \frac{\pi}{2} \right)
+  \int_{4\pi}\beta(\vec{\omega}\cdot\vec{\omega}')\, d\vec{\omega}' = 1.
+\end{equation}
+i.e., the probability of light being scattered to some direction on the unit sphere is 1.
+
+\subsection{Equation of Transfer}
+Then, combining these phenomena, the Radiative Transfer equation along
+$\vec{l}(\vec{x}, \vec{\omega})$ becomes
+\begin{equation}
+  \label{eqn:rte1d}
+  \frac{dL}{ds}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega})
+  = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
+  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x})\, d\omega',
+\end{equation}
+where $\int_{4\pi}$ denotes integration over the unit sphere.
+
+Now, we have
+\begin{align*}
+  \frac{dL}{ds}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega})
+    &= \frac{d\vec{l}}{ds}(\vec{x}, \vec{\omega}, s) \cdot \nabla L(\vec{x}, \vec{\omega}', \vec{\omega}) \\
+    &= \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
+\end{align*}
+
+Then, the general form of the Radiative Transfer Equation is
+\begin{equation}
+  \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
+  = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
+  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\omega'
 \end{equation}
 
+or, equivalently,
+\begin{equation}
+  \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
+  + a(\vec{x})L(\vec{x}, \vec{\omega})
+  = b \left(
+    \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\omega'
+    - L(\vec{x}, \vec{\omega})
+  \right)
+\end{equation}
 
-\subsection{Conditions for occupancy}
-Consider a fixed frond of length $l$ at an angle $\theta_f$. The point
-$(\theta,s)$ is occupied by the frond if
+\subsection{Boundary Conditions}
+
+We use periodic boundary conditions in the $x$ and $y$ directions.
 \begin{align}
-	\left|\theta_f - \theta \right| < \alpha
-	\shortintertext{and}
-	s < s_f(\theta)
+  L\left((\xmin, y, z), \vec{\omega}\right) &= L\left((\xmax, y, z), \vec{\omega}\right) \\
+  L\left((x, \ymin, z), \vec{\omega}\right) &= L\left((x, \ymax, z), \vec{\omega}\right)
 \end{align}
 
-Equivalently, letting the point $(\theta,s)$ be fixed, a frond occupies the point if the following conditions are satisfied.
+In the $z$ direction, we specify a spatially uniform downwelling light just
+under the surface of the water by a function $f(\vec{\omega})$.
+Or if $\zmin>0$, then the radiance at $z=\zmin$ should be specified instead (as opposed to the radiance at the first grid cell center).
+
+Further, we assume that no upwelling light enters the domain from the bottom.
 \begin{align}
-	\theta - \alpha < \theta_f < \theta + \alpha
-	\label{eqn:rs_th}
-	\shortintertext{and}
-	l > l_{min}(\theta,s)
-	\label{eqn:rs_l}
+  L(\vec{x_s}, \vec{\omega}) &= f(\omega) \mbox{ if } \vec{\omega} \cdot \hat{z} > 0\\ 
+  L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0
 \end{align}
-where
+ 
+\section{Irradiance}
+Once the radiance $L$ is calculated everywhere, the irradiance is
 \begin{equation}
-	l_{min}(\theta,s) = s \cdot \frac{l}{s_f(\theta)}
+  I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\omega.
 \end{equation}
-
-
-Then, considering the point to be fixed, \eqref{eqn:rs_th} and \eqref{eqn:rs_l} define the spacial region $R_s(\theta,s)$ called the ``occupancy region for $(\theta,s)$'' with the property that if the tip of a frond lies within this region (i.e. $(\theta_f,l) \in R_s(\theta,s)$), then it occupies the point.
-$R_s(3\pi/4,3/2)$ is shown in blue in figure \ref{fig:shade_area} and the smallest possible occupying fronds for several values of $\theta_f$ are shown in various colors.
-Any frond longer than these at the same angle will also occupy the point.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=.75\linewidth]{shade_area}
-	\vspace{-2em}
-	\captionof{figure}{Outlines of minimum-length fronds for a variety of angles to occupy the point $(\theta,s)=(3\pi/4,3/2)$}
-	\label{fig:shade_area}
-\end{figure}
-
-\subsection{Probability of occupancy}
-% TODO: Double check
-We are interested in the probability that, given a fixed point $(\theta,s)$, values of $l$ and $\theta_f$ chosen from the distributions described in section \ref{sec:dist} will fall in the occupancy region.
-This is found by integrating $P_{2D}$ over the occupancy region for $(\theta,s)$, as depicted in figure \ref{fig:cart_shade}.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=.75\linewidth]{cart_shade}
-	\vspace{-3em}
-	\captionof{figure}{Contour plot of $P_{2D}(\theta_f,l)$ overlayed with the
-    region in the $\theta_f-l$ plane which results in a frond occupying the point $(\theta,s)=(3\pi/4,3/2)$}
-	\label{fig:cart_shade}
-\end{figure}
-
-Now, integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ yields the proportion of the population occupying the point $(\theta,s)$.
-\begin{align}
-		\tilde{P}_k(\theta,s,z)	&= \iint_{R_s(\theta,s)}
-								P_{2D}(\theta_f,l)
-								\,dl\,d\theta_f \nonumber \\
-							&= \int_{\theta-\alpha}^{\theta+\alpha} 
-								\int_{l_{min}(\theta_f)}^\infty
-								P_{2D}(\theta_f,l)
-								\,dl\,d\theta_f
-\end{align}
-
-% TODO: Revise. This is the first mention of grid cells.
-Then, multiplying $\tilde{P}_k$ by the number of fronds in the population $n$ of the depth layer gives the expected number of fronds occupying the point.
-Now, assuming a uniform thickness $t$ for all fronds, and a thickness $dz$ of the depth layer, we find the proportion of the grid cell occupied by kelp to be
+Integrating $I(\vec{x})$, which has units \SI{}{\W/m^2}, over the surface of a frond, produces the power (with units \SI{}{\W}) transmitted to the frond.
+This is discussed further in Section \ref{sec:perceived_irrad}
+This can be converted to moles of photons (also called einsteins) per second as
 \begin{equation}
-  P_k = \frac{nt}{dz}\tilde{P}.
+  \SI{1}{\W\per\m^2} = \SI{4.2}{\micro\mole \,photons\per\second}.
 \end{equation}
-
-Then, the effective absorption coefficient can be calculated at any point in space as
-\begin{equation}
-  a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w
-\end{equation}
-% TODO: Calculate absorption coefficient grid.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=.75\linewidth]{prob_shade}
-	\vspace{-2em}
-	\captionof{figure}{Contour plot of the probability of occupying sampled at 121 points using $\theta_f=2\pi/3,v_w=1$}
-	\label{fig:prob_shade}
-\end{figure}
 
 \section{Asymptotics}
 In clear waters where absorption is more important than scattering, an asymptotic expansion can be used whereby the light field is generated through a sequence of discrete scattering events.
