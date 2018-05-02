@@ -99,6 +99,18 @@ Self-shading may be a significant model feature, though, as light availability
 may impact the growth and composition of the kelp biomass, and thus the mixture
 of goods that may be derived.
 
-
-\section{Summary of Main Results}
-% TODO: Fill this in
+\section{Overview of Thesis}
+The remainder of this document is organized as follows.
+In Chapter \ref{chap:kelp}, we develop a probabilistic model to describe the spatial distribution of kelp by assuming simple distributions for the lengths and orientations of fronds.
+We begin Chapter \ref{chap:light} with a survey of fundamental radiometric quantities and optical properties of matter.
+We use the spatial kelp distribution from Chapter \ref{chap:kelp} to determine optical properties of the combined water-kelp medium.
+We then present the Radiative Transfer Equation, an integro-partial differential equation which describes the the light field as a function of position and angle.
+An asymptotic expansion is explored for cases where absorption dominates scattering in the medium, such as in very clear water or high kelp density.
+In Chapter \ref{chap:numerical}, details are given for the numerical solution of the equations from Chapters \ref{chap:kelp} and \ref{chap:light}.
+Both the full finite difference solution and the asymptotic approximation are described.
+Next, in Chapter \ref{chap:parameters}, we discuss the availability of necessary parameters in the literature.
+For those which are not readily available, we give rough estimates and briefly describe experimental methods for their determination.
+Then, in Chapter \ref{chap:model_analysis}, we investigate the necessary grid resolution for adequate accuracy in the full finite difference solution and compare to the asymptotic approximation for a few parameter sets.
+Further, we determine the effect of varying a few key parameters on the light field predicted by the asymptotic approximation.
+Afterwards, we use the light model developed here in a full lifecycle simulation of kelp growth and compare the light field and biomass production to those predicted by a simpler 1D exponential decay light model.
+Finally, we conclude with Chapter \ref{chap:conclusion} by giving a brief summary of the model, discuss and its performance, and suggest improvements and avenues for future work.

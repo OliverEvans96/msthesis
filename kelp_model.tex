@@ -1,5 +1,9 @@
 \chapter{KELP MODEL}
-\label{label:kelp}
+\label{chap:kelp}
+
+In order to properly model the spatial distribution of light around the kelp, it is first necessary to formulate a spatial description of the kelp, which we do in this chapter.
+We take a probabilistic approach to describing the kelp.
+We begin by describing the distribution of kelp fronds, and through algebraic manipulation, we are able to assign to each point in space a probability that kelp occupies the location.
 
 \section{Physical Setup}
 Being a salt water species, macroalgae cultivation occurs primarily in the ocean, with the exception of the initial stage of growth, where microscopic kelp spores are inoculated onto a thread in a small laboratory pool.
@@ -16,7 +20,7 @@ In addition, light will be naturally absorbed by the water to varying degrees as
 	\includegraphics[width=3.5in]{kelp_array}
 	\captionof{figure}{$4\times 4$ array of vertical kelp ropes}
 \end{figure}
-\subsection{Coordinate System}
+\section{Coordinate System}
 
 Consider the rectangular domain
 \begin{align*}
@@ -58,9 +62,9 @@ Then, calculating derivatives from \eqref{eqn:coords} yields
 \end{figure}
 
 
-\section{Kelp Model}
+\section{Population Distributions}
 
-\subsection{Frond shape}
+\subsection{Frond Shape}
 \label{sec:shape}
 
 % \begin{figure}[h]
@@ -119,8 +123,8 @@ Likewise, if the area is known, then the length is
   \label{eqn:length-from-area}
 \end{equation}
 
-\subsection{Length and angle distributions}
-\label{sec:angle_dist}
+\subsection{Length and Angle Distributions}
+\label{sec:dist}
 We assume that frond lengths are normally distributed with mean $\mu_l$ and standard deviation $\sigma_l$.
 We assume the frond angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution, defined on $[-\pi,\pi]$ rather than $(-\infty,\infty)$.
 The von Mises distribution has two parameters, $\mu$ and $\kappa$, which shift and sharpen its peak respectively, as shown in Figure \ref{fig:vonmises}.
@@ -146,7 +150,7 @@ Notice that unlike the normal distribution, the von Mises distribution approache
 	\label{fig:vonmises}
 \end{figure}
 
-\subsection{Combined 2D length-angle distribution}
+\subsection{Joint Length-Orientation Distribution}
 \label{sec:2d_dist}
 The previous two distributions can reasonably be assumed to be independent of one another. That is, the angle of the frond does not depend on the length, or vice versa.
 Therefore, the probability of a frond simultaneously having a given frond length and angle is the product of their individual probabilities.
@@ -188,13 +192,13 @@ This is currently not taken into consideration in this model.
 	\label{fig:kelp_sample}
 \end{figure}
 
-\section{Calculate Kelp Density}
-\subsection{Relative coordinate system}
-\label{sec:rel_coords}
+\section{Spatial Distribution}
+\subsection{Rotated Coordinate System}
+\label{sec:rot_coords}
 To determine under what conditions a frond will occupy a given point, we begin by
 describing the shape of the frond in Cartesian and then converting to polar coordinates.
 Of primary interest are the edges connected to the frond tip.
-For convenience, we will use a relative coordinate system $(\theta',s)$ such that the line connecting the base to the tip is vertical, with the base at $(0,0)$.
+For convenience, we will use a rotated coordinate system $(\theta',s)$ such that the line connecting the base to the tip is vertical, with the base at $(0,0)$.
 The Cartesian analogue of this coordinate system, $(x',y')$, has the following properties.
 \begin{align}
 	x' &= s\cos\theta' \\ 
@@ -209,14 +213,14 @@ and
 	\theta' &= \atantwo(y, x)
 \end{align}
 
-\subsection{Functional description of frond edge}
+\subsection{Functional Description of Frond Edge}
 With this coordinate system established, we can describe the outer two edges of the frond in Cartesian coordinates as a piecewise linear function connecting the left corner: $(-w/2,f_a)$, the tip: $(0,l)$, and the right corner: $(w/2,f_a)$.
 This function has the form
 \begin{equation}
 	y'_f(x') = l-\sign(x')\frac{f_b}{w/2}x'.
 \end{equation}
 
-Using the equations in section \ref{sec:rel_coords}, this can be written in polar coordinates after some rearrangement as
+Using the equations in Section \ref{sec:rot_coords}, this can be written in polar coordinates after some rearrangement as
 \begin{equation}
 	s_f'(\theta') = \frac{l}{\sin\theta' + S(\theta')\frac{2f_b}{w}\cos\theta'}
 \end{equation}
@@ -225,13 +229,13 @@ where
 	S(\theta') = \sign(\theta'-\pi/2)
 \end{equation}
 
-Then, using the relationships in section \ref{sec:shape}, we can rewrite the above equation in terms of our frond ratios $f_s$ and $f_r$.
+Then, using the relationships in Section \ref{sec:shape}, we can rewrite the above equation in terms of our frond ratios $f_s$ and $f_r$.
 \begin{equation}
 	\label{eq:rf_rel}
 	s_f'(\theta') = \frac{l}{\sin\theta' + S(\theta')\frac{2f_r}{1+f_s}\cos\theta'}
 \end{equation}
 
-\subsection{Absolute coordinates}
+\subsection{Absolute Coordinates}
 \label{sec:abs_coords}
 To generalize to a frond pointed at an angle $\theta_f$, we will use the coordinate system $(\theta,s)$ such that
 \begin{equation}
@@ -244,7 +248,7 @@ Then, for a frond pointed at the arbitrary angle $\theta_f$, the function for th
 \end{equation}
 
 
-\subsection{Conditions for occupancy}
+\subsection{Conditions for Occupancy}
 Consider a fixed frond of length $l$ at an angle $\theta_f$. The point
 $(\theta,s)$ is occupied by the frond if
 \begin{align}
@@ -279,12 +283,12 @@ Any frond longer than these at the same angle will also occupy the point.
 	\label{fig:shade_area}
 \end{figure}
 
-\subsection{Probability of occupancy}
+\subsection{Probability of Occupancy}
 % TODO: Double check
-We are interested in the probability that, given a fixed point $(\theta,s)$, values of $l$ and $\theta_f$ chosen from the distributions described in section \ref{sec:dist} will fall in the occupancy region.
+We are interested in the probability that, given a fixed point $(\theta,s)$, values of $l$ and $\theta_f$ chosen from the distributions described in Section \ref{sec:dist} will fall in the occupancy region.
 This is found by integrating $P_{2D}$ over the occupancy region for $(\theta,s)$, as depicted in figure \ref{fig:cart_shade}.
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=.75\linewidth]{cart_shade}
 	\vspace{-3em}

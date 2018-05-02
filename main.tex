@@ -29,6 +29,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 %\usepackage{gensymb}
+\usepackage{xcolor}
 \usepackage{mathtools}
 \usepackage{etoolbox}
 \usepackage{booktabs}
@@ -39,6 +40,7 @@
 \usepackage{caption}
 \usepackage{natbib}
 \usepackage{siunitx}
+\usepackage{listings}
 \usepackage{bm}
 \usepackage[outdir=./eps2pdf/]{epstopdf}
 \graphicspath{
@@ -54,6 +56,25 @@
 
 \setlength{\tabcolsep}{12pt}
 
+\definecolor{commentcolor}{HTML}{752000}
+\definecolor{keywordcolor}{HTML}{007520}
+
+% Listings
+\lstset{
+    language=[90]Fortran,
+    inputpath=../kelp/code/fortran/src,
+    basicstyle=\linespread{0.8}\ttfamily,
+    commentstyle=\rmfamily,
+    keywordstyle=\color{commentcolor},
+    commentstyle=\color{keywordcolor},
+    showstringspaces=false,
+    numbers=left,
+    breaklines=true,
+    numbersep=1em,
+    frame=leftline,
+    tabsize=4,
+    xleftmargin=.5in,
+    xrightmargin=.5in}
 
 \DeclareMathOperator{\atantwo}{atan2}
 
@@ -165,8 +186,7 @@
 %followed by n \input{filename} commands, similar to the \input{chapx}
 %commands above.
 % DO NOT USE SECTIONS OR SUBSECTIONS IN AN APPENDIX OR APPENDICES
-%\appendix{3}
-% \input{appendixa}
-% \input{appendixb}
-% \input{appendixc}
+\appendix{2}
+\input{ray_tracing}
+% \input{fortran_code}
 \end{document}

@@ -3,16 +3,61 @@
 
 Now that we have formulated the distribution of kelp throughout the medium, we introduce the radiative transfer equation, which is used to calculate the light field.
 
-\subsection{Optical Definitions}
+\section{Optical Definitions}
+
+\subsection{Radiometric Quantities}
+
 One of the most fundamental quantities in optics is radiant flux $\Phi$, which is the has units of energy per time.
 The quantity of primary interest in modeling the light field is radiance $L$, which is defined as the radiant flux per steradian per projected surface area perpendicular to the direction of propagation of the beam.
 That is,
+
 \begin{equation}
 	L = \frac{d^2\Phi}{dA d\omega}
 \end{equation}
-We must now define a few inherent optical properties (IOPs) which depend only on the medium of propagation.
 
-\subsection{Characteristic Rays}
+Once the radiance $L$ is calculated everywhere, the irradiance is
+\begin{equation}
+  I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\omega.
+\end{equation}
+Integrating $I(\vec{x})$, which has units \SI{}{\W/m^2}, over the surface of a frond, produces the power (with units \SI{}{\W}) transmitted to the frond.
+This is discussed further in Section \ref{sec:perceived_irrad}
+
+Irradiance can be converted to moles of photons (also called Einsteins) per second as
+\begin{equation}
+  \SI{1}{\W\per\m^2} = \SI{4.2}{\micro\mole \,photons\per\second}.
+\end{equation}
+
+
+\subsection{Inherent Optical Properties}
+% TODO: Edit
+We must now define a few inherent optical properties (IOPs) which depend only on the medium of propagation.
+These phenomena are governed by three inherent optical properties (IOPs) of the
+medium.
+The absorption coefficient $a(\vec{x})$ (units m$^{-1}$) defines the
+proportional loss of radiance per unit length.
+The scattering coefficient $b$ (units m$^{-1}$), defines the proportional loss
+of radiance per unit length, and is assumed to be constant over space.
+
+The volume scattering function (VSF) $\beta(\Delta): [-1, 1] \to \RR^+$ (units sr$^{-1}$) defines the probability of light scattering at any given angle from its source.
+Formally, given two directions $\vec{\omega}$ and $\vec{\omega}'$, $\beta(\vec{\omega} \cdot \vec{\omega}')$ is the probability density of light scattering from $\vec{\omega}$ into $\vec{\omega}'$ (or vice-versa).
+Of course, since a single direction subtends no solid angle, the probability of scattering occurring exactly from $\vec{\omega}$ to $\vec{\omega}'$ is 0.
+Rather, we say that the probability of radiance being scattered from a direction $\omega$ into an element of solid angle $\Omega$ is $\int_\Omega \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'$.
+
+The VSF is normalized such that
+\begin{equation}
+  \int_{-1}^1\beta(\Delta)\, d\Delta=\frac{1}{2\pi},
+\end{equation}
+so that for any $\omega$,
+\begin{equation}
+  \int_{4\pi}\beta(\vec{\omega}\cdot\vec{\omega}')\, d\vec{\omega}' = 1.
+\end{equation}
+i.e., the probability of light being scattered to some direction on the unit sphere is 1.
+
+
+\section{The Radiative Transfer Equation}
+% TODO: Blurb
+
+\subsection{Ray Notation}
 Consider a fixed position $\vec{x}$ and direction $\vec{\omega}$ such that
 $\vec{\omega} \cdot \hat{z} \neq 0$.
 
@@ -55,29 +100,6 @@ medium produces three phenomena of interest:
   \item Radiance is increased due to scattering into the path from other
       directions.
 \end{enumerate}
-
-\subsection{IOPs}
-These phenomena are governed by three inherent optical properties (IOPs) of the
-medium.
-The absorption coefficient $a(\vec{x})$ (units m$^{-1}$) defines the
-proportional loss of radiance per unit length.
-The scattering coefficient $b$ (units m$^{-1}$), defines the proportional loss
-of radiance per unit length, and is assumed to be constant over space.
-
-The volume scattering function (VSF) $\beta(\Delta): [-1, 1] \to \RR^+$ (units sr$^{-1}$) defines the probability of light scattering at any given angle from its source.
-Formally, given two directions $\vec{\omega}$ and $\vec{\omega}'$, $\beta(\vec{\omega} \cdot \vec{\omega}')$ is the probability density of light scattering from $\vec{\omega}$ into $\vec{\omega}'$ (or vice-versa).
-Of course, since a single direction subtends no solid angle, the probability of scattering occuring exactly from $\vec{\omega}$ to $\vec{\omega}'$ is 0.
-Rather, we say that the probability of radiance being scattered from a direction $\omega$ into an element of solid angle $\Omega$ is $\int_\Omega \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'$.
-
-The VSF is normalized such that
-\begin{equation}
-  \int_{-1}^1\beta(\Delta)\, d\Delta=\frac{1}{2\pi},
-\end{equation}
-so that for any $\omega$,
-\begin{equation}
-  \int_{4\pi}\beta(\vec{\omega}\cdot\vec{\omega}')\, d\vec{\omega}' = 1.
-\end{equation}
-i.e., the probability of light being scattered to some direction on the unit sphere is 1.
 
 \subsection{Equation of Transfer}
 Then, combining these phenomena, the Radiative Transfer equation along
@@ -132,21 +154,9 @@ Further, we assume that no upwelling light enters the domain from the bottom.
   L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0
 \end{align}
  
-\section{Irradiance}
-Once the radiance $L$ is calculated everywhere, the irradiance is
-\begin{equation}
-  I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\omega.
-\end{equation}
-Integrating $I(\vec{x})$, which has units \SI{}{\W/m^2}, over the surface of a frond, produces the power (with units \SI{}{\W}) transmitted to the frond.
-This is discussed further in Section \ref{sec:perceived_irrad}
-This can be converted to moles of photons (also called einsteins) per second as
-\begin{equation}
-  \SI{1}{\W\per\m^2} = \SI{4.2}{\micro\mole \,photons\per\second}.
-\end{equation}
-
-\section{Asymptotics}
+\section{Low-Scattering Approximation}
 In clear waters where absorption is more important than scattering, an asymptotic expansion can be used whereby the light field is generated through a sequence of discrete scattering events.
-\subsection{Substitute asymptotic series}
+\subsection{Asymptotic Expansion}
 Taking $b$ to be small, we introduce the asymptotic series
 \newcommand{\Lasym}{L_0(\vec{x},\vec{\omega}) + b L_1(\vec{x},\vec{\omega}) + b^2 L_2(\vec{x},\vec{\omega}) + \cdots}
 \newcommand{\Lasyms}{L_0(\vec{x_s},\vec{\omega}) + b L_1(\vec{x_s},\vec{\omega}) + b^2 L_2(\vec{x_s},\vec{\omega}) + \cdots}
@@ -198,7 +208,9 @@ which becomes
 \end{align}
 
  
-\subsection{Rewrite as ODE along ray path}
+\subsection{Analytical Solution}
+\label{sec:asymptotic_sol}
+
 For all $\vec{x}, \vec{\omega}$, let
 \begin{align}
   \tilde{a}(s) &= a(\vec{l}(\vec{x}, \vec{\omega}), s), \\ 

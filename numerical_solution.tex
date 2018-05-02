@@ -4,14 +4,14 @@
 In this chapter, the mathematical details involved in the numerical solution of the previously described equations are presented.
 It is assumed that this model is run in conjunction with a model describing the growth of kelp over its life cycle, which calls this light model periodically to update the light field.
 
-\section{Kelp Numerics}
+\section{Super-Individuals}
 
 The algorithm described in this chapter has two components.
 First, a probabilistic description of the kelp is generated at each point in a discrete spatial grid.
 Second, optical properties of the resulting kelp-water medium are derived, and the light field is calculated.
 The first component is described here.
 
-\subsection{Length Distribution}
+\subsection{Frond Length Distribution}
 
 Rather than model each kelp frond, a subset of the population, called super-individuals, are modelled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
 Specifically, at each depth $k$, there are $n$ super-individuals, indexed by $i$.
@@ -93,7 +93,7 @@ The surface radiance boundary condition is treated separately.
 \begin{figure}[H]
   \centering
   \includegraphics[width=8cm]{angulargrid.pdf}
-  \caption{Angular grid}
+  \caption{Angular grid at each point in space}
   \label{fig:angular_grid}
 \end{figure}
 
@@ -418,137 +418,17 @@ Number of nonzero RHS entries: $n_xn_yn_z/2$
 
 Total number of nonzero matrix entries: $n_xn_yn_{\vec{\omega}} \left[n_z(n_{\vec{\omega}}+6)-1 \right]$
 
-\section{GMRES}
+\subsection{GMRES}
 % TODO: Fill this in
 GMRES is a Krylov Subspace method. These work like this. Here's what's special
 about GMRES. Advantages. Drawbacks. Not practical for running in SINMOD.
 
 \section{Numerical Asymptotics}
 
-\subsection{Ray Tracing Algorithm}
-% TODO: Revise
-\subsubsection{Extract values along path}
+Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the discrete grid can be constructed as described in Appendix \ref{chap:ray_tracing}, from which we can extract piecewise constant variations of the path absorption coefficient, $\tilde{a}(s)$ and the effective source, $g_n(s)$ from \ref{sec:asymptotic_sol}.
+Then, we proceed as follows.
 
-In order to evaluate a path integral through the previously described grid, it
-is first necessary to construct a one-dimensional piecewise constant integrand
-which is discontinuous at unevenly spaced points corresponding to the
-intersections between the path and edges in the spatial grid.
-
-Consider a grid center $\vec{p_1} = (p_{1x},p_{1y},p_{1z})$ and a corresponding path $\vec{l}(\vec{x_1}, \vec{\omega}, s)$.
-To find the location of discontinuities in the itegrand, we first calculate the
-distance from its origin, $\vec{p_0} = \vec{x_0}(\vec{p_1}, \vec{\omega}) = (p_{0x}, p_{0y}, p_{0z})$ to grid edges in each dimension
-separately.
-
-Given
-\begin{align}
-  x_i &= p_{0x} + \frac{s_i^x}{\tilde{s}}(p_{1x}-p_{0x}) \\
-  y_j &= p_{0y} + \frac{s_j^y}{\tilde{s}}(p_{1y}-p_{0y}) \\
-  z_k &= p_{0z} + \frac{s_k^z}{\tilde{s}}(p_{1z}-p_{0z})
-\end{align}
-
-we have
-\begin{align}
-  s_i^x &= \tilde{s}\frac{x_i-p_{0x}}{p_{1x}-p_{0x}} \\
-  s_i^y &= \tilde{s}\frac{y_i-p_{0y}}{p_{1y}-p_{0y}} \\
-  s_i^z &= \tilde{s}\frac{z_i-p_{0z}}{p_{1z}-p_{0z}} \\
-\end{align}
-
-
-We also keep a record for each dimension specifying whether the ray increases
-or decreases in the dimension. Let
-\begin{align}
-  \delta_x &= \sign(p_{0x}-p_{1x}) \\
-  \delta_y &= \sign(p_{0y}-p_{1y}) \\
-  \delta_z &= \sign(p_{0z}-p_{1z})
-\end{align}
-
-For convenience, we also store a closely related quantity, $\sigma$ with a value 1 for
-increasing rays and 0 for decreasing rays in each dimension
-\begin{align}
-  \sigma_x = (\delta_x+1)/2 \\
-  \sigma_y = (\delta_y+1)/2 \\
-  \sigma_z = (\delta_z+1)/2
-\end{align}
-
-For this algorithm, we keep two sets of indices. $(i,j,k)$ indexes the grid
-cell, and will be used for extracting physical quantities from each cell along
-the path.
-Meanwhile, $(i^e,j^e,k^e)$ will index the edges between grid cells, beginning
-after the first cell. i.e., $i^e=1$ refers not to the plane $x=\xmin$, but to $x=\xmin+dx$.
-
-Let $(i_0, j_0, k_0)$ be the indices of the grid cell containing $\vec{p_0}$.
-
-That is,
-
-\begin{align}
-  i_0 &= \ceil\left(\frac{p_{0x}-\xmin}{dx}\right) \\
-  j_0 &= \ceil\left(\frac{p_{0y}-\ymin}{dy}\right) \\
-  k_0 &= \ceil\left(\frac{p_{0z}-\zmin}{dz}\right)
-\end{align}
-
-Then,
-\begin{align}
-  i_0^e &= i_0 + \sigma_x \\
-  j_0^e &= j_0 + \sigma_y \\
-  k_0^e &= k_0 + \sigma_z
-\end{align}
-
-Now, we calculate the distance from $p_0$ along the path to edges in each dimension.
-\begin{align}
-  s_i^x = \hat{s}\frac{x_i^e-p_{0x}}{p_{1x}-p_{0x}} \\
-  s_j^y = \hat{s}\frac{y_j^e-p_{0y}}{p_{1y}-p_{0y}} \\
-  s_k^z = \hat{s}\frac{z_k^e-p_{0z}}{p_{1z}-p_{0z}}
-\end{align}
-
-For each grid cell, we check the path lengths required to cross the next $x$, $y$, and
-$z$ edge-planes.
-Then, we move to the next grid cell in that dimension.
-That is,
-
-% TODO: Check
-* We also track $s$, the path length.
-
-Consider $i,j,k$ fixed (denoting the current grid cell).
-
-\begin{align}  
-  d = \mbox{argmin}_{x,y,z} \left\{ s_i^x-s, s_j^y-s, s_k^z \right\}
-\end{align}
-
-%Then,
-% TODO: Fix this
-* This doesn't quite make sense yet.
-\begin{align}
-  \begin{cases}
-    i = i+\delta_x, & \mbox{if } d=x \\
-    j = j+\delta_y, & \mbox{if } d=y \\
-    z = k+\delta_z, & \mbox{if } d=z
-  \end{cases}
-\end{align}
-
-and
-
-\begin{align}
-  \begin{cases}
-    i^e = i^e+\delta_x, & \mbox{if } d=x \\
-    j^e = j^e+\delta_y, & \mbox{if } d=y \\
-    z^e = k^e+\delta_z, & \mbox{if } d=z
-  \end{cases}
-\end{align}
-
-
-Then, move to the adjacent grid cell in the dimension which requires the shortest
-step to reach an edge. Save $ds$ of the path through this cell. Also save abs.
-coef. and source.
-% TODO: Improve
-** Definitely needs more work**
-
-- absorption coefficient ($\tilde{a}(s)$)
-
-- effective source ($g_n(s)$)
-
-\subsubsection{Ray integral}
-
-Here are the equations for calculating the double integral over ray paths
+* Here are the equations for calculating the double integral over ray paths
 required for the asymptotics. It will hopefully make more sense once I add words
 to accompany the symbols.
 
