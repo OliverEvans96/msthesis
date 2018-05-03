@@ -21,7 +21,7 @@ For example, the MACROSEA project is a four year international research collabor
 The project includes both cultivators and scientists, working to develop a precise understanding of the full life cycle of kelp and its interaction with its environment.
 A fundamental aspect of this endeavor is the development of mathematical models to describe the growth of kelp.
 
-Recently, a growth model \cite{broch_modelling_2012} for S. latissima has been produced and integrated into the SINMOD \cite{wassmann_modelling_2006} hydrodynamic and ecosystem model of SINTEF.
+Recently, a growth model\cite{broch_modelling_2012} for S. latissima has been produced and integrated into the SINMOD\cite{wassmann_modelling_2006} hydrodynamic and ecosystem model of SINTEF.
 One aspect of the model which has yet to be fully developed is the availability of light, considering factors such as absorption and scattering by the aquatic medium, as well as by the kelp itself.
 This thesis contributes to this effort by developing a first-principles model of the light field in a kelp farming environment.
 As a first step, a model for the spatial distribution of kelp is developed.
@@ -44,14 +44,14 @@ This model can be used independently, or in conjunction with a kelp growth model
 Mathematical modeling of macroalgae growth is not a new topic, although it is a reemerging one.
 Several authors in the second half of the twentieth century were interested in describing the growth and composition of the macroalgae \textit{Macrocystis pyrifera}, commonly known as ``giant kelp,'' which grows prolifically off the coast of southern California.
 The first such mathematical model was developed by W.J. North for the Kelp Habitat Improvement Project at the California Institute of Technology in 1968 using seven variables.
-By 1974, Nick Anderson greatly expanded on North's work, and created the first comprehensive model of kelp growth which he programmed using FORTRAN \cite{anderson_mathematical_1974}.
+By 1974, Nick Anderson greatly expanded on North's work, and created the first comprehensive model of kelp growth which he programmed using FORTRAN\cite{anderson_mathematical_1974}.
 In his model, he accounts for solar radiation intensity as a function of time of year and time of day, and refraction on the surface of the water.
 He uses a simple model for shading, simply specifying a single parameter which determines the percentage of light that is allowed to pass through the kelp canopy floating on the surface of the water.
 He also accounts for attenuation due to turbidity using Beer's Law.
 Using this data on the availability of light, he calculates the photosynthesis rates and the growth experienced by the kelp.
 
 Over a decade later in 1987, G.A.
-Jackson expanded on Anderson's model for \textit{Macrocystis pyrifera}, with an emphasis on including more environmental parameters and a more complete description of the growth and decay of the kelp \cite{jackson_modelling_1987}. 
+Jackson expanded on Anderson's model for \textit{Macrocystis pyrifera}, with an emphasis on including more environmental parameters and a more complete description of the growth and decay of the kelp\cite{jackson_modelling_1987}. 
 The author takes into account respiration, frond decay, and sub-canopy light attenuation due to self-shading.
 Light attenuation is represented with a simple exponential model, and self-shading appears as an added term in the decay coefficient.
 The author does not consider radial or angular dependence on shading. %TODO:  Check this. Was previously ambiguous.
@@ -59,18 +59,18 @@ Jackson also expands Anderson's definition of canopy shading, treating the canop
 While this is a significant improvement over Anderson's light model, it is still rather simplistic.
 
 Both Anderson's and Jackson's model were carried out by numerically solving a system of differential equations over small time intervals.
-In 1990, M.A. Burgman and V.A. Gerard developed a stochastic population model \cite{burgman_stage-structured_1990}.
+In 1990, M.A. Burgman and V.A. Gerard developed a stochastic population model\cite{burgman_stage-structured_1990}.
 This approach is quite different, and functions by dividing kelp plants into groups based on size and age and generating random numbers to determine how the population distribution over these groups changes over time based on measured rates of growth, death, decay, light availability, etc.
-In the same year, Nyman et. al. published a similar model alongside a Markov chain model, and compared the results with experimental data collected in New Zealand \cite{nyman_macrocystis_1990}.
+In the same year, Nyman et. al. published a similar model alongside a Markov chain model, and compared the results with experimental data collected in New Zealand\cite{nyman_macrocystis_1990}.
 
-In 1996 and 1998 respectively, P. Duarte and J.G. Ferreira used the size-class approach to create a more general model of macroalgae growth, and Yoshimori et. al. created a differential equation model of \textit{Laminaria religiosa} with specific emphasis on temperature dependence of growth rate \cite{duarte_model_1997,yoshimori_mathematical_1998}.
+In 1996 and 1998 respectively, P. Duarte and J.G. Ferreira used the size-class approach to create a more general model of macroalgae growth, and Yoshimori et. al. created a differential equation model of \textit{Laminaria religiosa} with specific emphasis on temperature dependence of growth rate\cite{duarte_model_1997,yoshimori_mathematical_1998}.
 These were the some of the first models of kelp growth that did not specifically relate to \textit{Macrocystis pyrifera} (``giant kelp''). 
 Initially, there was a great deal of excitement about this species due to it's incredible size and growth rate, but difficulties in harvesting and negative environmental impacts have caused scientists to investigate other kelp species. % TODO: Cite
 
 \section{Background on Radiative Transfer}
 In terms of optical quantities, of primary interest is in the radiance at each point from all directions, which affects the photosynthetic rate of the kelp, and therefore the total amount of biomass producible in a given area as well as the total nutrient remediation potential.
 The equation governing the radiance throughout the system is known as the Radiative Transfer Equation (RTE), which has been largely unutilized in the fields of oceanography and aquaculture.
-The Radiative Transfer Equation has been used primarily in stellar astrophysics; it's application to marine biology is fairly recent \cite{mobley_radiative_2001}.
+The Radiative Transfer Equation has been used primarily in stellar astrophysics; it's application to marine biology is fairly recent\cite{mobley_radiative_2001}.
 In its full form, radiance is a function of 3 spatial dimensions, 2 angular dimensions, and frequency, making for an incredibly complex problem. % TODO: Cite?
 In this work, frequency is ignored, only monochromatic radiation is considered.
 The RTE states that along a given path, radiance is decreased by absorption and scattering out of the path, while it is increased by emission and scattering into the path.

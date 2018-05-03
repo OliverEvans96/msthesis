@@ -27,6 +27,22 @@ Irradiance is sometimes given in units of moles of photons (a mole of photons is
   \SI{1}{\W\per\m^2} = \SI{4.2}{\micro\mole \,photons\per\second}.
 \end{equation*}
 
+\subsection{Perceived Irradiance}
+\label{sec:perceived_irrad}
+
+The average irradiance experienced by a kelp frond in depth layer $k$ is
+\newcommand{\Iperk}{\tilde{I}_k}
+\begin{equation*}
+   \Iperk = \frac{\sum_{ij}P_{ijk}I_{ijk}}{\sum_{ij}P_{ijk}}.
+\end{equation*}
+
+The irradiance perceived by the kelp is expected to be slightly lower than the average irradiance,
+\begin{equation*}
+  \bar{I}_k = \frac{\sum_{ij}I_{ijk}}{n_x n_y}
+\end{equation*}
+since the kelp is more densely located at the center of the domain where the light field is reduced,
+whereas the simple average is influenced by regions of higher irradiance at the edges of the domain where kelp is not present.
+
 \subsection{Inherent Optical Properties}
 % TODO: Edit
 We must now define a few inherent optical properties (IOPs) which depend only on the medium of propagation.

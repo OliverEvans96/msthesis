@@ -6,13 +6,6 @@ It is assumed that this model is run in conjunction with a model describing the 
 
 \section{Super-Individuals}
 
-The algorithm described in this chapter has two components.
-First, a probabilistic description of the kelp is generated at each point in a discrete spatial grid.
-Second, optical properties of the resulting kelp-water medium are derived, and the light field is calculated.
-The first component is described here.
-
-\subsection{Frond Length Distribution}
-
 Rather than model each kelp frond, a subset of the population, called super-individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
 Specifically, at each depth $k$, there are $n$ super-individuals, indexed by $i$.
 Super-individual $i$ has a frond area $A_{ki}$ and represents $n_{ki}$ individual fronds.
@@ -30,6 +23,8 @@ We then assume that frond lengths are normally distributed in each depth layer
 with mean $\mu_k$ and standard deviation $\sigma_k$.
 
 \section{Discrete Grid}
+\label{sec:grid}
+
 The following is a description of the spatial-angular grid used in the numerical implementation of this model.
 It is assumed that all simulated quantities are constant over the interior of a grid cell.
 Other legitimate choices of grids exists; this one was chosen for its relative simplicity.
@@ -91,22 +86,14 @@ the midpoint rule is employed for both spatial and angular integration.
 Presented here is a basic derivation of the formulas for integration in the spatial-angular grid.
 Further details are found in Appendix \ref{chap:ray_tracing}.
 
-Define the \textit{spatial characteristic function}
+\subsection{Spatial Quadrature}
+Define the \textit{spatial characteristic function} as
 \begin{equation*}
   \mathcal{X}^X_{ijk}(\vec{x}) = \begin{cases}
     1, & \vec{x} \in X_{ijk} \\
-    0, & \mbox{otherwise}
-  \end{cases}
-\end{equation*}
-and the \textit{angular characteristic function}
-\begin{equation*}
-  \mathcal{X}^\Omega_p(\vec{\omega}) = \begin{cases}
-    1, & \vec{\omega} \in \Omega_p \\
     0, & \mbox{otherwise}.
   \end{cases}
 \end{equation*}
-
-\subsection{Spatial Quadrature}
 The double integral of a function $f(\vec{x})$ over a depth layer $k$ is approximated as
 \begin{align*}
   \int_\xmin^\xmax\int_\ymin^\ymax f(x, y, z_k)\, dy\, dx &\approx \int_\xmin^\xmax \int_\ymin^\ymax \sum_{i=1}^{n_x}\sum_{j=1}^{n_y} \mathcal{X}^X_{ijk}(x,y,z_k) f(x_i, y_j, z_k)\, dy\, dx \\
@@ -116,12 +103,21 @@ The double integral of a function $f(\vec{x})$ over a depth layer $k$ is approxi
 \end{align*}
 The path integral of $f(\vec{x})$ over a path $\vec{l}(s)$ from $s=0$ to $s=\tilde{s}$ is
 \begin{align*}
-  \int_0^{\tilde{s}} f(\vec{l}(s))\, ds &= \sum_{ijk} f(x_i, y_j, z_k)\, ds_{ijk},
+  \int_0^{\tilde{s}} f(\vec{l}(s))\, ds &= \sum_{i=1}^{n_x}\sum_{j=1}^{n_y}\sum_{k=1}^{n_z} f(x_i, y_j, z_k)\, ds_{ijk},
 \end{align*}
 where $ds_{ijk}$ is the total path distance of $\vec{l}(s)$ through $X_{ijk}$.
 Full details of the path integral algorithm for the case of straight line paths are found in Appendix \ref{chap:ray_tracing}.
 
 \subsection{Angular Quadrature}
+Define the \textit{angular characteristic function} as
+\begin{equation*}
+  \mathcal{X}^\Omega_p(\vec{\omega}) = \begin{cases}
+    1, & \vec{\omega} \in \Omega_p \\
+    0, & \mbox{otherwise}.
+  \end{cases}
+\end{equation*}
+
+
 Then, the integral of a function $f(\vec{\omega})$ is approximated as
 \begin{align*}
   \int_{4\pi} f(\vec{\omega})\, d\vec{\omega} &\approx \int_{4\pi} \sum_{p=1}^\nomega f(\vec{\omega}_p) \mathcal{X}^\Omega_p(\vec{\omega})\, d\vec{\omega} \\
@@ -137,88 +133,92 @@ Presented here are details of the evaluation of the asymptotic approximations \e
 
 Specifically, the amount of light scattered between angular grid cells is found by integrating $\beta$ as follows.
 Consider two angular grid cells, $\Omega$ and $\Omega'$.
-The average probability density of scattering from $\vec{\omega} \in \Omega$ to $\vec{\omega}' \in \Omega'$ (or vice versa) is
+Since $\beta(\vec{\omega}\cdot\vec{\omega}')$ is the probability density of scattering between $\vec{\omega}$ and $\vec{\omega}'$, the average probability density of scattering from $\vec{\omega} \in \Omega$ to $\vec{\omega}' \in \Omega'$ (or vice versa) is
 \begin{equation*}
-  \beta_{pp'} = \frac{1}{\abs{\Omega}\abs{\Omega'}} \int_\Omega\int_{\Omega'}\beta(\vec{\omega}\cdot\vec{\omega}')\, d\vec{\omega'}\, d\vec{\omega}
+  \beta_{pp'} = \frac{1}{\abs{\Omega}\abs{\Omega'}} \int_\Omega\int_{\Omega'}\beta(\vec{\omega}\cdot\vec{\omega}')\, d\vec{\omega'}\, d\vec{\omega}.
 \end{equation*}
-
 Denote the radiance at $(x_i, y_j, z_k, \vec{\omega}_p)$ by $L_{ijkp}$.
-% TODO: Be more careful here.
 Then, the total radiance scattered into $\Omega_p$ from $\Omega_{p'}$ is
 \begin{align*}
   \int_{\Omega}\int_{\Omega'}\beta(\vec{\omega} \cdot \vec{\omega}')L(\vec{x},\vec{\omega}')\, d\vec{\omega}'\, d\vec{\omega}
   &= L_{ijkp'} \int_\Omega\int_{\Omega_{p'}} \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'\, d\vec{\omega} \\
   &= \beta_{pp'}\abs{\Omega}\abs{\Omega'}L_{ijkp'}.
 \end{align*}
-Hence, the average radiance scattered is $\beta_{pp'}\abs{\Omega'}L_{ijkp'}.$
+Hence, the average radiance scattered from $\Omega_{p'}$ into some $\vec{\omega} \in \Omega_p$ is $\beta_{pp'}\abs{\Omega'}L_{ijkp'}$.
+Therefore, the radiance gain due to scattering into $\vec{\omega}_p$ from all other angles is
+\begin{equation}
+  \int_{4\pi}\beta(\vec{\omega_p}\cdot\vec{\omega_{p'}})L(\vec{x}, \vec{\omega}')\, d\vec{\omega} \approx \sum_{p=1}^\nomega \beta_{pp'}\abs{\Omega'}L_{ijkp}.
+  \label{eqn:scatter_integral}
+\end{equation}
 
 \subsection{Ray Integral}
-Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the discrete grid can be constructed as described in Appendix \ref{chap:ray_tracing}, from which we can extract piecewise constant variations of the path absorption coefficient, $\tilde{a}(s)$ and the effective source, $g_n(s)$ from Section \ref{sec:asymptotic_sol}.
-Then, we proceed as follows.
-
-* Here are the equations for calculating the double integral over ray paths
-required for the asymptotics. It will hopefully make more sense once I add words
-to accompany the symbols.
-
-Let
-\begin{align*}
-  g_n(s) &= \sum_{i=1}^{N-1}g_{ni}\mathcal{X}_i(s) \\
-  \tilde{a}(s) &= \sum_{i=1}^{N-1}\tilde{a}_{i}\mathcal{X}_i(s) \\
-\end{align*}
-and
+Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the discrete grid can be constructed using the ray tracing algorithm described in Appendix \ref{chap:ray_tracing}. 
+Let $\nu=1,\ldots,N\nobreak-\nobreak1$ index the spatial grid cells traversed by the ray, and define the \textit{path-length characteristic function}
 \begin{equation*}
-  \mathcal{X}_i(s) = \begin{cases}
-    1, & a_I \leq s < s_{i+1} \\
-    0, & \mbox{otherwise}
+  \mathcal{X}^l_\nu(s) = \begin{cases}
+    1, & s_\nu \leq s < s_{\nu+1} \\
+    0, & \mbox{otherwise}.
     \end{cases}
 \end{equation*}
+Then, the piecewise constant representations of the path absorption coefficient $\tilde{a}(s)$ and the effective source $g_n(s)$ from Section \ref{sec:asymptotic_sol} are
+\begin{align*}
+  g_n(s) &= \sum_{\nu=1}^{N-1}g_{n\nu}\mathcal{X}^l_\nu(s), \\
+  \tilde{a}(s) &= \sum_{\nu=1}^{N-1}\tilde{a}_{\nu}\mathcal{X}^l_\nu(s).
+\end{align*}
 
-and $\left\{s_i\right\}_{i=1}^N$ is increasing.
-
-Let $ds_i = s_{i+1} - s_i$.
-
-Let $\hat{i}(s) = \min\left\{ i \in \{1,\ldots,N\} : s_i>s \right\}$.
-Let $\tilde{d}(s) = s_{\hat{i}(s)}-s$.
-
-We have $s_1 = 0$ and $s_N = \tilde{s}$.
-
-
+As the ray traverses the spatial grids, it crosses $N-2$ spatial grid edges.
+Let the nondecreasing path lengths at which these crossings occur be denoted by
+$\left\{s_\nu\right\}_{\nu=1}^{N}$, with the convention $s_1=0$ and $s_{N}=\tilde{s}$.
+$\{s_\nu\}$ is not strictly increasing if the ray directly intersects a grid corner,
+which means that multiple edges are traversed at the same path length.
+Hence, for $\nu=1,\ldots,N-1$, the path lengths through each grid cell are
+\begin{equation*}
+  ds_\nu = s_{\nu+1} - s_\nu.
+\end{equation*}
+Given $s$, the index next edge crossing occurs at
+\begin{equation*}
+  \hat{\nu}(s) = \min\left\{ \nu \in \{1,\ldots,N\} : s_\nu>s \right\},
+\end{equation*}
+and the path length between $s$ and the next edge crossing is
+\begin{equation*}
+  \tilde{d}(s) = s_{\hat{\nu}(s)}-s.
+\end{equation*}
+Then, evaluating \eqref{eqn:asymptotics_soln_n} at $s=\tilde{s}$ is calculated as
 \begin{align*}
   u_n(\tilde{s}) &= \int_0^{\tilde{s}}g_n(s')\exp\left( -\int_{s''}^{s'}\tilde{a}(s'')\,ds'' \right)\, ds' \\
-  &= \int_0^{s_N} \sum_{i=1}^{N-1}g_{ni}\mathcal{X}_i(s') \exp\left( -\int_{s''}^{s'}\sum_{j=1}^{N-1}\tilde{a}_{j}\mathcal{X}_j(s'')\,ds'' \right)\, ds' \\
-  &= \sum_{i=1}^{N-1}g_{ni}\int_0^{s_N} \mathcal{X}_i(s') \exp\left( -\sum_{j=1}^{N-1}\tilde{a}_{j}\int_{s''}^{s'}\mathcal{X}_j(s'')\,ds'' \right)\, ds' \\
-  &= \sum_{i=1}^{N-1}g_{ni}\int_{s_i}^{s_{i+1}}  \exp\left(-\tilde{a}_{\hat{i}(s')-1}\tilde{d}(s') -\sum_{j=\hat{i}(s')}^{N-1}\tilde{a}_{j}ds_j\right)\, ds' \\
-  &= \sum_{i=1}^{N-1}g_{ni}\int_{s_i}^{s_{i+1}}  \exp\left(-\tilde{a}_{i}(s_{i+1}-s') -\sum_{j=i+1}^{N-1}\tilde{a}_{j}ds_j\right)\, ds'
+  &= \int_0^{s_N} \sum_{\nu=1}^{N-1}g_{n\nu}\mathcal{X}^l_\nu(s') \exp\left( -\int_{s''}^{s'}\sum_{j=1}^{N-1}\tilde{a}_{j}\mathcal{X}^l_j(s'')\,ds'' \right)\, ds' \\
+  &= \sum_{\nu=1}^{N-1}g_{n\nu}\int_0^{s_N} \mathcal{X}^l_\nu(s') \exp\left( -\sum_{j=1}^{N-1}\tilde{a}_{j}\int_{s''}^{s'}\mathcal{X}^l_j(s'')\,ds'' \right)\, ds' \\
+  &= \sum_{\nu=1}^{N-1}g_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(-\tilde{a}_{\hat{\nu}(s')-1}\tilde{d}(s') -\sum_{j=\hat{\nu}(s')}^{N-1}\tilde{a}_{j}ds_j\right)\, ds' \\
+  &= \sum_{\nu=1}^{N-1}g_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(-\tilde{a}_{\nu}(s_{\nu+1}-s') -\sum_{j=\nu+1}^{N-1}\tilde{a}_{j}ds_j\right)\, ds'.
 \end{align*}
-
-Let
+This integral is made straightforward by setting
 \begin{equation*}
-  b_i = -\tilde{a}_{i}s_{i+1} - \sum_{j=i+1}^{N-1}\tilde{a}_{j}ds_j.
+  b_\nu = -\tilde{a}_{\nu}s_{\nu+1} - \sum_{j=\nu+1}^{N-1}\tilde{a}_{j}ds_j,
 \end{equation*}
-
-Then,
+which yields
 \begin{align*}
-  u_n(\tilde{s}) &= \sum_{i=1}^{N-1}g_{ni}\int_{s_i}^{s_{i+1}}  \exp\left(\tilde{a}_{i}s' + b_i\right)\, ds' \\
-                 &= \sum_{i=1}^{N-1}g_{ni}e^{b_i}\int_{s_i}^{s_{i+1}}  \exp\left(\tilde{a}_{i}s'\right) ds'
+  u_n(\tilde{s}) &= \sum_{\nu=1}^{N-1}g_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(\tilde{a}_{\nu}s' + b_\nu\right)\, ds' \\
+                 &= \sum_{\nu=1}^{N-1}g_{n\nu}e^{b_\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(\tilde{a}_{\nu}s'\right) ds'.
 \end{align*}
-
-Let
+Define the intermediate variable
 \begin{align*}
-  d_i &= \int_{s_i}^{s_{i+1}}  \exp\left(\tilde{a}_{i}s'\right)\, ds' \\
+  d_\nu &= \int_{s_\nu}^{s_{\nu+1}}  \exp\left(\tilde{a}_{\nu}s'\right)\, ds' \\
     &= \begin{cases}
-    ds_i, & \tilde{a} = 0 \\
-      \left( \exp(\tilde{a}_i s_{i+1}) - \exp(\tilde{a}_i s_i) \right)/\tilde{a}_i, & \mbox{otherwise}
+    ds_\nu, & \tilde{a} = 0 \\
+      \left( \exp(\tilde{a}_\nu s_{\nu+1}) - \exp(\tilde{a}_\nu s_\nu) \right)/\tilde{a}_\nu, & \mbox{otherwise},
     \end{cases}
 \end{align*}
-
-Then,
-\begin{equation*}
-  u_n(\tilde{s}) = \sum_{i=1}^{N-1} g_{ni}d_i e^{b_i}
-\end{equation*}
+which permits the simple formula
+\begin{equation}
+  u_n(\tilde{s}) = \sum_{\nu=1}^{N-1} g_{n\nu}d_\nu e^{b_\nu}.
+  \label{eqn:discrete_ray_integral}
+\end{equation}
 
 \section{Finite Difference}
-
-We now discuss the discretization of derivatives on the spatial grid.
+While the asymptotic solution is valid in case of low scattering, a more general solution is obtained via finite difference, whereby the derivatives and integrals in the integro-partial differential equation are discretized to differences and sums and evaluated at each grid cell in order to construct a linear system of equations whose solution approximates that of the analytical equation.
+The price of a general solution, however, is greatly increased computational cost, both in terms of memory and CPU usage.
+Not only is it necessary to store a potentially huge sparse matrix in memory, but its construction can take enormous amounts of time.
+Nonetheless, it is useful to have access to a general numerical solution, at least for verification of approximations if not for direct use in applications.
 
 \subsection{Discretization}
 
@@ -284,7 +284,8 @@ Similarly, substituting $\varepsilon \to -\varepsilon$, we have
 \end{equation*}
 
 
-\subsection{Difference Equation}
+\subsection{Difference Equations}
+\label{sec:difference_equations}
 
 %TODO: Periodic $x,y$
 
@@ -379,9 +380,39 @@ Similarly, for downwelling light at the lowest depth layer, we have
 \end{equation*}
 
 \subsection{Structure of Linear System}
+For each spatial-angular grid cell, one of the above equations is applied.
+The equation applied at each grid cell involves adjacent radiance values due to the discretized derivatives.
+Thus, a coupled system of linear equations is produced, which can be written as a sparse matrix equation, $Ax=b$.
+In the coefficient matrix $A$, each row is asociated with the grid cell at which the discretized equation was evaluated.
+Each column is the coefficient of the radiance at a particular spatial-angular grid cell.
+In principle the order of the equations, i.e., the order of the rows and columns of the coefficient matrix, is not important
+so long as consistency is maintained with the solution vector and right-hand side.
+In general, some procedure is necessary for constructing an ordered list of the multidimensional grid cells.
+One option, employed here, is to use a block structure where dimensions are nested within one another.
+An ordering for the dimensions is chosen, from outermost to innermost.
+Adjacent rows and columns in the matrix are associated with adjacent grid cells in the innermost dimension,
+adjacent blocks of the innermost dimension are adjacent in the second innermost dimension, etc.
 
-%TODO: This
-Describe layout of matrix.
+In the numerical implementation of this model, we choose the order of dimensions to be $\vec{\omega}, z, y, x$, with $\vec{\omega}$ being the outermost and $x$ being the innermost.
+Recall that $\theta$ and $\phi$ are already combined, both indexed by $p$, as discussed in Section \ref{sec:grid} and Appendix \ref{chap:grid_details}.
+This particular ordering is chosen for ease of programming in terms of deciding which of the equations from Section \ref{sec:difference_equations} to apply.
+Since the choice of equation does not depend on $x$ or $y$, they are the outermost.
+Then, the surface and bottom $z$ values have to be considered separately from the rest.
+And within the surface and bottom depth layers, there are further cases depepending on whether the light is upwelling or downwelling.
+Hence, the chosen ordering follows somewhat naturally from the boundary conditions.
+
+Then, the discretized equation applied to $(x_i, y_j, z_k, \omega_p)$ is stored in row
+\begin{equation*}
+  r_{ijkp} = p + \nomega (k-1) + \nomega n_z (j-1) + \nomega n_z n_y (i-1).
+\end{equation*}
+Since the same ordering is used for rows and columns of the coefficient matrix $A$, $L_{ijkp}$ is located at position $r_{ijkp}$ of the solution vector $x$,
+and the right-hand side associated with that grid cell, if any, is also stored at position $r_{ijkp}$ of the right-hand side vector $b$.
+
+Also relevant is the total size of the system and of the sparse matrices necessary to store.
+The sizes of $A$, $x$, and $b$ are the number of grid cells, which is just $n_xn_yn_z\nomega$.
+Most of these elements, though, are zero since derivatives only involve adjacent spatial grid cells and the scattering integral only involves angles within a single spatial grid cell.
+Therefore, by saving only the locations and values of nonzero elements in the coefficient matrix, a considerable amount of storage space is saved.
+Table \ref{tab:nonzero} shows a breakdown of the number of distinct radiance values involved in each application of the discretized equations from Section \ref{sec:difference_equations}, as well as the number of times that each of the equations appears in the matrix.
 
 \begin{table}[H]
   \centering
@@ -396,31 +427,24 @@ Describe layout of matrix.
     bottom downwelling & $\nomega+6$ & $n_xn_y\nomega/2$ \\
   \end{tabular}
   \caption{Breakdown of nonzero matrix elements by derivative case}
+  \label{tab:nonzero}
 \end{table}
 
-Number of rows/columns: $n_xn_yn_zn_{\vec{\omega}}$
+By multiplying the first column of Table \ref{tab:nonzero} by the second and summing over the rows, the total number of nonzero matrix elements is calculated to be
+\begin{align*}
+  N_A &= (\nomega+6) \cdot n_xn_y(n_z-2)\nomega \\
+    &+   (\nomega+5) \cdot n_xn_y\nomega
+    +   (\nomega+6) \cdot n_xn_y\nomega \\
+  &= n_x n_y n_z \left[(\nomega+6)(n_z-2+1)+\nomega+5 \right] \\
+  &= n_x n_y n_z \left[(\nomega+6)(n_z-1)+\nomega+5 \right] \\
+  &=  n_x n_y n_z \left[n\omega n_z -\nomega + 6n_z - 6 + \nomega + 5 \right] \\
+  &=  n_x n_y n_z \left[n_z(\nomega+6)-1\right]
+\end{align*}
+Also, note that $b$ only has nonzero entries for the downwelling surface grid cells, of which there are $n_x n_y \nomega/2$.
 
-Number of nonzero RHS entries: $n_xn_yn_z/2$
+\subsection{Iterative Solution}
+For small systems of equations, direct methods such as Gaussian elimination, QR factorization, and singular value decomposition can be used.
+However, when the coefficient matrix becomes very large, the memory required to carry out a direct solution is prohibitively large, iterative solvers must be used.
+Many such solvers are available, including GMRES\cite{saad_gmres:_1985}, LGMRES\cite{baker_technique_2005}, IDR\cite{sonneveld_idrs:_2008}, and BI-CGSTAB\cite{van_der_vorst_bi-cgstab:_1992}.
+In our case, GMRES is used.
 
-Total number of nonzero matrix entries: $n_xn_yn_{\vec{\omega}} \left[n_z(n_{\vec{\omega}}+6)-1 \right]$
-
-\subsection{GMRES}
-% TODO: Fill this in
-GMRES is a Krylov Subspace method. These work like this. Here's what's special
-about GMRES. Advantages. Drawbacks. Not practical for running in SINMOD.
-
-\subsection{Perceived Irradiance}
-\label{sec:perceived_irrad}
-
-The average irradiance experienced by a kelp frond in depth layer $k$ is
-\newcommand{\Iperk}{\tilde{I}_k}
-\begin{equation*}
-   \Iperk = \frac{\sum_{ij}P_{ijk}I_{ijk}}{\sum_{ij}P_{ijk}}.
-\end{equation*}
-
-The irradiance perceived by the kelp is expected to be slightly lower than the average irradiance,
-\begin{equation*}
-  \bar{I}_k = \frac{\sum_{ij}I_{ijk}}{n_x n_y}
-\end{equation*}
-since the kelp is more densely located at the center of the domain where the light field is reduced,
-whereas the simple average is influenced by regions of higher irradiance at the edges of the domain where kelp is not present.
