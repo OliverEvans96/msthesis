@@ -79,12 +79,12 @@
 \DeclareMathOperator{\atantwo}{atan2}
 
 % Domain
-\newcommand\xmin{x_{\mbox{min}}}
-\newcommand\xmax{x_{\mbox{max}}}
-\newcommand\ymin{y_{\mbox{min}}}
-\newcommand\ymax{y_{\mbox{max}}}
-\newcommand\zmin{z_{\mbox{min}}}
-\newcommand\zmax{z_{\mbox{max}}}
+\newcommand\xmin{{x_{\min}}}
+\newcommand\xmax{{x_{\max}}}
+\newcommand\ymin{{y_{\min}}}
+\newcommand\ymax{{y_{\max}}}
+\newcommand\zmin{{z_{\min}}}
+\newcommand\zmax{{z_{\max}}}
 
 %% FROM GOALS
 \newcommand\plotwidth{7in}
@@ -189,7 +189,8 @@
 %followed by n \input{filename} commands, similar to the \input{chapx}
 %commands above.
 % DO NOT USE SECTIONS OR SUBSECTIONS IN AN APPENDIX OR APPENDICES
-\appendix{2}
+\appendix{3}
+\input{grid_details}
 \input{ray_tracing}
-\input{fortran_code}
+%\input{fortran_code}
 \end{document}

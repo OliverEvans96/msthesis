@@ -1,7 +1,7 @@
 \chapter{LIGHT MODEL}
 \label{chap:light}
 
-Now that we have formulated the distribution of kelp throughout the medium, we introduce the radiative transfer equation, which is used to calculate the light field.
+Now that we have formulated the distribution of kelp throughout the medium, we introduce the Radiative Transfer Equation, which is used to calculate the light field.
 
 \section{Optical Definitions}
 
@@ -55,36 +55,32 @@ i.e., the probability of light being scattered to some direction on the unit sph
 
 \section{The Radiative Transfer Equation}
 % TODO: Blurb
-We now present the radiative transfer equation, whose solution is the radiance in the medium as a function of position and angle.
+We now present the Radiative Transfer Equation, whose solution is the radiance in the medium as a function of position and angle.
 
 \subsection{Ray Notation}
 Consider a fixed position $\vec{x}$ and direction $\vec{\omega}$ such that
 $\vec{\omega} \cdot \hat{z} \neq 0$.
-
 % TODO: Just call $\vec{x_0}$ a point, not a function. Call it the projection to the surface.
-
-Let $\vec{l}(\vec{x}, \vec{\omega}, s)$ denote the linear path containing $\vec{x}$
-with initial z coordinate given by
+Let $\vec{l}(\vec{x}, \vec{\omega}, s)$ denote the linear path containing $\vec{x}$ in the direction $\vec{\omega}$.
+Assume that the ray is not horizontal.
+Then, it originates either at the surface or bottom of the domain, with initial z coordinate given by
 \begin{equation*}
   z_0 =
    \begin{cases}
     0, & \vec{\omega} \cdot \hat{z} < 0 \\
-    \zmax, & \vec{\omega} \cdot \hat{z} > 0
+    \zmax, & \vec{\omega} \cdot \hat{z} > 0.
   \end{cases}
 \end{equation*}
-
-Then,
+Hence, the ray path is parameterized as
 \begin{equation}
-  \vec{l}(\vec{x}, \vec{\omega}, s) = \frac{1}{\tilde{s}} (s\vec{x} + (\tilde{s} - s)\vec{x_0}(\vec{x}, \vec{\omega}))
+  \vec{l}(\vec{x}, \vec{\omega}, s) = \frac{1}{\tilde{s}} (s\vec{x} + (\tilde{s} - s)\vec{x_0}(\vec{x}, \vec{\omega})),
   \label{eqn:ray_path}
 \end{equation}
-
 where
 \begin{equation*}
   \vec{x_0}(\vec{x}, \vec{\omega}) = \vec{x} - \tilde{s} \vec{\omega}
 \end{equation*}
 is the origin of the ray, and 
-
 \begin{equation*}
   \tilde{s} = \frac{\vec{x} \cdot \hat{z} - z_0}{\vec{\omega} \cdot \hat{z}}
 \end{equation*}
@@ -103,8 +99,8 @@ medium produces three phenomena of interest:
 \end{enumerate}
 
 \subsection{Equation of Transfer}
-Then, combining these phenomena, the Radiative Transfer equation along
-$\vec{l}(\vec{x}, \vec{\omega})$ becomes
+Combining these phenomena yields the Radiative Transfer Equation along
+$\vec{l}(\vec{x}, \vec{\omega})$,
 \begin{equation}
   \label{eqn:rte1d}
   \frac{dL}{ds}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega})
@@ -112,15 +108,13 @@ $\vec{l}(\vec{x}, \vec{\omega})$ becomes
   + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x})\, d\omega',
 \end{equation}
 where $\int_{4\pi}$ denotes integration over the unit sphere.
-
-Now, we have
+The derivative of $L$ over the path can be rewritten as
 \begin{align*}
   \frac{dL}{ds}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega})
     &= \frac{d\vec{l}}{ds}(\vec{x}, \vec{\omega}, s) \cdot \nabla L(\vec{x}, \vec{\omega}', \vec{\omega}) \\
-    &= \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
+    &= \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega}),
 \end{align*}
-
-Then, the general form of the Radiative Transfer Equation is
+which unveils the general form of the Radiative Transfer Equation,
 \begin{equation*}
   \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
   = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
@@ -128,31 +122,30 @@ Then, the general form of the Radiative Transfer Equation is
 \end{equation*}
 
 or, equivalently,
-\begin{equation*}
+\begin{equation}
   \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
   + a(\vec{x})L(\vec{x}, \vec{\omega})
   = b \left(
     \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\omega'
     - L(\vec{x}, \vec{\omega})
-  \right)
-\end{equation*}
+  \right).
+  \label{eqn:rte}
+\end{equation}
 
 \subsection{Boundary Conditions}
 
-We use periodic boundary conditions in the $x$ and $y$ directions.
+We use periodic boundary conditions in the $x$ and $y$ directions,
 \begin{align*}
-  L\left((\xmin, y, z), \vec{\omega}\right) &= L\left((\xmax, y, z), \vec{\omega}\right) \\
-  L\left((x, \ymin, z), \vec{\omega}\right) &= L\left((x, \ymax, z), \vec{\omega}\right)
+  L\left((\xmin, y, z), \vec{\omega}\right) &= L\left((\xmax, y, z), \vec{\omega}\right), \\
+  L\left((x, \ymin, z), \vec{\omega}\right) &= L\left((x, \ymax, z), \vec{\omega}\right).
 \end{align*}
-
 In the $z$ direction, we specify a spatially uniform downwelling light just
 under the surface of the water by a function $f(\vec{\omega})$.
 Or if $\zmin>0$, then the radiance at $z=\zmin$ should be specified instead (as opposed to the radiance at the first grid cell center).
-
-Further, we assume that no upwelling light enters the domain from the bottom.
+Further, we assume that no upwelling light enters the domain from the bottom, so
 \begin{align*}
-  L(\vec{x_s}, \vec{\omega}) &= f(\omega) \mbox{ if } \vec{\omega} \cdot \hat{z} > 0\\ 
-  L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0
+  L(\vec{x_s}, \vec{\omega}) &= f(\omega) \mbox{ if } \vec{\omega} \cdot \hat{z} > 0, \\ 
+  L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0.
 \end{align*}
  
 \section{Low-Scattering Approximation}
@@ -165,7 +158,7 @@ Taking $b$ to be small, we introduce the asymptotic series
 \begin{align*}
   L(\vec{x},\vec{\omega}) = \Lasym.
 \end{align*}
-Then, substituting the above into the RTE,
+Substituting the above into \eqref{eqn:rte} yields
 \begin{align*}
     &\vec{\omega} \cdot \nabla \left[ \Lasym \right] \\
     &+ a(\vec{x}) \left[ \Lasym \right] \\
@@ -173,26 +166,26 @@ Then, substituting the above into the RTE,
       \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}')
       \left[ \Lasymp \right] \, d\vec{\omega}' \\
     &- \left[ \Lasym \right]
-    \Bigg)
+    \Bigg).
 \end{align*}
-Then, grouping like powers of $b$, we have the decoupled set of equations
+Grouping like powers of $b$, we have the decoupled set of equations
 \begin{align}
-  \vec{\omega} \cdot \nabla L_0(\vec{x}, \vec{\omega}) + a(\vec{x})L_0(\vec{x}) &= 0
+  \vec{\omega} \cdot \nabla L_0(\vec{x}, \vec{\omega}) + a(\vec{x})L_0(\vec{x}) &= 0,
   \label{eqn:asymptotics_0}\\
   \vec{\omega} \cdot \nabla L_1(\vec{x}, \vec{\omega}) + a(\vec{x})L_1(\vec{x})
-  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_0(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_0(\vec{x}, \vec{\omega}) \nonumber\\ 
+  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_0(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_0(\vec{x}, \vec{\omega}), \nonumber\\ 
   \vec{\omega} \cdot \nabla L_2(\vec{x}, \vec{\omega}) + a(\vec{x})L_2(\vec{x})
-  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_1(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_1(\vec{x}, \vec{\omega}) \nonumber \\ 
+  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_1(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_1(\vec{x}, \vec{\omega}). \nonumber \\ 
   &\vdots \nonumber
 \end{align}
-In general, for $n \geq 1$, we have
+In general, for $n \geq 1$,
 \begin{equation}
   \vec{\omega} \cdot \nabla L_n(\vec{x}, \vec{\omega}) + a(\vec{x})L_n(\vec{x})
-  = \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_{n-1}(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_{n-1}(\vec{x}, \vec{\omega})
+  = \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_{n-1}(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_{n-1}(\vec{x}, \vec{\omega}).
   \label{eqn:asymptotics_n}
 \end{equation}
 
-For boundary conditions, let $x_s$ be a point on the surface of the domain.
+For boundary conditions, let $\vec{x_s}$ be a point on the surface of the domain.
 Then, 
 \begin{equation*}
   \Lasyms =
@@ -201,7 +194,7 @@ Then,
     0, & \mbox{otherwise},
   \end{cases}
 \end{equation*}
-which becomes
+which can be decomposed as
 \begin{align}
   L_0(\vec{x}, \vec{\omega}) &=
   \begin{cases}
@@ -250,14 +243,14 @@ Then, integrating both sides yields
 Hence,
 \begin{equation}
   u_0(s) = f(\omega) \exp\left(-\int_0^s \tilde{a}(s)\, ds\right).
-  \label{eqn:asymptotic_soln_0}
+  \label{eqn:asymptotics_soln_0}
 \end{equation}
 Then, we convert back from path length $s$ to the spatial coordinate $\vec{x}$ using
 \begin{equation*}
   L_0(\vec{l}(\vec{x}, \vec{\omega},s), \vec{\omega}) = u_0(s).
 \end{equation*}
 
-Now, the $n \geq 1$ equations have a nonzero right-hand side, which we call the effective source, $g_n(s)$.
+The $n \geq 1$ equations have a nonzero right-hand side, which we call the effective source, $g_n(s)$.
 This can be similarly extracted along a ray path as
 \begin{equation*}
   g_n(s) = \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}')
@@ -277,18 +270,18 @@ As with the $n=0$ equation, the solution is found by multiplying by the appropri
   \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) g_n(s) &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \frac{du_n}{ds} + \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \tilde{a}(s) u_n(s) \\
   &= \frac{d}{ds}\left[\exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_n(s)\right].
 \end{align*}
-Then, integrating both sides yields
+Integrating both sides yields
 \begin{align*}
   \int_0^s\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) g_n(s')\, ds' &= \int_0^s \frac{d}{ds'}\left[\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) u_n(s')\right]\, ds' \\
   &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_n(s).
 \end{align*}
 Hence,
 \begin{equation*}
-    u_n(s) = \exp\left(-\int_0^s \tilde{a}(s')\, ds'\right) \int_0^s\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) g_n(s')\, ds',
+  u_n(s) = \exp\left(-\int_0^s \tilde{a}(s')\, ds'\right) \int_0^s\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) g_n(s')\, ds',
 \end{equation*}
 which simplifies to
 \begin{equation}
-    u_n(s) = \int_0^sg_n(s')\exp\left( -\int_{s''}^{s'}\tilde{a}(s'')\,ds'' \right)\, ds'.
+  u_n(s) = \int_0^sg_n(s')\exp\left( -\int_{s''}^{s'}\tilde{a}(s'')\,ds'' \right)\, ds'.
   \label{eqn:asymptotics_soln_n}
 \end{equation}
 As before, the conversion back to spatial coordinates is
