@@ -29,22 +29,24 @@ Consider the rectangular domain
 \end{align*}
 For all three dimensional analysis, we use the absolute coordinate system defined in figure \ref{fig:3dcoords}.
 In the following sections, it is necessary to convert between Cartesian and spherical coordinates, which we do using the relations
-\begin{align}
+\begin{equation}
+  \left\{
 	\begin{split}
 		x & = r\sin\phi\cos\theta, \\
 		y & = r\sin\phi\sin\theta, \\
 		z & = r\cos\phi. \\
-	\label{eqn:coords}
 	\end{split}
-\end{align}
+  \right.
+	\label{eqn:coords}
+\end{equation}
 
 Therefore, for some function $f(x,y,z)$, we can write its derivative along a path in spherical coordinates in terms of Cartesian coordinates using the chain rule.
-\begin{equation}
+\begin{equation*}
 	\frac{\partial f}{\partial r} 
 	=\frac{\partial f}{\partial x}\frac{\partial x}{\partial r} 
 	+ \frac{\partial f}{\partial y}\frac{\partial y}{\partial r} 
 	+ \frac{\partial f}{\partial z}\frac{\partial z}{\partial r}
-\end{equation}
+\end{equation*}
 Then, calculating derivatives from \eqref{eqn:coords} yields
 \begin{equation}
 	\frac{\partial f}{\partial r} 
@@ -81,35 +83,35 @@ We assume the frond is a kite with length $l$ from base to tip, and width $w$ fr
 The proximal length is the shortest distance from the base to the diagonal connecting the left and right corners, and is notated as $f_a$
 Likewise, the distal length is the shortest distance from that diagonal to the tip, notated $f_b$.
  We have
- \begin{equation}
+ \begin{equation*}
 	 f_a + f_b = l
- \end{equation}
+ \end{equation*}
 When considering a whole population with varying sizes, it is more convenient to specify ratios than absolute lengths.
 Let the following ratios be defined.
-\begin{align}
+\begin{align*}
 	f_r &= \frac{l}{w} \\
 	f_s &= \frac{f_a}{f_b}
-\end{align}
+\end{align*}
 These ratios are assumed to be consistent among the entire population, making all fronds geometrically similar.
 With these definitions, the shape of the frond can be fully specified by $l$, $f_r$, and $f_s$.
 It is possible, then, to redefine $w$, $f_a$ and $f_b$ as follows from the preceding formulas.
 
-\begin{align}
+\begin{align*}
 	w &= \frac{l}{f_r} \\
 	f_a &= \frac{lf_s}{1+f_s} \\
 	f_b &= \frac{l}{1+f_s}
-\end{align}
+\end{align*}
 
 The angle $\alpha$, half of the angle at the base corner, is also important in our analysis.
 Using the above equations,
-\begin{equation}
+\begin{equation*}
 	\alpha = \tan^{-1}\left(\frac{2f_rf_s}{1+f_s}\right)
-\end{equation}
+\end{equation*}
 
 The area of the frond is given by
-\begin{equation}
+\begin{equation*}
   A = \frac{lw}{2} = \frac{l^2}{2f_r}.
-\end{equation}
+\end{equation*}
 
 Likewise, if the area is known, then the length is
 \begin{equation}
@@ -121,9 +123,9 @@ Likewise, if the area is known, then the length is
 \label{sec:dist}
 We assume that frond lengths are normally distributed with mean $\mu_l$ and standard deviation $\sigma_l$.
 That is, the frond length distribution has the probability density function (PDF)
-\begin{equation}
+\begin{equation*}
   P_l(l) = \frac{1}{\sqrt{2\pi\sigma_l^2}}\exp\left(\frac{(l-\mu_l)^2}{2\sigma_l^2}\right).
-\end{equation}
+\end{equation*}
 
 We assume the frond angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution, defined on $[-\pi,\pi]$ rather than $(-\infty,\infty)$.
 The von Mises distribution has two parameters, $\mu$ and $\kappa$, which shift and sharpen its peak respectively, as shown in Figure \ref{fig:vonmises}.
@@ -133,14 +135,14 @@ That is, in the case of zero current velocity, the frond angles are be distribut
 Note that $\theta_w$ and $v_w$ vary over depth.
 
 The PDF for the von Mises distribution is
-\begin{equation}
+\begin{equation*}
 	P_{\theta_f}(\theta_f) = \frac{\exp\left(v_w\cos(\theta_f-v_w)\right)}{2\pi I_0(v_w)}
-\end{equation}
+\end{equation*}
 where $I_0(x)$ is the modified Bessel function of the first kind of order 0.
 Notice that unlike the normal distribution, the von Mises distribution approaches a \textit{non-zero} uniform distribution as $\kappa$ approaches 0.
-\begin{equation}
+\begin{equation*}
 	\displaystyle \lim_{v_w \to 0}P_{\theta_f}(\theta_f) = \frac{1}{2\pi} \;\forall\, \theta_f \in [-\pi,\pi]
-\end{equation}
+\end{equation*}
 
 \begin{figure}[h]
 	\centering
@@ -155,14 +157,14 @@ The previous two distributions can reasonably be assumed to be independent of on
 Therefore, the probability of a frond simultaneously having a given frond length and angle is the product of their individual probabilities.
 
 Given independent events $A$ and $B$,
-\begin{equation}
+\begin{equation*}
 	\label{eq:ind_prob}
 	P(A \cap B) = P(A)P(B)
-\end{equation}
+\end{equation*}
 Then the probability of frond length $l$ and frond angle $\theta_f$ coinciding is 
-\begin{equation}
+\begin{equation*}
 	P_{2D}(\theta_f,l) = P_{\theta_f}(\theta_f) \cdot P_l(l)
-\end{equation}
+\end{equation*}
 A contour plot of this 2D distribution for a specific set of parameters is shown in figure \ref{fig:dist_2d}, where probability is represented by color in the 2D plane.
 Darker green represents higher probability, while lighter beige represents lower probability.
 In figure \ref{fig:kelp_sample}, 50 samples are drawn from this distribution and plotted.
@@ -170,9 +172,9 @@ In figure \ref{fig:kelp_sample}, 50 samples are drawn from this distribution and
 It is important to note that if $P_{\theta_f}$ were dependent on $l$, the above definition of $P_{2D}$ would no longer be valid.
 For example, it might be more realistic to say that larger fronds are less likely to bend towards the direction of the current.
 In this case, \eqref{eq:ind_prob} would no longer hold, and it would be necessary to use the following more general relation.
-\begin{equation}
+\begin{equation*}
 	P(A \cap B) = P(A)P(B|A) = P(B)P(B|A)
-\end{equation}
+\end{equation*}
 This is currently not taken into consideration in this model.
 
 \begin{figure}[h]
@@ -199,62 +201,62 @@ describing the shape of the frond in Cartesian and then converting to polar coor
 Of primary interest are the edges connected to the frond tip.
 For convenience, we will use a rotated coordinate system $(\theta',s)$ such that the line connecting the base to the tip is vertical, with the base at $(0,0)$.
 The Cartesian analogue of this coordinate system, $(x',y')$, has the following properties.
-\begin{align}
+\begin{align*}
 	x' &= s\cos\theta' \\ 
 	y' &= s\sin\theta'
-\end{align}
+\end{align*}
 and
-\begin{align}
+\begin{align*}
 	s &= \sqrt{x'^2+y'^2}
-\end{align}
+\end{align*}
 \vspace{-1em}
-\begin{align}
+\begin{align*}
 	\theta' &= \atantwo(y, x)
-\end{align}
+\end{align*}
 
 \subsection{Functional Description of Frond Edge}
 With this coordinate system established, we can describe the outer two edges of the frond in Cartesian coordinates as a piecewise linear function connecting the left corner: $(-w/2,f_a)$, the tip: $(0,l)$, and the right corner: $(w/2,f_a)$.
 This function has the form
-\begin{equation}
+\begin{equation*}
 	y'_f(x') = l-\sign(x')\frac{f_b}{w/2}x'.
-\end{equation}
+\end{equation*}
 
 Using the equations in Section \ref{sec:rot_coords}, this can be written in polar coordinates after some rearrangement as
-\begin{equation}
+\begin{equation*}
 	s_f'(\theta') = \frac{l}{\sin\theta' + S(\theta')\frac{2f_b}{w}\cos\theta'}
-\end{equation}
+\end{equation*}
 where
-\begin{equation}
+\begin{equation*}
 	S(\theta') = \sign(\theta'-\pi/2)
-\end{equation}
+\end{equation*}
 
 Then, using the relationships in Section \ref{sec:shape}, we can rewrite the above equation in terms of our frond ratios $f_s$ and $f_r$.
-\begin{equation}
+\begin{equation*}
 	\label{eq:rf_rel}
 	s_f'(\theta') = \frac{l}{\sin\theta' + S(\theta')\frac{2f_r}{1+f_s}\cos\theta'}
-\end{equation}
+\end{equation*}
 
 \subsection{Absolute Coordinates}
 \label{sec:abs_coords}
 To generalize to a frond pointed at an angle $\theta_f$, we will use the coordinate system $(\theta,s)$ such that
-\begin{equation}
+\begin{equation*}
 	\theta = \theta' + \theta_f - \frac{\pi}{2}
-\end{equation}
+\end{equation*}
 Then, for a frond pointed at the arbitrary angle $\theta_f$, the function for the outer edges can be written as 
-\begin{equation}
+\begin{equation*}
 	\label{eq:rf_abs}
 	s_f(\theta) = s_f'\left(\theta - \theta_f + \frac{\pi}{2} \right)
-\end{equation}
+\end{equation*}
 
 
 \subsection{Conditions for Occupancy}
 Consider a fixed frond of length $l$ at an angle $\theta_f$. The point
 $(\theta,s)$ is occupied by the frond if
-\begin{align}
+\begin{align*}
 	\left|\theta_f - \theta \right| < \alpha
 	\shortintertext{and}
 	s < s_f(\theta)
-\end{align}
+\end{align*}
 
 Equivalently, letting the point $(\theta,s)$ be fixed, a frond occupies the point if the following conditions are satisfied.
 \begin{align}
@@ -265,9 +267,9 @@ Equivalently, letting the point $(\theta,s)$ be fixed, a frond occupies the poin
 	\label{eqn:rs_l}
 \end{align}
 where
-\begin{equation}
+\begin{equation*}
 	l_{min}(\theta,s) = s \cdot \frac{l}{s_f(\theta)}
-\end{equation}
+\end{equation*}
 
 
 Then, considering the point to be fixed, \eqref{eqn:rs_th} and \eqref{eqn:rs_l} define the spacial region $R_s(\theta,s)$ called the ``occupancy region for $(\theta,s)$'' with the property that if the tip of a frond lies within this region (i.e. $(\theta_f,l) \in R_s(\theta,s)$), then it occupies the point.
@@ -297,7 +299,7 @@ This is found by integrating $P_{2D}$ over the occupancy region for $(\theta,s)$
 \end{figure}
 
 Now, integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ yields the proportion of the population occupying the point $(\theta,s)$.
-\begin{align}
+\begin{align*}
 		\tilde{P}_k(\theta,s,z)	&= \iint_{R_s(\theta,s)}
 								P_{2D}(\theta_f,l)
 								\,dl\,d\theta_f \nonumber \\
@@ -305,19 +307,19 @@ Now, integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ yields the proportion
 								\int_{l_{min}(\theta_f)}^\infty
 								P_{2D}(\theta_f,l)
 								\,dl\,d\theta_f
-\end{align}
+\end{align*}
 
 % TODO: Revise. This is the first mention of grid cells.
 Then, multiplying $\tilde{P}_k$ by the number of fronds in the population $n$ of the depth layer gives the expected number of fronds occupying the point.
 Now, assuming a uniform thickness $t$ for all fronds, and a thickness $dz$ of the depth layer, we find the proportion of the grid cell occupied by kelp to be
-\begin{equation}
+\begin{equation*}
   P_k = \frac{nt}{dz}\tilde{P}_k.
-\end{equation}
+\end{equation*}
 
 Then, the effective absorption coefficient can be calculated at any point in space as
-\begin{equation}
+\begin{equation*}
   a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w
-\end{equation}
+\end{equation*}
 % TODO: Calculate absorption coefficient grid.
 
 \begin{figure}[h]
