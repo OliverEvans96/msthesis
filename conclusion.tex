@@ -1,14 +1,30 @@
 \chapter{CONCLUSION}
 \label{chap:conclusion}
 
-% TODO: Write this
 We present a probabilistic model for the spatial distribution of kelp, and develop a first-principles model for the light field, considering absorption and scattering due to the water and kelp.
 A full finite difference solution is presented, and an asymptotic approximation based on discrete scattering events is subsequently developed.
+The asymptotic approximation is shown to converge to the finite difference solution in cases where the absorption coefficient is the same order
+of magnitude as the scattering coefficient or larger.
+Otherwise, the solution diverges.
 
-Future work:
-\begin{itemize}
-  \item Frond bending
-  \item Horizontal kelp ropes (long lines)
-  \item etc.
-  %TODO: Add more
-\end{itemize}
+Many aspects of the model have room for future improvement.
+The most pressing is probably the development of a model for long-lines, which
+is more popular in practice than the vertical lines studied here.
+Similar techniques can likely be applied, but the details will of course differ.
+
+One major simplification in the calculation of the kelp model
+is the assumption that the fronds are perfectly horizontal.
+This could be improved in a straightforward way by including some
+probability distribution for the angular elevation as a function of current speed,
+similar to the study performed in \citep{norvik_design_2017}.
+The cost of implementing polar rotation is that depth layers are no longer isolated.
+Rather than integrating the two dimensional length-orientation distribution from
+Section \ref{sec:dist_2d} to calculate the spatial kelp distribution,
+it would be necessary to perform a triple integral which includes the elevation distribution.
+Since frond elevation and azimuathal orientation are both related to current velocity,
+it would likely be impossible to ignore the remarks at the end of \ref{sec:dist_2d}, and the
+assumption of independent distributions would have to be abandoned.
+
+Of course, real fronds are not rotating planar kites, but have a very dynamic geometry.
+To consider out-of-plane frond bending would require a totally different approach.
+Whether or not any improved description of the seaweed would merit the substantial work is unclear.

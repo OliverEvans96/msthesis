@@ -5,6 +5,7 @@ In this chapter, the mathematical details involved in the numerical solution of 
 It is assumed that this model is run in conjunction with a model describing the growth of kelp over its life cycle, which calls this light model periodically to update the light field.
 
 \section{Super-Individuals}
+\label{sec:si}
 
 Rather than model each kelp frond, a subset of the population, called super-individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
 Specifically, at each depth $k$, there are $n$ super-individuals, indexed by $i$.
@@ -12,13 +13,13 @@ Super-individual $i$ has a frond area $A_{ki}$ and represents $n_{ki}$ individua
 
 From \eqref{eqn:length-from-area}, the frond length of the super-individual is $l_{ki} = \sqrt{2A_{ki}f_r}$.
 Given the super-individual data, we calculate the mean $\mu$ and standard deviation $\sigma$ frond
-lengths using the formulas:
-\begin{equation*}
-  \mu_k = \frac{\ds \sum_{i=1}^N l_{ki}}{\ds \sum_{i=1}^N n_{ki}},
-\end{equation*}
-\begin{equation*}
-  \sigma_k = \frac{\ds \sum_{i=1}^N \left( l_{ki} - \mu_k \right)^2}{\ds \sum_{i=1}^N n_{ki}}.
-\end{equation*}
+lengths using the formulas
+\begin{align}
+  \mu_k &= \frac{\ds \sum_{i=1}^N l_{ki}}{\ds \sum_{i=1}^N n_{ki}},
+  \label{eqn:si_mean} \\
+  \sigma_k &= \frac{\ds \sum_{i=1}^N \left( l_{ki} - \mu_k \right)^2}{\ds \sum_{i=1}^N n_{ki}}.
+  \label{eqn:si_std}
+\end{align}
 We then assume that frond lengths are normally distributed in each depth layer
 with mean $\mu_k$ and standard deviation $\sigma_k$.
 

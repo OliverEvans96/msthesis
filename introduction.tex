@@ -26,13 +26,13 @@ One aspect of the model which has yet to be fully developed is the availability 
 This thesis contributes to this effort by developing a first-principles model of the light field in a kelp farming environment.
 As a first step, a model for the spatial distribution of kelp is developed.
 Radiative transfer theory is then applied to determine the effects of the kelp and water on the availability of light throughout the medium.
-A numerical finite difference solution to the Radiative Transfer Equation, followed by asymptotic approximations that prove to be sufficiently accurate and less computationally intensive.
-A detailed description of the numerical solution of this model, accompanied by source code for a FORTRAN implementation of the solution.
+A finite difference solution to the radiative transfer equation is developed, followed by asymptotic approximations that prove to be sufficiently accurate for clear water, and significantly less computationally intensive.
+A detailed description of the numerical solution of this model is presented, accompanied by source code for a FORTRAN implementation of the solution.
 This model can be used independently, or in conjunction with a kelp growth model to determine the amount of light available for photosynthesis at a single time step.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{kelp_photo/kelp_photo1}
+  \includegraphics[width=0.5\textwidth]{kelp_photo/sonja}
   \caption{\textit{Saccharina latissima} being harvested}
   % https://blogs.qub.ac.uk/qubio/files/2016/04/H5-5.jpg
   %TODO: Cite properly or replace with photo from Shane
@@ -69,8 +69,8 @@ Initially, there was a great deal of excitement about this species due to it's i
 
 \section{Background on Radiative Transfer}
 In terms of optical quantities, of primary interest is in the radiance at each point from all directions, which affects the photosynthetic rate of the kelp, and therefore the total amount of biomass producible in a given area as well as the total nutrient remediation potential.
-The equation governing the radiance throughout the system is known as the Radiative Transfer Equation (RTE), which has been largely unutilized in the fields of oceanography and aquaculture.
-The Radiative Transfer Equation has been used primarily in stellar astrophysics; it's application to marine biology is fairly recent\cite{mobley_radiative_2001}.
+The equation governing the radiance throughout the system is known as the radiative transfer equation (RTE), which has been largely unutilized in the fields of oceanography and aquaculture.
+The radiative transfer equation has been used primarily in stellar astrophysics; it's application to marine biology is fairly recent\cite{mobley_radiative_2001}.
 In its full form, radiance is a function of 3 spatial dimensions, 2 angular dimensions, and frequency, making for an incredibly complex problem. % TODO: Cite?
 In this work, frequency is ignored, only monochromatic radiation is considered.
 The RTE states that along a given path, radiance is decreased by absorption and scattering out of the path, while it is increased by emission and scattering into the path.
@@ -91,16 +91,17 @@ of goods that may be derived.
 \section{Overview of Thesis}
 % TODO: Check for redundancy
 The remainder of this document is organized as follows.
-In Chapter \ref{chap:kelp}, we develop a probabilistic model to describe the spatial distribution of kelp by assuming simple distributions for the lengths and orientations of fronds.
-We begin Chapter \ref{chap:light} with a survey of fundamental radiometric quantities and optical properties of matter.
-We use the spatial kelp distribution from Chapter \ref{chap:kelp} to determine optical properties of the combined water-kelp medium.
-We then present the Radiative Transfer Equation, an integro-partial differential equation which describes the the light field as a function of position and angle.
+In Chapter \ref{chap:kelp}, probabilistic model is developed to describe the spatial distribution of kelp by assuming simple distributions for the lengths and orientations of fronds.
+Chapter \ref{chap:light} begins with a survey of fundamental radiometric quantities and optical properties of matter.
+The spatial kelp distribution from Chapter \ref{chap:kelp} is used to determine optical properties of the combined water-kelp medium,
+and the radiative transfer equation, an integro-partial differential equation which describes the the light field as a function of position and angle, is discussed.
 An asymptotic expansion is explored for cases where absorption dominates scattering in the medium, such as in very clear water or high kelp density.
 In Chapter \ref{chap:numerical}, details are given for the numerical solution of the equations from Chapters \ref{chap:kelp} and \ref{chap:light}.
 Both the full finite difference solution and the asymptotic approximation are described.
-Next, in Chapter \ref{chap:parameters}, we discuss the availability of necessary parameters in the literature.
-For those which are not readily available, we give rough estimates and briefly describe experimental methods for their determination.
-Then, in Chapter \ref{chap:model_analysis}, we investigate the necessary grid resolution for adequate accuracy in the full finite difference solution and compare to the asymptotic approximation for a few parameter sets.
-Further, we determine the effect of varying a few key parameters on the light field predicted by the asymptotic approximation.
+Next, in Chapter \ref{chap:parameters}, the availability of necessary parameters in the literature is discussed.
+For those which are not readily available, give rough estimates are given or describe experimental methods for their determination are described.
+Then, in Chapter \ref{chap:model_analysis}, necessary grid resolution for adequate accuracy in the full finite difference solution is determined.
+The finite difference solution is compared to the asymptotic approximation for a few sets of optical properties.
+Further, we showcase the effect of varying a few key parameters on the light field predicted by the asymptotic approximation.
 Afterwards, the light model developed here is used in a numerical simulation of kelp growth, and the predicted light field and biomass production are compared to those predicted by a simpler 1D exponential decay light model.
-Finally, we conclude with Chapter \ref{chap:conclusion} by giving a brief summary of the model, discuss and its performance, and suggest improvements and avenues for future work.
+Finally, Chapter \ref{chap:conclusion} concludes the thesis by giving a brief summary of the model, discuss and its performance, and suggest improvements and avenues for future work.

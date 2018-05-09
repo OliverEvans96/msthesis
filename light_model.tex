@@ -12,20 +12,21 @@ The quantity of primary interest in modeling the light field is radiance $L$, wh
 That is,
 
 \begin{equation*}
-	L = \frac{d^2\Phi}{dA d\omega}
+	L = \frac{d^2\Phi}{dA d\vec{\omega}}
 \end{equation*}
 
 Once the radiance $L$ is calculated everywhere, the irradiance is
 \begin{equation*}
-  I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\omega.
+  I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\vec{\omega}.
 \end{equation*}
 Integrating $I(\vec{x})$, which has units \SI{}{\W/m^2}, over the surface of a frond, produces the power (with units \SI{}{\W}) transmitted to the frond.
 For details, see Section \ref{sec:perceived_irrad}.
 
 Irradiance is sometimes given in units of moles of photons (a mole of photons is also called an Einstein) per second, with the conversion \cite{mobley_light_1994} given by
-\begin{equation*}
+\begin{equation}
   \SI{1}{\W\per\m^2} = \SI{4.2}{\micro\mole \,photons\per\second}.
-\end{equation*}
+  \label{eqn:watts_photons}
+\end{equation}
 
 \subsection{Perceived Irradiance}
 \label{sec:perceived_irrad}
@@ -121,7 +122,7 @@ $\vec{l}(\vec{x}, \vec{\omega})$,
   \label{eqn:rte1d}
   \frac{dL}{ds}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega})
   = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
-  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x})\, d\omega',
+  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x})\, d\vec{\omega}',
 \end{equation}
 where $\int_{4\pi}$ denotes integration over the unit sphere.
 The derivative of $L$ over the path can be rewritten as
@@ -134,7 +135,7 @@ which unveils the general form of the Radiative Transfer Equation,
 \begin{equation*}
   \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
   = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
-  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\omega'
+  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\vec{\omega}'
 \end{equation*}
 
 or, equivalently,
@@ -142,7 +143,7 @@ or, equivalently,
   \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
   + a(\vec{x})L(\vec{x}, \vec{\omega})
   = b \left(
-    \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\omega'
+    \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\vec{\omega}'
     - L(\vec{x}, \vec{\omega})
   \right).
   \label{eqn:rte}
