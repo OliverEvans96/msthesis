@@ -57,7 +57,8 @@ One-indexing is employed throughout this document.
   \label{fig:spatial_grid}
 \end{figure}
 
-Each spatial grid cell is the Cartesian product of $x$, $y$, and $z$ intervals of width $dx$, $dy$, and $dz$ respectively.
+Each spatial grid cell is the Cartesian product of $x$, $y$, and $z$ intervals of width $dx$, $dy$, and $dz$ respectively,
+as shown in Figure \ref{fig:spatial_grid}.
 The three-dimensional interval centered at $(x_i, y_j, z_k)$ is denoted $X_{ijk}$, and has volume $\abs{X_{ijk}}=dx\,dy\,dz$.
 Also, note that no grid center is located on the plane $z=0$; the surface radiance boundary condition is treated separately.
 
@@ -131,6 +132,7 @@ Then, the integral of a function $f(\vec{\omega})$ is approximated as
 Presented here are details of the evaluation of the asymptotic approximations \eqref{eqn:asymptotics_soln_0} and \eqref{eqn:asymptotics_soln_n} to the raditiave transfer equation \eqref{eqn:rte}.
 
 \subsection{Scattering Integral}
+\label{sec:scatter_integral}
 
 Specifically, the amount of light scattered between angular grid cells is found by integrating $\beta$ as follows.
 Consider two angular grid cells, $\Omega$ and $\Omega'$.
@@ -218,28 +220,24 @@ which permits the simple formula
 \section{Finite Difference}
 While the asymptotic solution is valid in case of low scattering, a more general solution is obtained via finite difference, whereby the derivatives and integrals in the integro-partial differential equation are discretized to differences and sums and evaluated at each grid cell in order to construct a linear system of equations whose solution approximates that of the analytical equation.
 The price of a general solution, however, is greatly increased computational cost, both in terms of memory and CPU usage.
-Not only is it necessary to store a potentially huge sparse matrix in memory, but its construction can take enormous amounts of time.
-Nonetheless, it is useful to have access to a general numerical solution, at least for verification of approximations if not for direct use in applications.
 
 \subsection{Discretization}
 
 For the spatial interior of the domain, we use the second order central difference formula (CD2) to approximate the derivatives, which is
 \begin{equation*}
-    \tag{CD2}
     f'(x) = \frac{f(x+dx)-f(x-dx)}{2dx} + \mathcal{O}(dx^3).
 \end{equation*}
 
 When applying the PDE on the upper or lower boundary, we use the forward and backward difference (FD2 and BD2) formulas respectively.
-Omitting $\mathcal{O}(dx^3)$, we have
+The forward difference is given by
 \begin{equation*}
-    \tag{FD2}
     \label{eq:FD2}
-    f'(x) = \frac{-3f(x)+4f(x+dx)-f(x+2dx)}{2dx}
+    f'(x) = \frac{-3f(x)+4f(x+dx)-f(x+2dx)}{2dx} + \mathcal{O}(\varepsilon^3),
 \end{equation*}
+and the backward difference by
 \begin{equation*}
-    \tag{BD2}
     \label{eq:BD2}
-    f'(x) = \frac{3f(x)-4f(x-dx)+f(x-2dx)}{2dx}
+    f'(x) = \frac{3f(x)-4f(x-dx)+f(x-2dx)}{2dx} + \mathcal{O}(\varepsilon^3).
 \end{equation*}
 
 For the upper and lower boundaries, we need an asymmetric finite difference
@@ -288,61 +286,60 @@ Similarly, substituting $\varepsilon \to -\varepsilon$, we have
 \subsection{Difference Equations}
 \label{sec:difference_equations}
 
-%TODO: Periodic $x,y$
-
-In general, we have
-
+For every spatial grid cell, the scattering integral is discretized as described in Section \ref{sec:scatter_integral}, as
 \begin{equation*}
-  \vec{\omega} \cdot \nabla L_p = -(a+b) L_p + \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'}L_{p'}.
+  \vec{\omega} \cdot \nabla L_p = -(a_{ijk}+b) L_p + \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'}L_{p'},
+\end{equation*}
+or equivalently,
+\begin{equation*}
+  \vec{\omega} \cdot \nabla L_p + (a_{ijk}+b)L_p - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{p'} = 0.
 \end{equation*}
 
-Then,
-\begin{equation*}
-  \vec{\omega} \cdot \nabla L_p + (a+b(1-\beta_{pp'}))L_p - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{p'} = 0
-\end{equation*}
-
-Interior:
+On the interior of the spatial domain, we apply the central difference formula in each dimension, which yields.
 \begin{equation*}
   \begin{aligned}
     0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{L_{ij,k+1,p}-L_{ij,k-1,p}}{2dz}\cos\hat{\phi}_p \\
-    &+ (a_{ijk}+b(1-\beta_{pp'}))L_{ijkp}  - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}
+    &+ (a_{ijk}+b)L_{ijkp}  - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}
   \end{aligned}
 \end{equation*}
+Note that since periodic boundary conditions are used in $x$ and $y$,
+the subscript $i+1$ should actually read $(i+1) \mbox{mod1} n_x$, where
+mod1 is the one-indexed modulus.
+The same idea applies for $i-1$, $j+1$, and $j-1$.
+For the sake of readability, this is omitted from the equations in this section.
 
-Surface downwelling (BC):
+For downwelling light at the surface, we apply the asymmetric second order difference approximation \eqref{eqn:afd2}
+using the surface radiance value, which gives
 \begin{equation*}
   \begin{aligned}
     0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{-8f_p + 7L_{ijkp} + L_{ij,k+1,p}}{5dz}\cos\hat{\phi}_p \\
-    &+ (a_{ijk}+b(1-\beta_{pp'}))L_{ijkp} \\
+    &+ (a_{ijk}+b)L_{ijkp} \\
     &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
   \end{aligned}
 \end{equation*}
-
 Combining $L_{ijkp}$ terms on the left and moving the boundary condition to the
 right gives
-
 \begin{equation*}
   \begin{aligned}
     &\frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     + &\frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     + &\frac{L_{ij,k+1,p}}{5dz}\cos\hat{\phi}_p \\
-    + &(a_{ijk}+b(1-\beta_{pp'}) + \frac{7}{5dz} \cos\hat{\phi}_p)L_{ijkp} \\
+    + &(a_{ijk}+b) + \frac{7}{5dz} \cos\hat{\phi}_p)L_{ijkp} \\
     - &\sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'} = \frac{8f_p}{5dz} \cos\hat{\phi}_p.
   \end{aligned}
 \end{equation*}
 
 Likewise for the bottom boundary condition, we have
-
 \begin{equation*}
   \begin{aligned}
     0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &- \frac{L_{ij,k-1,p}}{5dz}\cos\hat{\phi}_p \\
-    &+ (a_{ijk}+b(1-\beta_{pp'}) - \frac{7}{5dz}\cos\hat{\phi}_p)L_{ijkp} \\
+    &+ (a_{ijk}+b) - \frac{7}{5dz}\cos\hat{\phi}_p)L_{ijkp} \\
     &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
   \end{aligned}
 \end{equation*}
@@ -353,7 +350,7 @@ Now, for upwelling light at the first depth layer (non-BC), we apply FD2.
     0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{-3L_{ijkp} + 4L_{ij,k+1,p} - L_{ij,k+2,p}}{2dz}\cos\hat{\phi}_p \\
-    &+ (a_{ijk}+b(1-\beta_{pp'}))L_{ijkp} \\
+    &+ (a_{ijk}+b)L_{ijkp} \\
     &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
   \end{aligned}
 \end{equation*}
@@ -364,7 +361,7 @@ Grouping $L_{ijkp}$ terms gives
     0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{4L_{ij,k+1,p} - L_{ij,k+2,p}}{2dz}\cos\hat{\phi}_p \\
-    &+ \left(a_{ijk}+b(1-\beta_{pp'}) - 3\frac{\cos\hat\phi_p}{2dz} \right)L_{ijkp} \\
+    &+ \left(a_{ijk}+b - 3\frac{\cos\hat\phi_p}{2dz} \right)L_{ijkp} \\
     &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
   \end{aligned}
 \end{equation*}
@@ -375,7 +372,7 @@ Similarly, for downwelling light at the lowest depth layer, we have
     0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{-4L_{ij,k-1,p} + L_{ij,k-2,p}}{2dz}\cos\hat{\phi}_p \\
-    &+ \left(a_{ijk}+b(1-\beta_{pp'}) + 3\frac{\cos\hat\phi_p}{2dz} \right)L_{ijkp} \\
+    &+ \left(a_{ijk}+b + 3\frac{\cos\hat\phi_p}{2dz} \right)L_{ijkp} \\
     &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}
   \end{aligned}
 \end{equation*}
@@ -386,6 +383,7 @@ The equation applied at each grid cell involves adjacent radiance values due to 
 Thus, a coupled system of linear equations is produced, which can be written as a sparse matrix equation, $Ax=b$.
 In the coefficient matrix $A$, each row is asociated with the grid cell at which the discretized equation was evaluated.
 Each column is the coefficient of the radiance at a particular spatial-angular grid cell.
+
 In principle the order of the equations, i.e., the order of the rows and columns of the coefficient matrix, is not important
 so long as consistency is maintained with the solution vector and right-hand side.
 In general, some procedure is necessary for constructing an ordered list of the multidimensional grid cells.
@@ -417,6 +415,7 @@ Table \ref{tab:nonzero} shows a breakdown of the number of distinct radiance val
 
 \begin{table}[H]
   \centering
+  \caption{Breakdown of nonzero matrix elements by derivative case}
   \begin{tabular}{p{\linewidth/3}p{\linewidth/3}p{\linewidth/3}}
     \toprule
     \textbf{Derivative case} & \textbf{\# nonzero/row} & \textbf{\# of rows} \\
@@ -426,8 +425,8 @@ Table \ref{tab:nonzero} shows a breakdown of the number of distinct radiance val
     bottom upwelling & $\nomega+5$ & $n_xn_y\nomega/2$ \\
     surface upwelling & $\nomega+6$ & $n_xn_y\nomega/2$ \\
     bottom downwelling & $\nomega+6$ & $n_xn_y\nomega/2$ \\
+    \bottomrule
   \end{tabular}
-  \caption{Breakdown of nonzero matrix elements by derivative case}
   \label{tab:nonzero}
 \end{table}
 
@@ -444,8 +443,10 @@ By multiplying the first column of Table \ref{tab:nonzero} by the second and sum
 Also, note that $b$ only has nonzero entries for the downwelling surface grid cells, of which there are $n_x n_y \nomega/2$.
 
 \subsection{Iterative Solution}
-For small systems of equations, direct methods such as Gaussian elimination, QR factorization, and singular value decomposition can be used.
-However, when the coefficient matrix becomes very large, the memory required to carry out a direct solution is prohibitively large, iterative solvers must be used.
+Because of the large number of dimensions (three spatial, two angular), the matrix can easily have upwards of millions of nonzero elements,
+even for modest grid sizes.
+Direct methods such as Gaussian elimination, QR factorization, and singular value decomposition are therefore infeasible due to memory requirements.
+We therefore turn to iterative solvers.
 Many such solvers are available, including GMRES \cite{saad_gmres:_1985}, LGMRES \cite{baker_technique_2005}, IDR \cite{sonneveld_idrs:_2008}, and BI-CGSTAB \cite{van_der_vorst_bi-cgstab:_1992}.
 In our case, GMRES is used.
 

@@ -29,6 +29,23 @@
 	file = {oe-18-5-4615.pdf:/home/oliver/.zotero/zotero/cywzn0ul.default/zotero/storage/WACIEX8D/oe-18-5-4615.pdf:application/pdf}
 }
 
+@article{petkova_novel_2011,
+	title = {A novel approach for accurate radiative transfer in cosmological hydrodynamic simulations},
+	volume = {415},
+	issn = {00358711},
+	url = {http://arxiv.org/abs/1012.1017},
+	doi = {10.1111/j.1365-2966.2011.18986.x},
+	abstract = {We present a numerical implementation of radiative transfer based on an explicitly photon-conserving advection scheme, where radiative fluxes over the cell interfaces of a structured or unstructured mesh are calculated with a second-order reconstruction of the intensity field. The approach employs a direct discretisation of the radiative transfer equation in Boltzmann form with adjustable angular resolution that in principle works equally well in the optically thin and optically thick regimes. In our most general formulation of the scheme, the local radiation field is decomposed into a linear sum of directional bins of equal solid-angle, tessellating the unit sphere. Each of these "cone-fields" is transported independently, with constant intensity as a function of direction within the cone. Photons propagate at the speed of light (or optionally using a reduced speed of light approximation to allow larger timesteps), yielding a fully time-dependent solution of the radiative transfer equation that can naturally cope with an arbitrary number of sources, as well as with scattering. The method casts sharp shadows, subject to the limitations induced by the adopted angular resolution. If the number of point sources is small and scattering is unimportant, our implementation can alternatively treat each source exactly in angular space, producing shadows whose sharpness is only limited by the grid resolution. A third hybrid alternative is to treat only a small number of the locally most luminous point sources explicitly, with the rest of the radiation intensity followed in a radiative diffusion approximation. We have implemented the method in the moving-mesh code \{{\textbackslash}small AREPO\}, where it is coupled to the hydrodynamics in an operator splitting approach that subcycles the radiative transfer alternatingly with the hydrodynamical evolution steps.},
+	number = {4},
+	urldate = {2017-04-28},
+	journal = {Monthly Notices of the Royal Astronomical Society},
+	author = {Petkova, Margarita and Springel, Volker},
+	month = aug,
+	year = {2011},
+	keywords = {Astrophysics - Cosmology and Nongalactic Astrophysics},
+	pages = {3731--3749}
+}
+
 @incollection{mobley_radiative_2001,
 	title = {Radiative {Transfer} in the {Ocean}},
 	isbn = {978-0-12-227430-5},
