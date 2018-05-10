@@ -4,24 +4,21 @@
 Now that we have formulated the distribution of kelp throughout the medium, we introduce the Radiative Transfer Equation, which is used to calculate the light field.
 
 \section{Optical Definitions}
+Before introducing the radiative transfer equation, it is necessary to discuss some basic radiometric quantities of interest which characterize the light field, as well as inherent optical properties which describe the medium of propagation.
 
 \subsection{Radiometric Quantities}
 
 One of the most fundamental quantities in optics is radiant flux $\Phi$, which is the has units of energy per time.
 The quantity of primary interest in modeling the light field is radiance $L$, which is defined as the radiant flux per steradian per projected surface area perpendicular to the direction of propagation of the beam.
 That is,
-
 \begin{equation*}
-	L = \frac{d^2\Phi}{dA d\vec{\omega}}
+	L = \frac{d^2\Phi}{dA d\vec{\omega}},
 \end{equation*}
-
+where $\vec{\omega}$ is an element of solid angle, and $A$ is an element of projected surface area.
 Once the radiance $L$ is calculated everywhere, the irradiance is
 \begin{equation*}
   I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\vec{\omega}.
 \end{equation*}
-Integrating $I(\vec{x})$, which has units \SI{}{\W/m^2}, over the surface of a frond, produces the power (with units \SI{}{\W}) transmitted to the frond.
-For details, see Section \ref{sec:perceived_irrad}.
-
 Irradiance is sometimes given in units of moles of photons (a mole of photons is also called an Einstein) per second, with the conversion \cite{mobley_light_1994} given by
 \begin{equation}
   \SI{1}{\W\per\m^2} = \SI{4.2}{\micro\mole \,photons\per\second}.
@@ -36,17 +33,16 @@ The average irradiance experienced by a kelp frond in depth layer $k$ is
 \begin{equation*}
    \Iperk = \frac{\sum_{ij}P_{ijk}I_{ijk}}{\sum_{ij}P_{ijk}}.
 \end{equation*}
-
 The irradiance perceived by the kelp is expected to be slightly lower than the average irradiance,
 \begin{equation*}
-  \bar{I}_k = \frac{\sum_{ij}I_{ijk}}{n_x n_y}
+  \bar{I}_k = \frac{\sum_{ij}I_{ijk}}{n_x n_y},
 \end{equation*}
 since the kelp is more densely located at the center of the domain where the light field is reduced,
 whereas the simple average is influenced by regions of higher irradiance at the edges of the domain where kelp is not present.
 
 \subsection{Inherent Optical Properties}
 % TODO: Edit
-We must now define a few inherent optical properties (IOPs) which depend only on the medium of propagation.
+We now define a few inherent optical properties (IOPs) which depend only on the medium of propagation.
 These phenomena are governed by three inherent optical properties (IOPs) of the
 medium.
 The absorption coefficient $a(\vec{x})$ (units m$^{-1}$) defines the

@@ -5,22 +5,38 @@ In order to properly model the spatial distribution of light around the kelp, it
 We take a probabilistic approach to describing the kelp.
 We begin by describing the distribution of kelp fronds, and through algebraic manipulation, we are able to assign to each point in space a probability that kelp occupies the location.
 
+
 \section{Physical Setup}
-The life of cultivated macroalgae generally begins in the laboratory, where microscopic kelp spores are inoculated onto a thread in a small laboratory pool. % TODO: Cite
-This thread is wrapped around a large rope, which is placed in the ocean and generally suspended by buoys in one of two configurations: horizontal or vertical.
+The life of cultivated macroalgae generally begins in the laboratory, where microscopic kelp spores are inoculated onto a thread in a small laboratory pool.
+This thread is wrapped around a larger rope as in Figure \ref{fig:rope_thread}, which is hung from buoys in the ocean.
+The two primary configurations are vertical and horizontal or ``long'' lines.
+In the case of vertical lines, the seaweed rope hangs straight down from a single buoy, and is either weighted or anchored.
+In the case of long lines, the rope is strung from one buoy to another.
+Long lines allow more light to reach the seaweed since it grows closer to the surface, but more vertical lines can be set up in a given area,
+which may be advantageous for IMTA.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.65\textwidth]{kelp_photo/rope_thread}
+  \caption{\textit{Saccharina latissima} innoculated onto a thread wrapped around a rope on which it is to be grown}
+  \label{fig:rope_thread}
+\end{figure}
+
 We consider only the case of a rigid vertical rope which does not sway in the current.
 The mature \textit{Saccharina latissima} plant consists of a single frond (leaf), a stipe (stem) and a holdfast (root structure).
 For the sake of this model, only the kelp frond is considered, and its base is attached directly to the rope.
 The ``gentle undulation approximation'' is employed, whereby it is assumed that fronds are perfectly horizontal.
-While on at any point in time they may point up or down due to water current and gravity, we consider the horizontal
+While at any given time they may point up or down due to water current and gravity, we consider the horizontal
 state to be an average configuration.
 This simplifaction allows for the three-dimensionally distributed population of kelp fronds
 to be considered a collection of independent populations in two-dimensional depth layers.
+A computer rendering of this scenario is shown in Figure \ref{fig:kelp_array}.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=3.5in]{kelp_array}
-	\captionof{figure}{Rendering of four nearby vertical kelp ropes}
+	\captionof{figure}{Rendering of four nearby vertical kelp ropes as represented in the spatial distribution model. Note the kite-shaped fronds and horizontal orientation.}
+  \label{fig:kelp_array}
 \end{figure}
 
 \section{Coordinate System}
@@ -42,13 +58,12 @@ In the following sections, it is necessary to convert between Cartesian and sphe
   \right.
 	\label{eqn:coords}
 \end{equation}
-
-Therefore, for some function $f(x,y,z)$, we can write its derivative along a path in spherical coordinates in terms of Cartesian coordinates using the chain rule.
+Therefore, for some function $f(x,y,z)$, we can write its derivative along a path in spherical coordinates in terms of Cartesian coordinates using the chain rule,
 \begin{equation*}
 	\frac{\partial f}{\partial r} 
 	=\frac{\partial f}{\partial x}\frac{\partial x}{\partial r} 
 	+ \frac{\partial f}{\partial y}\frac{\partial y}{\partial r} 
-	+ \frac{\partial f}{\partial z}\frac{\partial z}{\partial r}
+	+ \frac{\partial f}{\partial z}\frac{\partial z}{\partial r}.
 \end{equation*}
 Then, calculating derivatives from \eqref{eqn:coords} yields
 \begin{equation}
@@ -65,11 +80,10 @@ Then, calculating derivatives from \eqref{eqn:coords} yields
 	\label{fig:3dcoords}
 \end{figure}
 
-
 \section{Population Distributions}
 In order to construct a spatial distribution of kelp fronds, a simple kite-shaped geometry is introduced,
 and frond lengths and azimuthal orientations are assumed to be distributed predictably.
-It is assumed that fronds extend perfectly horizontally 
+Since it is assumed that fronds extend perfectly horizontally, no angular elevation distribution is required.
 
 \subsection{Frond Shape}
 \label{sec:shape}
@@ -88,56 +102,50 @@ The frond is assumed to be kite-shaped with length $l$ from base to tip, and wid
 In Figure \ref{fig:frond}, the base is shown at the bottom and the tip is shown at the top.
 The proximal length is the shortest distance from the base to the diagonal connecting the left and right corners, and is notated as $f_a$.
 Likewise, the distal length is the shortest distance from that diagonal to the tip, notated $f_b$.
- We have
+It is therefore clear that
  \begin{equation*}
-	 f_a + f_b = l
+	 f_a + f_b = l.
  \end{equation*}
 When considering a whole population with varying sizes, it is more convenient to specify ratios than absolute lengths.
-Let the following ratios be defined.
+Define the ratios
 \begin{align*}
-	f_r &= \frac{l}{w} \\
-	f_s &= \frac{f_a}{f_b}
+	f_r &= \frac{l}{w}, \\
+	f_s &= \frac{f_a}{f_b}.
 \end{align*}
-These ratios are assumed to be consistent among the entire population, making all fronds geometrically similar.
-With these definitions, the shape of the frond can be fully specified by $l$, $f_r$, and $f_s$.
-It is possible, then, to redefine $w$, $f_a$ and $f_b$ as follows from the preceding formulas.
-
+These ratios are assumed to be constant among the entire population, so that all fronds are geometrically similar.
+Thus, the shape of the frond can be fully specified by $l$, $f_r$, and $f_s$;
+it is possible to redefine $w$, $f_a$ and $f_b$ from the preceding formulas as
 \begin{align*}
-	w &= \frac{l}{f_r} \\
-	f_a &= \frac{lf_s}{1+f_s} \\
-	f_b &= \frac{l}{1+f_s}
+	w &= \frac{l}{f_r}, \\
+	f_a &= \frac{lf_s}{1+f_s}, \\
+	f_b &= \frac{l}{1+f_s}.
 \end{align*}
-
 The angle $\alpha$, half of the angle at the base corner, is also noteworthy.
-Using the above equations,
+From the above equations, it follows that 
 \begin{equation*}
-	\alpha = \tan^{-1}\left(\frac{2f_rf_s}{1+f_s}\right)
+	\alpha = \tan^{-1}\left(\frac{2f_rf_s}{1+f_s}\right).
 \end{equation*}
 
-The area of the frond is given by
-\begin{equation*}
-  A = \frac{lw}{2} = \frac{l^2}{2f_r}.
-\end{equation*}
-
-Likewise, if the area is known, then the length is
-\begin{equation}
-  l = \sqrt{2Af_r}.
+It is useful to convert between frond length and surface area, which can be done via the relations
+\begin{align}
+  A &= \frac{lw}{2} = \frac{l^2}{2f_r}, \\
+  l &= \sqrt{2Af_r}.
   \label{eqn:length-from-area}
-\end{equation}
+\end{align}
 
 \subsection{Length and Angle Distributions}
 \label{sec:dist}
-Frond lengths are assumed to be normally distributed with mean $\mu_l$ and standard deviation $\sigma_l$.
-That is, the frond length distribution has the probability density function (PDF)
+The distribution of frond lengths is assumed to be normal, with mean $\mu_l$ and standard deviation $\sigma_l$.
+That is, it has the probability density function (PDF)
 \begin{equation*}
   P_l(l) = \frac{1}{\sqrt{2\pi\sigma_l^2}}\exp\left(\frac{(l-\mu_l)^2}{2\sigma_l^2}\right).
 \end{equation*}
 
 It is further assumed that frond angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution, defined on $[-\pi,\pi]$ rather than $(-\infty,\infty)$.
 The von Mises distribution has two parameters, $\mu$ and $\kappa$, which shift and sharpen its peak respectively, as shown in Figure \ref{fig:vonmises}.
-$\kappa$ can be considered analogous to $1/\sigma$ in the normal distribution.
-That is, in the case of zero current velocity, the frond angles are be distributed uniformly, while as current velocity increases, they become increasingly likely to be pointing in the direction of the current, depending on the stiffness of the frond.
-Assuming a linear relationship between the current velocity and the steepness of the angular distribution, define the frond bending coefficient $\eta$, with units \SI{}{\s\per\m}.
+$\kappa$ is analogous to $1/\sigma$ in the normal distribution.
+In the absence of current, the frond angles are be distributed uniformly, while as current velocity increases, they become increasingly likely to align in the current direction, depending on the stiffness of the frond.
+Assuming a linear relationship between the current velocity and the steepness of the angular distribution, define the \textit{alignment coefficient} $\eta$, with units of inverse velocity(\SI{}{\s\per\m}).
 Then, in use $\mu = \theta_w$ and $\kappa = \eta v_w$ as the von Mises distribution parameters.
 Note that $\theta_w$ and $v_w$ vary over depth, while $\eta$ is assumed constant for the population.
 Then, the PDF for the von Mises frond angle distribution is
@@ -161,15 +169,15 @@ Notice that unlike the normal distribution, the von Mises distribution approache
 \label{sec:dist_2d}
 The previous two distributions can reasonably be assumed to be independent of one another. That is, the angle of the frond does not depend on the length, or vice versa.
 Therefore, the probability of a frond simultaneously having a given frond length and angle is the product of their individual probabilities.
-
-Given independent events $A$ and $B$,
+Given independent events $A$ and $B$, the probability of their intersection is the product of their individual probabilities.
+That is,
 \begin{equation*}
 	\label{eq:ind_prob}
-	P(A \cap B) = P(A)P(B)
+	P(A \cap B) = P(A)P(B).
 \end{equation*}
 Then the probability of frond length $l$ and frond angle $\theta_f$ coinciding is 
 \begin{equation*}
-	P_{2D}(\theta_f,l) = P_{\theta_f}(\theta_f) \cdot P_l(l)
+	P_{2D}(\theta_f,l) = P_{\theta_f}(\theta_f) \cdot P_l(l).
 \end{equation*}
 A contour plot of this 2D distribution for a specific set of parameters is shown in Figure \ref{fig:dist_2d}, where probability is represented by color in the 2D plane.
 Darker green represents higher probability, while lighter beige represents lower probability.
@@ -186,20 +194,20 @@ which is currently not taken into consideration in this model.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=.75\linewidth]{prob_2d}
-	\vspace{-3em}
 	\captionof{figure}{2D length-angle probability distribution with $\theta_w=2\pi/3,v_w=1$}
 	\label{fig:dist_2d}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.75\linewidth]{kelp_sample}
-	\vspace{-2em}
+	\includegraphics[width=.6\linewidth]{kelp_sample}
 	\captionof{figure}{A sample of 50 kelp fronds with length and angle picked from the distribution above with $f_s=0.5$ and $f_r=2$.}
 	\label{fig:kelp_sample}
 \end{figure}
 
 \section{Spatial Distribution}
+In this section, the population length and angle distributions from the previous section are used to construct a spatial distribution of kelp.
+This is made possible by the simple kite-shape fronds, and would be considerably more difficult with more general frond shapes.
 \subsection{Rotated Coordinate System}
 \label{sec:rot_coords}
 To determine under what conditions a frond will occupy a given point, we begin by
@@ -235,7 +243,7 @@ Then, using the relationships in Section \ref{sec:shape}, the above equation can
 \end{equation*}
 To generalize to a frond pointed at an angle $\theta_f$, we introduce the coordinate system $(\theta,s)$ such that
 \begin{equation*}
-	\theta = \theta' + \theta_f - \frac{\pi}{2}
+	\theta = \theta' + \theta_f - \frac{\pi}{2}.
 \end{equation*}
 Then, for a frond pointed at the arbitrary angle $\theta_f$, the function for the outer edges can be written as 
 \begin{equation*}
@@ -274,8 +282,7 @@ Any frond longer than these at the same angle will also occupy the point.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.75\linewidth]{shade_area}
-	\vspace{-2em}
+	\includegraphics[width=.6\linewidth]{shade_area}
 	\captionof{figure}{Outlines of minimum-length fronds for a variety of angles to occupy the point $(\theta,s)=(3\pi/4,3/2)$}
 	\label{fig:shade_area}
 \end{figure}
@@ -284,12 +291,11 @@ Any frond longer than these at the same angle will also occupy the point.
 We are interested in the probability that, given a fixed point $(\theta,s)$, values of $l$ and $\theta_f$ chosen from the distributions described in Section \ref{sec:dist} will fall in the occupancy region.
 This is found by integrating $P_{2D}$ over the occupancy region for $(\theta,s)$.
 
-\begin{figure}[H]
+\begin{figure}[h]
 	\centering
-	\includegraphics[width=.75\linewidth]{cart_shade}
-	\vspace{-3em}
+	\includegraphics[width=.6\linewidth]{cart_shade}
 	\captionof{figure}{Contour plot of $P_{2D}(\theta_f,l)$ overlayed with the
-    region in the $\theta_f-l$ plane which results in a frond occupying the point $(\theta,s)=(3\pi/4,3/2)$}
+    region in the $\theta_f$\nobreak-\nobreak$l$ plane which results in a frond occupying the point $(\theta,s)=(3\pi/4,3/2)$}
 	\label{fig:cart_shade}
 \end{figure}
 
@@ -305,12 +311,11 @@ Integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ as depicted in Figure \ref
 \end{align*}
 
 % TODO: Revise. This is the first mention of grid cells.
-Then, multiplying $\tilde{P}_k$ by the number of fronds in the population $n$ of the depth layer gives the expected number of fronds occupying the point.
+Multiplying $\tilde{P}_k$ by the number of fronds in the population $n$ of the depth layer gives the expected number of fronds occupying the point.
 Assuming a uniform thickness $t$ for all fronds, and a thickness $dz$ of the depth layer, the proportion of the grid cell occupied by kelp is found to be
 \begin{equation*}
   P_k = \frac{nt}{dz}\tilde{P}_k.
 \end{equation*}
-
 Then, the effective absorption coefficient can be calculated at any point in space as
 \begin{equation*}
   a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w
@@ -319,8 +324,7 @@ Then, the effective absorption coefficient can be calculated at any point in spa
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.75\linewidth]{prob_shade}
-	\vspace{-2em}
-	\captionof{figure}{Colored plot of the probability of frond occupation sampled at 121 points using $\theta_f=2\pi/3,v_w=1$}
+	\includegraphics[width=.6\linewidth]{prob_shade}
+	\captionof{figure}{Colored plot of the probability of frond occupation sampled at 121 points using $\theta_f=2\pi/3,\eta v_w=1$}
 	\label{fig:prob_shade}
 \end{figure}

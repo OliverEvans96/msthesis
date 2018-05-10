@@ -17,6 +17,12 @@ clean:
 main.pdf:
 	latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make main.tex
 
+draft_diff.pdf:
+	latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make draft_diff.tex
+
+%.pdf: %.tex
+	latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make $<
+
 outline.pdf:
 	pandoc outline.md -o outline.pdf
 
