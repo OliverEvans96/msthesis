@@ -57,10 +57,10 @@ For the sake of reducing dimensionality, we define generic spatial and angular r
 $n_s$ and $n_a$ such that $n_s=n_x=n_y$ and $n_a=n_\theta=n_\phi$.
 Remaining is a three-dimensional resolution space, $(n_s,n_z,n_a)$.
 Rather than perform calculations at every possible combination of resolutions in the space,
-we choose a maximum resolution of $20 \times 20 \times 20$.
-We hold two of the three resolutions at the maximum value while varying the third.
+we choose a maximum resolution of $20 \times 20 \times 20$,
+and hold two of the three resolutions at the maximum value while varying the third.
 For example, Figure \ref{fig:gs_ns} compares $4 \times 20 \times 20$, $6 \times 20 \times 20$, $8 \times 20 \times 20$, etc.
-The quantity that we compare is \textit{perceived irradiance}, which is not the simple average irradiance in each depth layer.
+The quantity that we compare is \textit{perceived irradiance}, which is different than the simple mean irradiance in each depth layer.
 Rather, the average is weighted by the normalized spatial kelp distribution to determine the average irradiance experienced by the kelp population.
 For more detail, see Section \ref{sec:perceived_irrad}
 
@@ -77,31 +77,39 @@ Figure \ref{fig:gs_na} shows that $n_a$ is somewhere between the two,
 demonstrating clear improvement with increasing resolution, though the improvement is not uniform over depth.
 Figure \ref{fig:gs_compare} shows the trend of increasing accuracy with increasing resolution in each dimension.
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=5in]{gs_ns_20}
+  \includegraphics[width=\textwidth]{gs_ns}
   \caption{Grid study, $n_s$}
   \label{fig:gs_ns}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=5in]{gs_nz_20}
+  \includegraphics[width=\textwidth]{gs_nz}
   \caption{Grid study, $n_z$}
   \label{fig:gs_nz}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=5in]{gs_na_20}
+  \includegraphics[width=\textwidth]{gs_na}
   \caption{Grid study, $n_a$}
   \label{fig:gs_na}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=5in]{gs_20}
+  \includegraphics[width=4in]{gs_compare}
   \caption{Grid study, summary}
+  \label{fig:gs_compare}
+\end{figure}
+
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=4in]{gs_time}
+  \caption{Grid study, time}
   \label{fig:gs_compare}
 \end{figure}
 
@@ -125,13 +133,13 @@ In the first case, 4 scattering events is sufficient, whereas in the second, the
 \begin{figure}[H]
   \centering
   \includegraphics[width=4in]{asym_conv_irrad_aut8}
-  \caption{Successive asymptotic approximations, irradiance: \texttt{AUT8}}
+  \caption{Successive asymptotic approximations, irradiance: AUT8}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=4in]{asym_conv_rel_err_aut8}
-  \caption{Successive asymptotic approximations, relative error: \texttt{AUT8}}
+  \caption{Successive asymptotic approximations, relative error: AUT8}
 \end{figure}
 
 %%
@@ -139,13 +147,13 @@ In the first case, 4 scattering events is sufficient, whereas in the second, the
 \begin{figure}[H]
   \centering
   \includegraphics[width=4in]{asym_conv_irrad_hao11}
-  \caption{Successive asymptotic approximations, irradiance: \texttt{HAO11}}
+  \caption{Successive asymptotic approximations, irradiance: HAO11}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=4in]{asym_conv_rel_err_hao11}
-  \caption{Successive asymptotic approximations, relative error: \texttt{HAO11}}
+  \caption{Successive asymptotic approximations, relative error: HAO11}
 \end{figure}
 
 %%
@@ -153,13 +161,13 @@ In the first case, 4 scattering events is sufficient, whereas in the second, the
 \begin{figure}[H]
   \centering
   \includegraphics[width=4in]{asym_conv_irrad_nuc2200}
-  \caption{Successive asymptotic approximations, irradiance: \texttt{NUC2200}}
+  \caption{Successive asymptotic approximations, irradiance: NUC2200}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=4in]{asym_conv_irrad_nuc2240}
-  \caption{Successive asymptotic approximations, relative error: \texttt{NUC2240}}
+  \caption{Successive asymptotic approximations, relative error: NUC2240}
 \end{figure}
 
 %%

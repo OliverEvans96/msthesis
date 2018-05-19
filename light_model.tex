@@ -77,7 +77,6 @@ We are now prepared to present the full details of Radiative Transfer Equation, 
 \subsection{Ray Notation}
 Consider a fixed position $\vec{x}$ and direction $\vec{\omega}$ such that
 $\vec{\omega} \cdot \hat{z} \neq 0$.
-% TODO: Just call $\vec{x_0}$ a point, not a function. Call it the projection to the surface.
 Let $\vec{l}(\vec{x}, \vec{\omega}, s)$ denote the linear path containing $\vec{x}$ in the direction $\vec{\omega}$.
 Assume that the ray is not horizontal.
 Then, it originates either at the surface or bottom of the domain, with initial z coordinate given by
@@ -94,9 +93,10 @@ Hence, the ray path is parameterized as
   \label{eqn:ray_path}
 \end{equation}
 where
-\begin{equation*}
+\begin{equation}
   \vec{x_0}(\vec{x}, \vec{\omega}) = \vec{x} - \tilde{s} \vec{\omega}
-\end{equation*}
+  \label{eqn:x_0}
+\end{equation}
 is the origin of the ray, and 
 \begin{equation*}
   \tilde{s} = \frac{\vec{x} \cdot \hat{z} - z_0}{\vec{\omega} \cdot \hat{z}}

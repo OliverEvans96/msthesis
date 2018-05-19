@@ -200,7 +200,8 @@ which is currently not taken into consideration in this model.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.6\linewidth]{kelp_sample}
+	%\includegraphics[width=.6\linewidth]{kelp_sample}
+	\includegraphics[width=4in]{../kelp/code/reports/figures/kelp_sample_2}
 	\captionof{figure}{A sample of 50 kelp fronds with length and angle picked from the distribution above with $f_s=0.5$ and $f_r=2$.}
 	\label{fig:kelp_sample}
 \end{figure}
@@ -293,13 +294,13 @@ This is found by integrating $P_{2D}$ over the occupancy region for $(\theta,s)$
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.6\linewidth]{cart_shade}
+	\includegraphics[width=.75\linewidth]{cart_shade}
 	\captionof{figure}{Contour plot of $P_{2D}(\theta_f,l)$ overlayed with the
     region in the $\theta_f$\nobreak-\nobreak$l$ plane which results in a frond occupying the point $(\theta,s)=(3\pi/4,3/2)$}
 	\label{fig:cart_shade}
 \end{figure}
 
-Integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ as depicted in Figure \ref{fig:cart_shade} yields the proportion of the population occupying the point $(\theta,s)$,
+Integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ as depicted in Figure \ref{fig:cart_shade} yields the proportion of the population in the depth layer occupying the point $(\theta,s)$,
 \begin{align*}
 		\tilde{P}_k(\theta,s,z)	&= \iint_{R_s(\theta,s)}
 								P_{2D}(\theta_f,l)
@@ -310,9 +311,8 @@ Integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ as depicted in Figure \ref
 								\,dl\,d\theta_f.
 \end{align*}
 
-% TODO: Revise. This is the first mention of grid cells.
-Multiplying $\tilde{P}_k$ by the number of fronds in the population $n$ of the depth layer gives the expected number of fronds occupying the point.
-Assuming a uniform thickness $t$ for all fronds, and a thickness $dz$ of the depth layer, the proportion of the grid cell occupied by kelp is found to be
+Assuming that the depth layer has thickness $dz$ and contains $n$ fronds of thickenss $t$,
+the proportion of the depth layer occupied by kelp at any horizontal position can be calculated as 
 \begin{equation*}
   P_k = \frac{nt}{dz}\tilde{P}_k.
 \end{equation*}
@@ -320,7 +320,6 @@ Then, the effective absorption coefficient can be calculated at any point in spa
 \begin{equation*}
   a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w
 \end{equation*}
-% TODO: Calculate absorption coefficient grid.
 
 \begin{figure}[h]
 	\centering
