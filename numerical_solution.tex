@@ -129,7 +129,7 @@ Then, the integral of a function $f(\vec{\omega})$ is approximated as
 \end{align*}
 
 \section{Numerical Asymptotics}
-Presented here are details of the evaluation of the asymptotic approximations \eqref{eqn:asymptotics_soln_0} and \eqref{eqn:asymptotics_soln_n} to the raditiave transfer equation \eqref{eqn:rte}.
+Presented here are details of the evaluation of the asymptotic approximations \eqref{eqn:asymptotics_soln_0} and \eqref{eqn:asymptotics_soln_n} to the radiative transfer equation \eqref{eqn:rte}.
 
 \subsection{Scattering Integral}
 \label{sec:scatter_integral}
@@ -159,7 +159,7 @@ Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the disc
 Let $\nu=1,\ldots,N\nobreak-\nobreak1$ index the spatial grid cells traversed by the ray, and define the \textit{path-length characteristic function}
 \begin{equation*}
   \mathcal{X}^l_\nu(s) = \begin{cases}
-    1, & s_\nu \leq s < s_{\nu+1} \\
+    1, & s_\nu \leq s < s_{\nu+1}, \\
     0, & \mbox{otherwise}.
     \end{cases}
 \end{equation*}
@@ -218,7 +218,7 @@ which permits the simple formula
 \end{equation}
 
 \section{Finite Difference}
-While the asymptotic solution is valid in case of low scattering, a more general solution is obtained via finite difference, whereby the derivatives and integrals in the integro-partial differential equation are discretized to differences and sums and evaluated at each grid cell in order to construct a linear system of equations whose solution approximates that of the analytical equation.
+While the asymptotic solution is valid in the case of low scattering, a more general solution is obtained via finite difference, whereby the derivatives and integrals in the integro-partial differential equation are discretized to differences and sums and evaluated at each grid cell in order to construct a linear system of equations whose solution approximates that of the analytical equation.
 The price of a general solution, however, is greatly increased computational cost, both in terms of memory and CPU usage.
 
 \subsection{Discretization}
@@ -244,13 +244,13 @@ For the upper and lower boundaries, we need an asymmetric finite difference
 method.
 In general, the Taylor Series of a function $f$ about $x$ is
 \begin{equation*}
-  f'(x+\varepsilon) = \sum_{n=1}^\infty \frac{f^{(n)}(x)}{n!} \varepsilon^n \\
+  f'(x+\varepsilon) = \sum_{n=1}^\infty \frac{f^{(n)}(x)}{n!} \varepsilon^n. \\
 \end{equation*}
 
 Truncating after the first few terms, we have
 \begin{equation}
   \label{eqn:afd1}
-  f'(x+\varepsilon)  = f(x) + f'(x)\varepsilon + \frac{f''(x)}{2}\varepsilon^2 + \mathcal{O}(\varepsilon^3)
+  f'(x+\varepsilon)  = f(x) + f'(x)\varepsilon + \frac{f''(x)}{2}\varepsilon^2 + \mathcal{O}(\varepsilon^3).
 \end{equation}
 
 Similarly, replacing $\varepsilon$ with $-\varepsilon/2$ we have
@@ -262,24 +262,24 @@ Similarly, replacing $\varepsilon$ with $-\varepsilon/2$ we have
 Rearranging \eqref{eqn:afd1} produces
 \begin{equation}
   \label{eqn:afd3}
-  f''(x)\varepsilon^2 = 2f(x+\varepsilon) - 2f(x) - 2f'(x)\varepsilon + \mathcal{O}(\varepsilon^3)
+  f''(x)\varepsilon^2 = 2f(x+\varepsilon) - 2f(x) - 2f'(x)\varepsilon + \mathcal{O}(\varepsilon^3).
 \end{equation}
 
 Combining \eqref{eqn:afd2} with \eqref{eqn:afd3} gives
 \begin{align*}
   \varepsilon f'(x) &= 2f(x) - 2f(x-\frac{\varepsilon}{2}) + f''(x)\frac{\varepsilon^2}{8} + \mathcal{O}(\varepsilon^3) \\
                     &= 2f(x) - 2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{4} - \frac{f(x)}{4} - \frac{f'(x)\varepsilon}{4} + \mathcal{O}(\varepsilon^3) \\
-                    &= \frac{4}{5}\left( 2f(x)-2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{4} - \frac{f(x)}{4} \right) + \mathcal{O}(\varepsilon^3)
+                    &= \frac{4}{5}\left( 2f(x)-2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{4} - \frac{f(x)}{4} \right) + \mathcal{O}(\varepsilon^3).
 \end{align*}
 
 Then, dividing by $\varepsilon$ gives
 \begin{equation*}
-  f'(x) = \frac{-8f(x-\frac{\varepsilon}{2}) + 7f(x) + f(x+\varepsilon)}{5\varepsilon} + \mathcal{O}(\varepsilon^2)
+  f'(x) = \frac{-8f(x-\frac{\varepsilon}{2}) + 7f(x) + f(x+\varepsilon)}{5\varepsilon} + \mathcal{O}(\varepsilon^2).
 \end{equation*}
 
 Similarly, substituting $\varepsilon \to -\varepsilon$, we have
 \begin{equation*}
-  f'(x) = \frac{- f(x-\varepsilon) - 7f(x) + 8f(x+\frac{\varepsilon}{2})}{5\varepsilon} + \mathcal{O}(\varepsilon^2)
+  f'(x) = \frac{- f(x-\varepsilon) - 7f(x) + 8f(x+\frac{\varepsilon}{2})}{5\varepsilon} + \mathcal{O}(\varepsilon^2).
 \end{equation*}
 
 
@@ -295,17 +295,17 @@ or equivalently,
   \vec{\omega} \cdot \nabla L_p + (a_{ijk}+b)L_p - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{p'} = 0.
 \end{equation*}
 
-On the interior of the spatial domain, we apply the central difference formula in each dimension, which yields.
+On the interior of the spatial domain, we apply the central difference formula in each dimension, which yields
 \begin{equation*}
   \begin{aligned}
     0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{L_{ij,k+1,p}-L_{ij,k-1,p}}{2dz}\cos\hat{\phi}_p \\
-    &+ (a_{ijk}+b)L_{ijkp}  - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}
+    &+ (a_{ijk}+b)L_{ijkp}  - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
   \end{aligned}
 \end{equation*}
 Note that since periodic boundary conditions are used in $x$ and $y$,
-the subscript $i+1$ should actually read $(i+1) \mbox{mod1} n_x$, where
+the subscript $i+1$ should actually read $(i+1) \, \mbox{mod1}\,  n_x$, where
 mod1 is the one-indexed modulus.
 The same idea applies for $i-1$, $j+1$, and $j-1$.
 For the sake of readability, this is omitted from the equations in this section.
@@ -384,7 +384,7 @@ Thus, a coupled system of linear equations is produced, which can be written as 
 In the coefficient matrix $A$, each row is asociated with the grid cell at which the discretized equation was evaluated.
 Each column is the coefficient of the radiance at a particular spatial-angular grid cell.
 
-In principle the order of the equations, i.e., the order of the rows and columns of the coefficient matrix, is not important
+In principle, the order of the equations, i.e., the order of the rows and columns of the coefficient matrix, is not important
 so long as consistency is maintained with the solution vector and right-hand side.
 In general, some procedure is necessary for constructing an ordered list of the multidimensional grid cells.
 One option, employed here, is to use a block structure where dimensions are nested within one another.
@@ -397,7 +397,7 @@ Recall that $\theta$ and $\phi$ are already combined, both indexed by $p$, as di
 This particular ordering is chosen for ease of programming in terms of deciding which of the equations from Section \ref{sec:difference_equations} to apply.
 Since the choice of equation does not depend on $x$ or $y$, they are the outermost.
 Then, the surface and bottom $z$ values have to be considered separately from the rest.
-And within the surface and bottom depth layers, there are further cases depepending on whether the light is upwelling or downwelling.
+And within the surface and bottom depth layers, there are further cases depending on whether the light is upwelling or downwelling.
 Hence, the chosen ordering follows somewhat naturally from the boundary conditions.
 
 Then, the discretized equation applied to $(x_i, y_j, z_k, \omega_p)$ is stored in row
@@ -415,7 +415,7 @@ Table \ref{tab:nonzero} shows a breakdown of the number of distinct radiance val
 
 \begin{table}[H]
   \centering
-  \caption{Breakdown of nonzero matrix elements by derivative case}
+  \caption{Breakdown of nonzero matrix elements by derivative case.}
   \begin{tabular}{p{\linewidth/3}p{\linewidth/3}p{\linewidth/3}}
     \toprule
     \textbf{Derivative case} & \textbf{\# nonzero/row} & \textbf{\# of rows} \\
