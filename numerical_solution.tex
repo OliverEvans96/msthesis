@@ -7,7 +7,7 @@ It is assumed that this model is run in conjunction with a model describing the 
 \section{Super-Individuals}
 \label{sec:si}
 
-Rather than model each kelp frond, a subset of the population, called super-individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
+Rather than model each kelp frond, subsets of the population, called super-individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
 Specifically, at each depth $k$, there are $n$ super-individuals, indexed by $i$.
 Super-individual $i$ has a frond area $A_{ki}$ and represents $n_{ki}$ individual fronds.
 
@@ -37,11 +37,11 @@ $d\phi$ between adjacent grid points.
 
 The following indices are assigned to each dimension:
 \begin{align*}
-  x &\to i \\
-  y &\to j \\
-  z &\to k \\
-  \theta &\to l \\
-  \phi &\to m
+  x &\to i, \\
+  y &\to j, \\
+  z &\to k, \\
+  \theta &\to l, \\
+  \phi &\to m.
 \end{align*}
 
 It is convenient, however, to use a single index $p$ to refer to directions $\vec{\omega}$ rather than referring to $\theta$ and $\phi$ separately.
@@ -53,7 +53,7 @@ One-indexing is employed throughout this document.
 \begin{figure}[H]
   \centering
   \includegraphics[width=8cm]{spatialgrid.pdf}
-  \caption{Spatial grid}
+  \caption{Spatial grid.}
   \label{fig:spatial_grid}
 \end{figure}
 
@@ -65,13 +65,13 @@ Also, note that no grid center is located on the plane $z=0$; the surface radian
 \begin{figure}[H]
   \centering
   \includegraphics[width=8cm]{angulargrid.pdf}
-  \caption{Angular grid at each point in space}
+  \caption{Angular grid at each point in space.}
   \label{fig:angular_grid}
 \end{figure}
 
 As shown in Figure \ref{fig:angular_grid}, $\phi=0$ and $\phi=\pi$, called
 the north ($+z$) and south ($-z$) poles respectively, are treated separately from other angular grid cells.
-A generic interior angular grid cell centered at $\vec{\omega}_p$ is the Cartesian product of an azimuthal interval of width $d\theta$ and a polar interval of width $d\theta$.
+A generic interior angular grid cell centered at $\vec{\omega}_p$ is the Cartesian product of an azimuthal interval of width $d\theta$ and a polar interval of width $d\phi$.
 However, two pole cells are the Cartesian product of a polar interval of width $d\phi/2$ and the full azimuthal domain, $[0, 2\pi)$.
 
 With this configuration, the total number of angles considered is $\nomega = n_\theta(n_\phi-2)+2$.
@@ -92,7 +92,7 @@ Further details are found in Appendix \ref{chap:ray_tracing}.
 Define the \textit{spatial characteristic function} as
 \begin{equation*}
   \mathcal{X}^X_{ijk}(\vec{x}) = \begin{cases}
-    1, & \vec{x} \in X_{ijk} \\
+    1, & \vec{x} \in X_{ijk}, \\
     0, & \mbox{otherwise}.
   \end{cases}
 \end{equation*}
@@ -114,7 +114,7 @@ Full details of the path integral algorithm for the case of straight line paths 
 Define the \textit{angular characteristic function} as
 \begin{equation*}
   \mathcal{X}^\Omega_p(\vec{\omega}) = \begin{cases}
-    1, & \vec{\omega} \in \Omega_p \\
+    1, & \vec{\omega} \in \Omega_p, \\
     0, & \mbox{otherwise}.
   \end{cases}
 \end{equation*}
@@ -155,7 +155,7 @@ Therefore, the radiance gain due to scattering into $\vec{\omega}_p$ from all ot
 \end{equation}
 
 \subsection{Ray Integral}
-Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the discrete grid can be constructed using the ray tracing algorithm described in Appendix \ref{chap:ray_tracing}. 
+Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the discrete grid can be constructed using the ray tracing algorithm described in Appendix \ref{chap:ray_tracing}.
 Let $\nu=1,\ldots,N\nobreak-\nobreak1$ index the spatial grid cells traversed by the ray, and define the \textit{path-length characteristic function}
 \begin{equation*}
   \mathcal{X}^l_\nu(s) = \begin{cases}
@@ -277,7 +277,7 @@ Then, dividing by $\varepsilon$ gives
   f'(x) = \frac{-8f(x-\frac{\varepsilon}{2}) + 7f(x) + f(x+\varepsilon)}{5\varepsilon} + \mathcal{O}(\varepsilon^2)
 \end{equation*}
 
-Similarly, substituting $\varepsilon \to -\varepsilon$, we have 
+Similarly, substituting $\varepsilon \to -\varepsilon$, we have
 \begin{equation*}
   f'(x) = \frac{- f(x-\varepsilon) - 7f(x) + 8f(x+\frac{\varepsilon}{2})}{5\varepsilon} + \mathcal{O}(\varepsilon^2)
 \end{equation*}
@@ -449,4 +449,3 @@ Direct methods such as Gaussian elimination, QR factorization, and singular valu
 We therefore turn to iterative solvers.
 Many such solvers are available, including GMRES \cite{saad_gmres:_1985}, LGMRES \cite{baker_technique_2005}, IDR \cite{sonneveld_idrs:_2008}, and BI-CGSTAB \cite{van_der_vorst_bi-cgstab:_1992}.
 In our case, GMRES is used.
-

@@ -18,7 +18,7 @@ which may be advantageous for IMTA.
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.65\textwidth]{kelp_photo/rope_thread}
-  \caption{\textit{Saccharina latissima} innoculated onto a thread wrapped around a rope on which it is to be grown}
+  \caption{\textit{Saccharina latissima} innoculated onto a thread wrapped around a rope on which it is to be grown.}
   \label{fig:rope_thread}
 \end{figure}
 
@@ -60,14 +60,14 @@ In the following sections, it is necessary to convert between Cartesian and sphe
 \end{equation}
 Therefore, for some function $f(x,y,z)$, we can write its derivative along a path in spherical coordinates in terms of Cartesian coordinates using the chain rule,
 \begin{equation*}
-	\frac{\partial f}{\partial r} 
-	=\frac{\partial f}{\partial x}\frac{\partial x}{\partial r} 
-	+ \frac{\partial f}{\partial y}\frac{\partial y}{\partial r} 
+	\frac{\partial f}{\partial r}
+	=\frac{\partial f}{\partial x}\frac{\partial x}{\partial r}
+	+ \frac{\partial f}{\partial y}\frac{\partial y}{\partial r}
 	+ \frac{\partial f}{\partial z}\frac{\partial z}{\partial r}.
 \end{equation*}
 Then, calculating derivatives from \eqref{eqn:coords} yields
 \begin{equation}
-	\frac{\partial f}{\partial r} 
+	\frac{\partial f}{\partial r}
 	=\frac{\partial f}{\partial x}\sin\phi\cos\theta
 	+ \frac{\partial f}{\partial y}\sin\phi\sin\theta
 	+ \frac{\partial f}{\partial z}\cos\phi.
@@ -76,7 +76,7 @@ Then, calculating derivatives from \eqref{eqn:coords} yields
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=3in]{3d_coords}
-	\caption{Downward-facing right-handed coordinate system with radial distance $r$ from the origin, distance $s$ from the $z$ axis, zenith angle $\phi$ and azimuthal angle $\theta$}
+	\caption{Downward-facing right-handed coordinate system with radial distance $r$ from the origin, distance $s$ from the $z$ axis, zenith angle $\phi$ and azimuthal angle $\theta$.}
 	\label{fig:3dcoords}
 \end{figure}
 
@@ -94,7 +94,7 @@ Since it is assumed that fronds extend perfectly horizontally, no angular elevat
   %TODO: Cite this?
   \qquad
 	\includegraphics[width=2in]{frond}
-	\captionof{figure}{Simplified kite-shaped frond}
+	\captionof{figure}{Simplified kite-shaped frond.}
 	\label{fig:frond}
 \end{figure}
 
@@ -121,7 +121,7 @@ it is possible to redefine $w$, $f_a$ and $f_b$ from the preceding formulas as
 	f_b &= \frac{l}{1+f_s}.
 \end{align*}
 The angle $\alpha$, half of the angle at the base corner, is also noteworthy.
-From the above equations, it follows that 
+From the above equations, it follows that
 \begin{equation*}
 	\alpha = \tan^{-1}\left(\frac{2f_rf_s}{1+f_s}\right).
 \end{equation*}
@@ -146,7 +146,7 @@ The von Mises distribution has two parameters, $\mu$ and $\kappa$, which shift a
 $\kappa$ is analogous to $1/\sigma$ in the normal distribution.
 In the absence of current, the frond angles are be distributed uniformly, while as current velocity increases, they become increasingly likely to align in the current direction, depending on the stiffness of the frond.
 Assuming a linear relationship between the current velocity and the steepness of the angular distribution, define the \textit{frond alignment coefficient} $\eta$, with units of inverse velocity(\SI{}{\s\per\m}).
-Then, in use $\mu = \theta_w$ and $\kappa = \eta v_w$ as the von Mises distribution parameters.
+Then, use $\mu = \theta_w$ and $\kappa = \eta v_w$ as the von Mises distribution parameters.
 Note that $\theta_w$ and $v_w$ vary over depth, while $\eta$ is assumed constant for the population.
 Then, the PDF for the von Mises frond angle distribution is
 \begin{equation*}
@@ -161,7 +161,7 @@ Notice that unlike the normal distribution, the von Mises distribution approache
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=6in]{vonmises}
-	\captionof{figure}{von Mises distribution for a variety of parameters}
+	\captionof{figure}{von Mises distribution for a variety of parameters.}
 	\label{fig:vonmises}
 \end{figure}
 
@@ -175,7 +175,7 @@ That is,
 	\label{eq:ind_prob}
 	P(A \cap B) = P(A)P(B).
 \end{equation*}
-Then the probability of frond length $l$ and frond angle $\theta_f$ coinciding is 
+Then the probability of frond length $l$ and frond angle $\theta_f$ coinciding is
 \begin{equation*}
 	P_{2D}(\theta_f,l) = P_{\theta_f}(\theta_f) \cdot P_l(l).
 \end{equation*}
@@ -201,7 +201,7 @@ which is currently not taken into consideration in this model.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=4.5in]{kelp_sample}
-	\captionof{figure}{A sample of 50 kelp fronds with length and angle picked from the distribution above with $f_s=0.5$ and $f_r=2$.}
+	\captionof{figure}{A sample of 50 kelp fronds with shape parameters $f_s=0.5$ and $f_r=2$ whose lengths are picked from a normal distribution and whose angles are picked from a von Mises distribution.}
 	\label{fig:kelp_sample}
 \end{figure}
 
@@ -216,7 +216,7 @@ Of primary interest are the edges connected to the frond tip.
 For convenience, we will use a rotated coordinate system $(\theta',s)$ such that the line connecting the base to the tip is vertical, with the base at $(0,0)$.
 Denote the Cartesian analogue of this coordinate system as $(x',y')$ which is related to $(\theta',s)$ by
 \begin{align*}
-	x' &= s\cos\theta' \\ 
+	x' &= s\cos\theta' \\
 	y' &= s\sin\theta' \\
 	s &= \sqrt{x'^2+y'^2}, \\
 	\theta' &= \atantwo(y, x).
@@ -245,7 +245,7 @@ To generalize to a frond pointed at an angle $\theta_f$, we introduce the coordi
 \begin{equation*}
 	\theta = \theta' + \theta_f - \frac{\pi}{2}.
 \end{equation*}
-Then, for a frond pointed at the arbitrary angle $\theta_f$, the function for the outer edges can be written as 
+Then, for a frond pointed at the arbitrary angle $\theta_f$, the function for the outer edges can be written as
 \begin{equation*}
 	\label{eq:rf_abs}
 	s_f(\theta) = s_f'\left(\theta - \theta_f + \frac{\pi}{2} \right).
@@ -283,7 +283,7 @@ Any frond longer than these at the same angle will also occupy the point.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=4.5in]{shade_area}
-	\captionof{figure}{Outlines of minimum-length fronds for a variety of angles to occupy the point $(\theta,s)=(3\pi/4,3/2)$}
+	\captionof{figure}{Outlines of minimum-length fronds for a variety of angles to occupy the point $(\theta,s)=(3\pi/4,3/2)$.}
 	\label{fig:shade_area}
 \end{figure}
 
@@ -295,7 +295,7 @@ This is found by integrating $P_{2D}$ over the occupancy region for $(\theta,s)$
 	\centering
 	\includegraphics[width=4.5in]{cart_shade}
 	\captionof{figure}{Contour plot of $P_{2D}(\theta_f,l)$ overlayed with the
-    region in the $\theta_f$\nobreak-\nobreak$l$ plane which results in a frond occupying the point $(\theta,s)=(3\pi/4,3/2)$}
+    region in the $\theta_f$\nobreak-\nobreak$l$ plane which results in a frond occupying the point $(\theta,s)=(3\pi/4,3/2)$.}
 	\label{fig:cart_shade}
 \end{figure}
 
@@ -304,25 +304,25 @@ Integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ as depicted in Figure \ref
 		\tilde{P}_k(\theta,s,z)	&= \iint_{R_s(\theta,s)}
 								P_{2D}(\theta_f,l)
 								\,dl\,d\theta_f \nonumber \\
-							&= \int_{\theta-\alpha}^{\theta+\alpha} 
+							&= \int_{\theta-\alpha}^{\theta+\alpha}
 								\int_{l_{min}(\theta_f)}^\infty
 								P_{2D}(\theta_f,l)
 								\,dl\,d\theta_f.
 \end{align*}
 
 Assuming that the depth layer has thickness $dz$ and contains $n$ fronds of thickenss $t$,
-the proportion of the depth layer occupied by kelp at any horizontal position can be calculated as 
+the proportion of the depth layer occupied by kelp at any horizontal position can be calculated as
 \begin{equation*}
   P_k = \frac{nt}{dz}\tilde{P}_k.
 \end{equation*}
 Then, the effective absorption coefficient can be calculated at any point in space as
 \begin{equation*}
-  a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w
+  a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w.
 \end{equation*}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=4.5in]{prob_shade}
-	\captionof{figure}{Contour plot of the probability of frond occupation sampled at 121 points using $\theta_f=2\pi/3,\eta v_w=1$}
+	\captionof{figure}{Contour plot of the probability of frond occupation sampled at 121 points using $\theta_f=2\pi/3,\eta v_w=1$.}
 	\label{fig:prob_shade}
 \end{figure}

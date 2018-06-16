@@ -3,8 +3,8 @@
 \section{Motivation}
   Given the consistent global increase in population, efficient and innovative resource utilization is increasingly important.
 Our generation faces major challenges regarding food, energy, and water and must confront major issues associated with global climate change.
-Growing concern for the negative environmental impacts of petroleum-based fuel has generated a market for biofuel, especially corn-based ethanol,
-however corn-based ethanol has been heavily criticized for diverting land usage away from food production, for increasing use of fertilizers and pesticides that impair water quality, and for the high carbon footprint involved in its development \cite{jones_corn-based_nodate,searchinger_use_2008}.
+Growing concern for the negative environmental impacts of petroleum-based fuel has generated a market for biofuel, especially corn-based ethanol;
+however, corn-based ethanol has been heavily criticized for diverting land usage away from food production, for increasing use of fertilizers and pesticides that impair water quality, and for the high carbon footprint involved in its development \cite{jones_corn-based_nodate,searchinger_use_2008}.
 Meanwhile, a great deal of unutilized coastline is available for both food and fuel production through seaweed cultivation.
 Specifically, the sugar kelp \textit{Saccharina latissima} has been demonstrated to be a viable source of food, both for direct human consumption and biofuel production, especially in conjunction with other aquatic species in \textit{integrated multi-trophic aquaculture} (IMTA) \cite{brzeski_integrated_1996,chopin_integrating_2001,hadley_modeling_2015,handa_seasonal_2013}.
 
@@ -58,7 +58,7 @@ He also accounts for attenuation due to turbidity using Beer's Law.
 Using this data on the availability of light, he calculates the photosynthesis rates and the growth experienced by the kelp.
 
 Over a decade later in 1987, G.A.
-Jackson expanded on Anderson's model for \textit{Macrocystis pyrifera} \cite{jackson_modelling_1987}, with an emphasis on including more environmental parameters and a more complete description of the growth and decay of the kelp. 
+Jackson expanded on Anderson's model for \textit{Macrocystis pyrifera} \cite{jackson_modelling_1987}, with an emphasis on including more environmental parameters and a more complete description of the growth and decay of the kelp.
 The author takes into account respiration, frond decay, and sub-canopy light attenuation due to self-shading.
 Light attenuation is represented with a simple exponential model, and self-shading appears as an added term in the decay coefficient.
 The author does not consider radial or angular dependence on shading.
@@ -71,20 +71,20 @@ This approach functions by dividing kelp plants into groups based on size and ag
 In the same year, Nyman et. al. \cite{nyman_macrocystis_1990} published a similar model alongside a Markov chain model, and compared the results with experimental data collected in New Zealand.
 
 In 1996 and 1998 respectively, P. Duarte and J.G. Ferreira used the size-class approach to create a more general model of macroalgae growth, and Yoshimori et. al. created a differential equation model of \textit{Laminaria religiosa} with specific emphasis on temperature dependence of growth rate \cite{duarte_model_1997,yoshimori_mathematical_1998}.
-These were the some of the first models of kelp growth that did not specifically relate to \textit{Macrocystis pyrifera} (``giant kelp''). 
+These were some of the first models of kelp growth that did not specifically relate to \textit{Macrocystis pyrifera} (``giant kelp'').
 
 \section{Background on Radiative Transfer}
-In terms of optical quantities, of primary interest is in the radiance at each point in all directions, which affects the photosynthetic rate of the kelp, and therefore the total amount of biomass producible in a given area as well as the total nutrient remediation potential.
+In terms of optical quantities, of primary interest is the radiance at each point in all directions, which affects the photosynthetic rate of the kelp, and therefore the total amount of biomass producible in a given area as well as the total nutrient remediation potential.
 The equation governing the radiance throughout the system is known as the radiative transfer equation (RTE), which has been largely unutilized in the fields of oceanography and aquaculture.
-The radiative transfer equation has been used extensively in stellar astrophysics \cite{chandrasekhar_radiative_1960,petkova_novel_2011}; it's application to marine biology is fairly recent \cite{mobley_radiative_2001}.
-In its full form, radiance is a function of 3 spatial dimensions, 2 angular dimensions, and frequency, making for a formitable problem.
+The radiative transfer equation has been used extensively in stellar astrophysics \cite{chandrasekhar_radiative_1960,petkova_novel_2011}; its application to marine biology is fairly recent \cite{mobley_radiative_2001}.
+In its full form, radiance is a function of 3 spatial dimensions, 2 angular dimensions, and frequency, making for a formidable problem.
 In this work, frequency is ignored; only monochromatic radiation is considered.
 The RTE states that along a given path, radiance is decreased by absorption and scattering out of the path, while it is increased by emission and scattering into the path.
 In the case of macroalgae cultivation, emission is negligible, owing only perhaps to some small luminescent phytoplankton or other anomaly, and can therefore be safely ignored.
 
 \section{Overview of Thesis}
 The remainder of this document is organized as follows.
-In Chapter \ref{chap:kelp}, probabilistic model is developed to describe the spatial distribution of kelp by assuming simple distributions for the lengths and orientations of fronds.
+In Chapter \ref{chap:kelp}, a probabilistic model is developed to describe the spatial distribution of kelp by assuming simple distributions for the lengths and orientations of fronds.
 Chapter \ref{chap:light} begins with a survey of fundamental radiometric quantities and optical properties of matter.
 The spatial kelp distribution from Chapter \ref{chap:kelp} is used to determine optical properties of the combined water-kelp medium,
 and the radiative transfer equation, an integro-partial differential equation which describes the the light field as a function of position and angle, is discussed.
@@ -92,9 +92,9 @@ An asymptotic expansion is explored for cases where absorption dominates scatter
 In Chapter \ref{chap:numerical}, details are given for the numerical solution of the equations from Chapters \ref{chap:kelp} and \ref{chap:light}.
 Both the full finite difference solution and the asymptotic approximation are described.
 Next, in Chapter \ref{chap:parameters}, the availability of necessary parameters in the literature is discussed.
-For those which are not readily available, give rough estimates are given or describe experimental methods for their determination are described.
+For those which are not readily available, rough estimates are given or experimental methods for their determination are described.
 Then, in Chapter \ref{chap:model_analysis}, necessary grid resolution for adequate accuracy in the full finite difference solution is determined.
 The finite difference solution is compared to the asymptotic approximation for a few sets of optical properties.
 Further, we showcase the effect of varying a few key parameters on the light field predicted by the asymptotic approximation, and
 a comparison is given between the light fields predicted with and without considering self-shading by the kelp.
-Finally, Chapter \ref{chap:conclusion} concludes the thesis by giving a brief summary of the model, discuss and its performance, and suggest improvements and avenues for future work.
+Finally, Chapter \ref{chap:conclusion} concludes the thesis by giving a brief summary of the model, discusses and its performance, and suggests improvements and avenues for future work.

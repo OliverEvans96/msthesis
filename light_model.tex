@@ -8,7 +8,7 @@ Before introducing the radiative transfer equation, it is necessary to discuss s
 
 \subsection{Radiometric Quantities}
 
-One of the most fundamental quantities in optics is radiant flux $\Phi$, which is the has units of energy per time.
+One of the most fundamental quantities in optics is radiant flux $\Phi$, which has units of energy per time.
 The quantity of primary interest in modeling the light field is radiance $L$, which is defined as the radiant flux per steradian per projected surface area perpendicular to the direction of propagation of the beam.
 That is,
 \begin{equation*}
@@ -29,7 +29,7 @@ Irradiance is sometimes given in units of moles of photons (a mole of photons is
 \label{sec:perceived_irrad}
 
 Assuming that the irradiance $I(\vec{x})$ is known,
-the average irradiance at each depth can be calculated as 
+the average irradiance at each depth can be calculated as
 \begin{equation*}
   %\bar{I}_k = \frac{\sum_{ij}I_{ijk}}{n_x n_y},
   \bar{I}(z) = \frac{\iint I(x,y,z)\, dx\, dy}{\iint 1\, dx\, dy}.
@@ -97,7 +97,7 @@ where
   \vec{x_0}(\vec{x}, \vec{\omega}) = \vec{x} - \tilde{s} \vec{\omega}
   \label{eqn:x_0}
 \end{equation}
-is the origin of the ray, and 
+is the origin of the ray, and
 \begin{equation*}
   \tilde{s} = \frac{\vec{x} \cdot \hat{z} - z_0}{\vec{\omega} \cdot \hat{z}}
 \end{equation*}
@@ -108,9 +108,9 @@ Denote the radiance at $\vec{x}$ in the direction $\vec{\omega}$ by $L(\vec{x}, 
 As light travels along $\vec{l}(\vec{x}, \vec{\omega}, s)$, interaction with the
 medium produces three phenomena of interest:
 \begin{enumerate}
-  \item Radiance is decreased due to absorption.
+  \item Radiance is decreased due to absorption;
   \item Radiance is decreased due to scattering out of the path to other
-    directions.
+    directions;
   \item Radiance is increased due to scattering into the path from other
       directions.
 \end{enumerate}
@@ -160,10 +160,10 @@ under the surface of the water by a function $f(\vec{\omega})$.
 Or if $\zmin>0$, then the radiance at $z=\zmin$ should be specified instead (as opposed to the radiance at the first grid cell center).
 Further, we assume that no upwelling light enters the domain from the bottom, so
 \begin{align*}
-  L(\vec{x_s}, \vec{\omega}) &= f(\omega) \mbox{ if } \vec{\omega} \cdot \hat{z} > 0, \\ 
+  L(\vec{x_s}, \vec{\omega}) &= f(\omega) \mbox{ if } \vec{\omega} \cdot \hat{z} > 0, \\
   L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0.
 \end{align*}
- 
+
 \section{Low-Scattering Approximation}
 In waters where absorption dominates scattering, an asymptotic series in terms of the scattering coefficient $b$ can be constructed.
 The physical interpretation of the asymptotic series is that each term represents a discrete scattering event.
@@ -195,9 +195,9 @@ Grouping like powers of $b$, we have the decoupled set of equations
   \vec{\omega} \cdot \nabla L_0(\vec{x}, \vec{\omega}) + a(\vec{x})L_0(\vec{x}) &= 0,
   \label{eqn:asymptotics_0}\\
   \vec{\omega} \cdot \nabla L_1(\vec{x}, \vec{\omega}) + a(\vec{x})L_1(\vec{x})
-  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_0(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_0(\vec{x}, \vec{\omega}), \nonumber\\ 
+  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_0(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_0(\vec{x}, \vec{\omega}), \nonumber\\
   \vec{\omega} \cdot \nabla L_2(\vec{x}, \vec{\omega}) + a(\vec{x})L_2(\vec{x})
-  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_1(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_1(\vec{x}, \vec{\omega}). \nonumber \\ 
+  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_1(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_1(\vec{x}, \vec{\omega}). \nonumber \\
   &\vdots \nonumber
 \end{align}
 In general, for $n \geq 1$,
@@ -208,7 +208,7 @@ In general, for $n \geq 1$,
 \end{equation}
 
 For boundary conditions, let $\vec{x_s}$ be a point on the surface of the domain.
-Then, 
+Then,
 \begin{equation*}
   \Lasyms =
   \begin{cases}
@@ -234,7 +234,7 @@ In general, for $n \geq 1$,
   \label{eqn:asymptotics_bc_n}
 \end{equation}
 
- 
+
 \subsection{Analytical Solution}
 \label{sec:asymptotic_sol}
 
