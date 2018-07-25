@@ -178,7 +178,7 @@ Hence, for $\nu=1,\ldots,N-1$, the path lengths through each grid cell are
 \begin{equation*}
   ds_\nu = s_{\nu+1} - s_\nu.
 \end{equation*}
-Given $s$, the index next edge crossing occurs at
+Given $s$, the index of the next edge crossing occurs at
 \begin{equation*}
   \hat{\nu}(s) = \min\left\{ \nu \in \{1,\ldots,N\} : s_\nu>s \right\},
 \end{equation*}
@@ -404,11 +404,11 @@ Then, the discretized equation applied to $(x_i, y_j, z_k, \omega_p)$ is stored 
 \begin{equation*}
   r_{ijkp} = p + \nomega (k-1) + \nomega n_z (j-1) + \nomega n_z n_y (i-1).
 \end{equation*}
-Since the same ordering is used for rows and columns of the coefficient matrix $A$, $L_{ijkp}$ is located at position $r_{ijkp}$ of the solution vector $x$,
-and the right-hand side associated with that grid cell, if any, is also stored at position $r_{ijkp}$ of the right-hand side vector $b$.
+Since the same ordering is used for rows and columns of the coefficient matrix $A$, $L_{ijkp}$ is located at position $r_{ijkp}$ of the solution vector $\vec{x}$,
+and the right-hand side associated with that grid cell, if any, is also stored at position $r_{ijkp}$ of the right-hand side vector $\vec{b}$.
 
 Also relevant is the total size of the system and of the sparse matrices necessary to store.
-The sizes of $A$, $x$, and $b$ are the number of grid cells, which is just $n_xn_yn_z\nomega$.
+The sizes of $A$, $\vec{x}$, and $\vec{b}$ are the number of grid cells, which is just $n_xn_yn_z\nomega$.
 Most of these elements, though, are zero since derivatives only involve adjacent spatial grid cells and the scattering integral only involves angles within a single spatial grid cell.
 Therefore, by saving only the locations and values of nonzero elements in the coefficient matrix, a considerable amount of storage space is saved.
 Table \ref{tab:nonzero} shows a breakdown of the number of distinct radiance values involved in each application of the discretized equations from Section \ref{sec:difference_equations}, as well as the number of times that each of the equations appears in the matrix.
@@ -435,12 +435,12 @@ By multiplying the first column of Table \ref{tab:nonzero} by the second and sum
   N_A &= (\nomega+6) \cdot n_xn_y(n_z-2)\nomega \\
     &+   (\nomega+5) \cdot n_xn_y\nomega
     +   (\nomega+6) \cdot n_xn_y\nomega \\
-  &= n_x n_y n_z \left[(\nomega+6)(n_z-2+1)+\nomega+5 \right] \\
-  &= n_x n_y n_z \left[(\nomega+6)(n_z-1)+\nomega+5 \right] \\
-  &=  n_x n_y n_z \left[n\omega n_z -\nomega + 6n_z - 6 + \nomega + 5 \right] \\
-  &=  n_x n_y n_z \left[n_z(\nomega+6)-1\right]
+  &= n_x n_y \nomega \left[(\nomega+6)(n_z-2+1)+\nomega+5 \right] \\
+  &= n_x n_y \nomega \left[(\nomega+6)(n_z-1)+\nomega+5 \right] \\
+  &=  n_x n_y \nomega \left[n\omega n_z -\nomega + 6n_z - 6 + \nomega + 5 \right] \\
+  &=  n_x n_y \nomega \left[n_z(\nomega+6)-1\right]
 \end{align*}
-Also, note that $b$ only has nonzero entries for the downwelling surface grid cells, of which there are $n_x n_y \nomega/2$.
+Also, note that $\vec{b}$ only has nonzero entries for the downwelling surface grid cells, of which there are $n_x n_y \nomega/2$.
 
 \subsection{Iterative Solution}
 Because of the large number of dimensions (three spatial, two angular), the matrix can easily have upwards of millions of nonzero elements,
