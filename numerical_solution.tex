@@ -156,29 +156,30 @@ Therefore, the radiance gain due to scattering into $\vec{\omega}_p$ from all ot
 
 \subsection{Ray Integral}
 Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the discrete grid can be constructed using the ray tracing algorithm described in Appendix \ref{chap:ray_tracing}.
-Let $\nu=1,\ldots,N\nobreak-\nobreak1$ index the spatial grid cells traversed by the ray, and define the \textit{path-length characteristic function}
+Let $\nu=1,\ldots,N\nobreak-\nobreak1$ index the spatial grid cells traversed (wholly or partially) by the ray, and define the \textit{path-length characteristic function}
 \begin{equation*}
   \mathcal{X}^l_\nu(s) = \begin{cases}
     1, & s_\nu \leq s < s_{\nu+1}, \\
     0, & \mbox{otherwise}.
     \end{cases}
 \end{equation*}
-Then, the piecewise constant representations of the path absorption coefficient $\tilde{a}(s)$ and the effective source $g_n(s)$ from Section \ref{sec:asymptotic_sol} are
+Then, the piecewise constant representations of the path absorption coefficient $\tilde{a}(s)$ and the effective source $\tilde{g}_n(s)$ from Section \ref{sec:asymptotic_sol} are
 \begin{align*}
-  g_n(s) &= \sum_{\nu=1}^{N-1}g_{n\nu}\mathcal{X}^l_\nu(s), \\
+  \tilde{g}_n(s) &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\mathcal{X}^l_\nu(s), \\
   \tilde{a}(s) &= \sum_{\nu=1}^{N-1}\tilde{a}_{\nu}\mathcal{X}^l_\nu(s).
 \end{align*}
 
 As the ray traverses the spatial grids, it crosses $N-2$ spatial grid edges.
 Let the nondecreasing path lengths at which these crossings occur be denoted by
 $\left\{s_\nu\right\}_{\nu=1}^{N}$, with the convention $s_1=0$ and $s_{N}=\tilde{s}$.
+This implies that edge $\nu$ preceeds cell $\nu$.
 $\{s_\nu\}$ is not strictly increasing if the ray directly intersects a grid corner,
 which means that multiple edges are traversed at the same path length.
-Hence, for $\nu=1,\ldots,N-1$, the path lengths through each grid cell are
+Hence, the path lengths through the grid cells, indexed by $\nu=1,\ldots,N-1$, are
 \begin{equation*}
   ds_\nu = s_{\nu+1} - s_\nu.
 \end{equation*}
-Given $s$, the index of the next edge crossing occurs at
+Given $s$, the index of the next edge crossing is
 \begin{equation*}
   \hat{\nu}(s) = \min\left\{ \nu \in \{1,\ldots,N\} : s_\nu>s \right\},
 \end{equation*}
@@ -188,11 +189,11 @@ and the path length between $s$ and the next edge crossing is
 \end{equation*}
 Then, evaluating \eqref{eqn:asymptotics_soln_n} at $s=\tilde{s}$ is calculated as
 \begin{align*}
-  u_n(\tilde{s}) &= \int_0^{\tilde{s}}g_n(s')\exp\left( -\int_{s''}^{s'}\tilde{a}(s'')\,ds'' \right)\, ds' \\
-  &= \int_0^{s_N} \sum_{\nu=1}^{N-1}g_{n\nu}\mathcal{X}^l_\nu(s') \exp\left( -\int_{s''}^{s'}\sum_{j=1}^{N-1}\tilde{a}_{j}\mathcal{X}^l_j(s'')\,ds'' \right)\, ds' \\
-  &= \sum_{\nu=1}^{N-1}g_{n\nu}\int_0^{s_N} \mathcal{X}^l_\nu(s') \exp\left( -\sum_{j=1}^{N-1}\tilde{a}_{j}\int_{s''}^{s'}\mathcal{X}^l_j(s'')\,ds'' \right)\, ds' \\
-  &= \sum_{\nu=1}^{N-1}g_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(-\tilde{a}_{\hat{\nu}(s')-1}\tilde{d}(s') -\sum_{j=\hat{\nu}(s')}^{N-1}\tilde{a}_{j}ds_j\right)\, ds' \\
-  &= \sum_{\nu=1}^{N-1}g_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(-\tilde{a}_{\nu}(s_{\nu+1}-s') -\sum_{j=\nu+1}^{N-1}\tilde{a}_{j}ds_j\right)\, ds'.
+  u_n(\tilde{s}) &= \int_0^{\tilde{s}}\tilde{g}_n(s')\exp\left( -\int_{s'}^{\tilde{s}}\tilde{a}(s'')\,ds'' \right)\, ds' \\
+  &= \int_0^{s_N} \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\mathcal{X}^l_\nu(s') \exp\left( -\int_{s'}^{\tilde{s}}\sum_{j=1}^{N-1}\tilde{a}_{j}\mathcal{X}^l_j(s'')\,ds'' \right)\, ds' \\
+  &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\int_0^{s_N} \mathcal{X}^l_\nu(s') \exp\left( -\sum_{j=1}^{N-1}\tilde{a}_{j}\int_{s'}^{\tilde{s}}\mathcal{X}^l_j(s'')\,ds'' \right)\, ds' \\
+  &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(-\tilde{a}_{\hat{\nu}(s')-1}\tilde{d}(s') -\sum_{j=\hat{\nu}(s')}^{N-1}\tilde{a}_{j}ds_j\right)\, ds' \\
+  &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(-\tilde{a}_{\nu}(s_{\nu+1}-s') -\sum_{j=\nu+1}^{N-1}\tilde{a}_{j}ds_j\right)\, ds'.
 \end{align*}
 This integral is made straightforward by setting
 \begin{equation*}
@@ -200,8 +201,8 @@ This integral is made straightforward by setting
 \end{equation*}
 which yields
 \begin{align*}
-  u_n(\tilde{s}) &= \sum_{\nu=1}^{N-1}g_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(\tilde{a}_{\nu}s' + b_\nu\right)\, ds' \\
-                 &= \sum_{\nu=1}^{N-1}g_{n\nu}e^{b_\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(\tilde{a}_{\nu}s'\right) ds'.
+  u_n(\tilde{s}) &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(\tilde{a}_{\nu}s' + b_\nu\right)\, ds' \\
+                 &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}e^{b_\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(\tilde{a}_{\nu}s'\right) ds'.
 \end{align*}
 Define the intermediate variable
 \begin{align*}
@@ -213,9 +214,18 @@ Define the intermediate variable
 \end{align*}
 which permits the simple formula
 \begin{equation}
-  u_n(\tilde{s}) = \sum_{\nu=1}^{N-1} g_{n\nu}d_\nu e^{b_\nu}.
+  u_n(\tilde{s}) = \sum_{\nu=1}^{N-1} \tilde{g}_{n\nu}d_\nu e^{b_\nu}.
   \label{eqn:discrete_ray_integral}
 \end{equation}
+
+When $n=0$, the boundary condition must be included for downwelling light,
+and the effective source $\tilde{g}_{n\nu}$ is reduced to the explicit source $\tilde{\sigma}_{0\nu}$
+for lack of a scattering term.
+Thus, the numerical solution to \eqref{eqn:asymptotics_soln_0} is given by
+\begin{align}
+  u_0(\tilde{s}) &= f(\vec{\omega})H(\vec{\omega}\cdot\hat{z}) \exp\left( -\sum_{j=1}^{N-1}\tilde{a}_jds_j\right)
+  + \sum_{\nu=1}^{N-1} \tilde{\sigma}_{0\nu}d_\nu e^{b_\nu}.
+\end{align}
 
 \section{Finite Difference}
 While the asymptotic solution is valid in the case of low scattering, a more general solution is obtained via finite difference, whereby the derivatives and integrals in the integro-partial differential equation are discretized to differences and sums and evaluated at each grid cell in order to construct a linear system of equations whose solution approximates that of the analytical equation.
