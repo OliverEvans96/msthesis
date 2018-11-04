@@ -71,6 +71,7 @@ so that for any $\omega$,
 \end{equation*}
 i.e., the probability of light being scattered to some direction on the unit sphere is 1.
 
+TODO:
 \section{The Radiative Transfer Equation}
 We are now prepared to present the full details of Radiative Transfer Equation, whose solution is the radiance in the medium as a function of position $x$ and angle $\vec{\omega}$.
 
@@ -106,13 +107,14 @@ is the path length from $\vec{x_0}(\vec{x}, \vec{\omega})$ to $\vec{x}$.
 \subsection{Colloquial Description}
 Denote the radiance at $\vec{x}$ in the direction $\vec{\omega}$ by $L(\vec{x}, \vec{\omega})$.
 As light travels along $\vec{l}(\vec{x}, \vec{\omega}, s)$, interaction with the
-medium produces three phenomena of interest:
+medium produces four phenomena of interest:
 \begin{enumerate}
   \item Radiance is decreased due to absorption;
   \item Radiance is decreased due to scattering out of the path to other
     directions;
   \item Radiance is increased due to scattering into the path from other
       directions.
+  \item Radiance is increased or decreased due to light sources or sinks
 \end{enumerate}
 
 \subsection{Equation of Transfer}
@@ -122,7 +124,7 @@ $\vec{l}(\vec{x}, \vec{\omega})$,
   \label{eqn:rte1d}
   \frac{dL}{ds}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega})
   = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
-  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x})\, d\vec{\omega}',
+  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x})\, d\vec{\omega}' + \sigma(\vec{x}, \vec{\omega}),
 \end{equation}
 where $\int_{4\pi}$ denotes integration over the unit sphere.
 The derivative of $L$ over the path can be rewritten as
@@ -135,7 +137,7 @@ which reveals the vector form of the radiative transfer equation,
 \begin{equation*}
   \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega})
   = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
-  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\vec{\omega}',
+  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\vec{\omega}' + \sigma(\vec{x}, \vec{\omega}),
 \end{equation*}
 or equivalently,
 \begin{equation}
@@ -144,7 +146,7 @@ or equivalently,
   = b \left(
     \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x}, \vec{\omega}')\, d\vec{\omega}'
     - L(\vec{x}, \vec{\omega})
-  \right).
+  \right)+ \sigma(\vec{x}, \vec{\omega}).
   \label{eqn:rte}
 \end{equation}
 
@@ -160,7 +162,7 @@ under the surface of the water by a function $f(\vec{\omega})$.
 Or if $\zmin>0$, then the radiance at $z=\zmin$ should be specified instead (as opposed to the radiance at the first grid cell center).
 Further, we assume that no upwelling light enters the domain from the bottom, so
 \begin{align*}
-  L(\vec{x_s}, \vec{\omega}) &= f(\omega) \mbox{ if } \vec{\omega} \cdot \hat{z} > 0, \\
+  L(\vec{x_s}, \vec{\omega}) &= f(\vec{\omega}) \mbox{ if } \vec{\omega} \cdot \hat{z} > 0, \\
   L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0.
 \end{align*}
 
@@ -170,15 +172,22 @@ The physical interpretation of the asymptotic series is that each term represent
 With the addition of each term, light from the previous term is scattered and attenuated from each point along the ray path.
 In reality, the scattering cannot be considered to occur in discrete events, but rather all scattering occurs simultaneously (on a macroscopic timescale).
 
-Since this is only an approximation, it is important to note that while the asymptotic series converges as $b \to 0$, it is not expected to converge as the number of terms increases.
+Since this is only an approximation, it is important to note that while the asymptotic series converges as $b \to 0$, it is not necessary that the series converges as the number of terms increases, although it may occur in certain cases.
 Especially in cases of large scattering, the asymptotic series diverges rapidly.
+The convergence properties will be expaned upon in -TODO-
 \subsection{Asymptotic Expansion}
 Taking $b$ to be small, we introduce the asymptotic series
 \newcommand{\Lasym}{L_0(\vec{x},\vec{\omega}) + b L_1(\vec{x},\vec{\omega}) + b^2 L_2(\vec{x},\vec{\omega}) + \cdots}
 \newcommand{\Lasyms}{L_0(\vec{x_s},\vec{\omega}) + b L_1(\vec{x_s},\vec{\omega}) + b^2 L_2(\vec{x_s},\vec{\omega}) + \cdots}
+\newcommand{\Lasymb}{L_0(\vec{x_b},\vec{\omega}) + b L_1(\vec{x_b},\vec{\omega}) + b^2 L_2(\vec{x_b},\vec{\omega}) + \cdots}
 \newcommand{\Lasymp}{L_0(\vec{x},\vec{\omega}') + b L_1(\vec{x},\vec{\omega}') + b^2 L_2(\vec{x},\vec{\omega}') + \cdots}
+\newcommand{\sigasym}{\sigma_0(\vec{x},\vec{\omega}) + b \sigma_1(\vec{x},\vec{\omega}) + b^2 \sigma_2(\vec{x},\vec{\omega}) + \cdots}
 \begin{align*}
   L(\vec{x},\vec{\omega}) = \Lasym.
+\end{align*}
+Since the source, $\sigma$ may also depend on $b$, it deserves a similar expansion,
+\begin{align*}
+  \sigma(\vec{x},\vec{\omega}) = \sigasym.
 \end{align*}
 Substituting the above into \eqref{eqn:rte} yields
 \begin{align*}
@@ -188,125 +197,126 @@ Substituting the above into \eqref{eqn:rte} yields
       \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}')
       \left[ \Lasymp \right] \, d\vec{\omega}' \\
     &- \left[ \Lasym \right]
-    \Bigg).
+      \Bigg) \\
+    &+ \left[ \sigasym \right].
 \end{align*}
 Grouping like powers of $b$, we have the decoupled set of equations
 \begin{align}
-  \vec{\omega} \cdot \nabla L_0(\vec{x}, \vec{\omega}) + a(\vec{x})L_0(\vec{x}) &= 0,
+  \vec{\omega} \cdot \nabla L_0(\vec{x}, \vec{\omega}) + a(\vec{x})L_0(\vec{x}) &= \sigma_0(\vec{x}, \vec{\omega}),
   \label{eqn:asymptotics_0}\\
   \vec{\omega} \cdot \nabla L_1(\vec{x}, \vec{\omega}) + a(\vec{x})L_1(\vec{x})
-  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_0(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_0(\vec{x}, \vec{\omega}), \nonumber\\
+  &= \sigma_1(\vec{x}, \vec{\omega})
+  + \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_0(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_0(\vec{x}, \vec{\omega}), \nonumber\\
   \vec{\omega} \cdot \nabla L_2(\vec{x}, \vec{\omega}) + a(\vec{x})L_2(\vec{x})
-  &= \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_1(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_1(\vec{x}, \vec{\omega}). \nonumber \\
+  &= \sigma_2(\vec{x}, \vec{\omega})
+  + \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_1(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_1(\vec{x}, \vec{\omega}). \nonumber \\
   &\vdots \nonumber
 \end{align}
 In general, for $n \geq 1$,
 \begin{equation}
   \vec{\omega} \cdot \nabla L_n(\vec{x}, \vec{\omega}) + a(\vec{x})L_n(\vec{x})
-  = \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_{n-1}(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_{n-1}(\vec{x}, \vec{\omega}).
+  = \sigma_n(\vec{x}, \vec{\omega})
+  + \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L_{n-1}(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_{n-1}(\vec{x}, \vec{\omega}).
   \label{eqn:asymptotics_n}
 \end{equation}
 
-For boundary conditions, let $\vec{x_s}$ be a point on the surface of the domain.
+For boundary conditions, let $\vec{x_s}$ be a point on the surface of the domain and $\vec{x_b}$ a point on the bottom.
 Then,
 \begin{equation*}
-  \Lasyms =
   \begin{cases}
-    f(\omega), & \hat{z}\cdot\omega > 0 \\
-    0, & \mbox{otherwise},
-  \end{cases}
+    \Lasyms = f(\vec{\omega}) &\mbox{ if } \hat{z}\cdot\vec{\omega} > 0, \\
+    \Lasymb = 0 &\mbox{ if } \hat{z}\cdot\vec{\omega} < 0.
+    \end{cases}
 \end{equation*}
-which can be decomposed as
-\begin{align}
-  L_0(\vec{x}, \vec{\omega}) &=
-  \begin{cases}
-    f(\omega), & \hat{z}\cdot\omega > 0, \\
-    0, & \mbox{otherwise},
-  \end{cases}
-  \label{eqn:asymptotics_bc_0} \\
-  L_1(\vec{x}, \vec{\omega}) &= 0 \nonumber \\
-  L_2(\vec{x}, \vec{\omega}) &= 0. \nonumber \\
-  &\vdots \nonumber
-\end{align}
-In general, for $n \geq 1$,
+Grouping by powers of $b$, we have
 \begin{equation}
-  L_n(\vec{x}, \vec{\omega}) = 0.
+  \begin{cases}
+    L_0(\vec{x_s}, \vec{\omega}) = f(\vec{\omega}) &\mbox{ if } \hat{z}\cdot\vec{\omega} > 0, \\
+    L_0(\vec{x_b}, \vec{\omega}) = 0 &\mbox{ if } \hat{z}\cdot\vec{\omega} < 0,
+  \end{cases}
+  \label{eqn:asymptotics_bc_0}
+\end{equation}
+for the first term, and
+\begin{equation}
+  \begin{cases}
+    L_n(\vec{x_s}, \vec{\omega}) = 0 &\mbox{ if } \hat{z}\cdot\vec{\omega} > 0, \\
+    L_n(\vec{x_b}, \vec{\omega}) = 0 &\mbox{ if } \hat{z}\cdot\vec{\omega} < 0,
+  \end{cases}
   \label{eqn:asymptotics_bc_n}
 \end{equation}
-
+for $n > 0$.
 
 \subsection{Analytical Solution}
 \label{sec:asymptotic_sol}
 
-For all $\vec{x}, \vec{\omega}$, we consider the path $\vec{l}(\vec{x}, \vec{\omega}, s)$ from \eqref{eqn:ray_path}.
-We extract the absorption coefficient along the path,
-\begin{equation*}
-  \tilde{a}(s) = a(\vec{l}(\vec{x}, \vec{\omega}), s).
-\end{equation*}
-Then, the first equation from the asymptotic expansion, \eqref{eqn:asymptotics_0} and its associated boundary condition, \eqref{eqn:asymptotics_bc_0}, can be rewritten as the first order, linear ordinary differential equation
-\begin{equation*}
+Given $\vec{x}, \vec{\omega}$, consider the path $\vec{l}(\vec{x}, \vec{\omega}, s)$ from \eqref{eqn:ray_path} for $s \in [0, \tilde{s}]$.
+Denote the radiance, absorption coefficient, and source term along the path by
+\begin{align*}
+  \tilde{u_0}(s) = L(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}), \\
+  \tilde{a}(s) = a(\vec{l}(\vec{x}, \vec{\omega}, s)), \\
+  \tilde\sigma_0(s) = \sigma_0(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}).
+\end{align*}
+Then, the first equation from the asymptotic expansion, \eqref{eqn:asymptotics_0} and its associated boundary condition, \eqref{eqn:asymptotics_bc_0}, can be rewritten as the first order linear ordinary differential equation
+\begin{equation}
   \left\{
   \begin{aligned}
-  0 &= \frac{du_0}{ds}(s) + \tilde{a}(s) u_0(s) \\
-  u_0(0) &= f(\vec{\omega}),
+  \tilde\sigma_0(s) &= \frac{du_0}{ds}(s) + \tilde{a}(s) u_0(s) \\
+  u_0(0) &= f(\vec{\omega})H(\vec{\omega}\cdot\hat{z}),
   \end{aligned}
   \right.
-\end{equation*}
-which we can solve by multiplying by the appropriate integrating factor, as follows.
+  \label{eqn:asymptotics_ode_0}
+\end{equation}
+where $H(x)$ is the Heaviside step function.
+This equation is solved by multiplying by the appropriate integrating factor, as follows.
 \begin{align*}
-  0 &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \frac{du_0}{ds} + \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \tilde{a}(s) u_0(s) \\
+  \exp\left(\int_0^s \tilde{a}(s')\, ds'\right)\tilde\sigma_0(s) &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \frac{du_0}{ds} + \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \tilde{a}(s) u_0(s) \\
   &= \frac{d}{ds}\left[\exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_0(s)\right].
 \end{align*}
 Then, integrating both sides yields
 \begin{align*}
-  0 &= \int_0^s \frac{d}{ds'}\left[\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) u_0(s')\right]\, ds' \\
-  &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_0(s) - f(\vec{\omega}).
+  \int_0^s \exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right)\tilde\sigma_0(s')\, ds' &= \int_0^s \frac{d}{ds}\left[\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) u_0(s')\right]\, ds' \\
+  &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_0(s) - f(\vec{\omega})H(\vec{\omega}\cdot\hat{z}).
 \end{align*}
 Hence,
-\begin{equation}
-  u_0(s) = f(\omega) \exp\left(-\int_0^s \tilde{a}(s)\, ds\right).
+\begin{align}
+  u_0(s) &= \left[f(\vec{\omega})H(\vec{\omega}\cdot\hat{z}) + \int_0^s \exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) \tilde\sigma_0(s')\, ds'\right] \exp\left(-\int_0^s \tilde{a}(s')\, ds'\right) \nonumber\\
+  &= \exp\left(-\int_0^s \tilde{a}(s')\, ds'\right) f(\vec{\omega})H(\vec{\omega}\cdot\hat{z}) \nonumber\\
+    &+ \int_0^s \exp\left(-\int_{s'}^s \tilde{a}(s'')\, ds''\right) \tilde\sigma_0(s')\, ds'
   \label{eqn:asymptotics_soln_0}
-\end{equation}
-Then, we convert back from path length $s$ to the spatial coordinate $\vec{x}$ using
+\end{align}
+Then, we convert back from path length $s$ to the spatial coordinate $\vec{x}$ by evaluating the one-dimensional solution at the end of the ray path.
+That is,
 \begin{equation*}
-  L_0(\vec{l}(\vec{x}, \vec{\omega},s), \vec{\omega}) = u_0(s).
+  L_0(\vec{x}, \vec{\omega}) = u_0(\tilde{s}).
 \end{equation*}
 
-The $n \geq 1$ equations have a nonzero right-hand side, which we call the effective source, $g_n(s)$.
+In addition to the explicit source term, the  $n \geq 1$ equations also have a scattering term, which is an integral of the previous term in the series. The sum of these two sources is called the effective source,
+\begin{equation*}
+  g_n(\vec{x}, \vec{\omega}) = \sigma(\vec{x}, \vec{\omega}) + \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}')
+  L_{n-1}(\vec{x}, \vec{\omega}')\,d\vec{\omega}' - L_{n-1}(\vec{x}, \vec{\omega}).
+\end{equation*}
 This can be similarly extracted along a ray path as
 \begin{equation*}
-  g_n(s) = \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}')
-  L_{n-1}(\vec{l}(\vec{x}, \vec{\omega'}, s), \vec{\omega}')\,d\vec{\omega}' - L_{n-1}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}).
+  \tilde{g}_n(s) = \tilde{\sigma}(s) + \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}')
+  L_{n-1}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}')\,d\vec{\omega}' - L_{n-1}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}).
 \end{equation*}
-Then, since $g_n$ depends only on $L_{n-1}$, it is independent of $u_n$, which allows \eqref{eqn:asymptotics_n} and its boundary condition, \eqref{eqn:asymptotics_bc_n}, to be written as the first order, linear ordinary differential equation along the ray path,
-\begin{equation*}
+Then, since $\tilde{g}_n$ depends only on $L_{n-1}$ and is therefore independent of $u_n$, \eqref{eqn:asymptotics_n} and its boundary condition \eqref{eqn:asymptotics_bc_n} can be written as the first order linear ordinary differential equation along the ray path,
+\begin{equation}
   \left\{
   \begin{aligned}
-    g_n(s) &= \frac{du_n}{ds}(s) + \tilde{a}(s)u_n(s) \\
+    \tilde{g}_n(s) &= \frac{du_n}{ds}(s) + \tilde{a}(s)u_n(s) \\
     u_n(0) &= 0
   \end{aligned}
   \right.
-\end{equation*}
-As with the $n=0$ equation, the solution is found by multiplying by the appropriate integrating factor.
-\begin{align*}
-  \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) g_n(s) &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \frac{du_n}{ds} + \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \tilde{a}(s) u_n(s) \\
-  &= \frac{d}{ds}\left[\exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_n(s)\right].
-\end{align*}
-Integrating both sides yields
-\begin{align*}
-  \int_0^s\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) g_n(s')\, ds' &= \int_0^s \frac{d}{ds'}\left[\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) u_n(s')\right]\, ds' \\
-  &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_n(s).
-\end{align*}
+  \label{eqn:asymptotics_ode_n}
+\end{equation}
+This is exactly \eqref{eqn:asymptotics_ode_0} with $\tilde{\sigma}_0 \to \tilde{g}_n$ and $f(\vec{\omega}) \to 0$.
 Hence,
-\begin{equation*}
-  u_n(s) = \exp\left(-\int_0^s \tilde{a}(s')\, ds'\right) \int_0^s\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) g_n(s')\, ds',
-\end{equation*}
-which simplifies to
 \begin{equation}
-  u_n(s) = \int_0^sg_n(s')\exp\left( -\int_{s''}^{s'}\tilde{a}(s'')\,ds'' \right)\, ds'.
+  u_n(s) = \int_0^s\tilde{g}_n(s')\exp\left( -\int_{s''}^{s'}\tilde{a}(s'')\,ds'' \right)\, ds'.
   \label{eqn:asymptotics_soln_n}
 \end{equation}
-As before, the conversion back to spatial coordinates is
+As before, the conversion back to full spatial and angular coordinates is
 \begin{equation*}
-  L_n(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}) = u_n(s).
+  L_n(\vec{x}, \vec{\omega}) = u_n(\tilde{s}).
 \end{equation*}
