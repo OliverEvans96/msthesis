@@ -298,17 +298,17 @@ Similarly, substituting $\varepsilon \to -\varepsilon$, we have
 
 For every spatial grid cell, the scattering integral is discretized as described in Section \ref{sec:scatter_integral}, as
 \begin{equation*}
-  \vec{\omega} \cdot \nabla L_p = -(a_{ijk}+b) L_p + \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'}L_{p'},
+  \vec{\omega} \cdot \nabla L_p = -(a_{ijk}+b) L_p + \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'}L_{p'} + \sigma_{ijkp},
 \end{equation*}
 or equivalently,
 \begin{equation*}
-  \vec{\omega} \cdot \nabla L_p + (a_{ijk}+b)L_p - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{p'} = 0.
+  \vec{\omega} \cdot \nabla L_p + (a_{ijk}+b)L_p - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{p'} = \sigma_{ijkp}.
 \end{equation*}
 
 On the interior of the spatial domain, we apply the central difference formula in each dimension, which yields
 \begin{equation*}
   \begin{aligned}
-    0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
+    \sigma_{ijkp} &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{L_{ij,k+1,p}-L_{ij,k-1,p}}{2dz}\cos\hat{\phi}_p \\
     &+ (a_{ijk}+b)L_{ijkp}  - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
@@ -324,7 +324,7 @@ For downwelling light at the surface, we apply the asymmetric second order diffe
 using the surface radiance value, which gives
 \begin{equation*}
   \begin{aligned}
-    0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
+    \sigma_{ijkp} &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{-8f_p + 7L_{ijkp} + L_{ij,k+1,p}}{5dz}\cos\hat{\phi}_p \\
     &+ (a_{ijk}+b)L_{ijkp} \\
@@ -339,14 +339,14 @@ right gives
     + &\frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     + &\frac{L_{ij,k+1,p}}{5dz}\cos\hat{\phi}_p \\
     + &(a_{ijk}+b) + \frac{7}{5dz} \cos\hat{\phi}_p)L_{ijkp} \\
-    - &\sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'} = \frac{8f_p}{5dz} \cos\hat{\phi}_p.
+    - &\sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'} = \frac{8f_p}{5dz} \cos\hat{\phi}_p + \sigma_{ijkp}.
   \end{aligned}
 \end{equation*}
 
 Likewise for the bottom boundary condition, we have
 \begin{equation*}
   \begin{aligned}
-    0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
+    \sigma_{ijkp} &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &- \frac{L_{ij,k-1,p}}{5dz}\cos\hat{\phi}_p \\
     &+ (a_{ijk}+b) - \frac{7}{5dz}\cos\hat{\phi}_p)L_{ijkp} \\
@@ -357,7 +357,7 @@ Likewise for the bottom boundary condition, we have
 Now, for upwelling light at the first depth layer (non-BC), we apply FD2.
 \begin{equation*}
   \begin{aligned}
-    0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
+    \sigma_{ijkp} &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{-3L_{ijkp} + 4L_{ij,k+1,p} - L_{ij,k+2,p}}{2dz}\cos\hat{\phi}_p \\
     &+ (a_{ijk}+b)L_{ijkp} \\
@@ -368,7 +368,7 @@ Now, for upwelling light at the first depth layer (non-BC), we apply FD2.
 Grouping $L_{ijkp}$ terms gives
 \begin{equation*}
   \begin{aligned}
-    0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
+    \sigma_{ijkp} &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{4L_{ij,k+1,p} - L_{ij,k+2,p}}{2dz}\cos\hat{\phi}_p \\
     &+ \left(a_{ijk}+b - 3\frac{\cos\hat\phi_p}{2dz} \right)L_{ijkp} \\
@@ -379,7 +379,7 @@ Grouping $L_{ijkp}$ terms gives
 Similarly, for downwelling light at the lowest depth layer, we have
 \begin{equation*}
   \begin{aligned}
-    0 &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
+    \sigma_{ijkp} &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{-4L_{ij,k-1,p} + L_{ij,k-2,p}}{2dz}\cos\hat{\phi}_p \\
     &+ \left(a_{ijk}+b + 3\frac{\cos\hat\phi_p}{2dz} \right)L_{ijkp} \\
