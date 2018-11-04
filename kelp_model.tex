@@ -213,7 +213,7 @@ This is made possible by the simple kite-shape fronds, and would be considerably
 To determine under what conditions a frond will occupy a given point, we begin by
 describing the shape of the frond in Cartesian coordinates and then convert to polar coordinates.
 Of primary interest are the edges connected to the frond tip.
-For convenience, we will use a rotated coordinate system $(\theta',s)$ such that the line connecting the base to the tip is vertical, with the base at $(0,0)$.
+For convenience, we will use a rotated coordinate system $(\theta',s)$ such that the line connecting the base to the tip points in the $+y$ direction ($\theta=\pi/2$), with the base at $(0,0)$.
 Denote the Cartesian analogue of this coordinate system as $(x',y')$ which is related to $(\theta',s)$ by
 \begin{align*}
 	x' &= s\cos\theta' \\
@@ -234,7 +234,7 @@ Using the equations in Section \ref{sec:rot_coords}, this can be written in pola
 \end{equation*}
 where
 \begin{equation*}
-	S(\theta') = \sign(\theta'-\pi/2).
+	S(\theta') = \sign(\cos\theta').
 \end{equation*}
 Then, using the relationships in Section \ref{sec:shape}, the above equation can be rewritten in terms of the frond ratios $f_s$ and $f_r$ as
 \begin{equation*}
