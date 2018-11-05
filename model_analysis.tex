@@ -63,6 +63,7 @@ Whereas \textit{inverting} a differential operator analytically is impossible fo
 Of course, it is necessary to construct $u$ and any coefficient functions in $D$ from simple, differentiable and integrable functions.
 
 Also, $u$ must satisfy any constraints imposed by the algorithm such as hard-coded boundary conditions or requirements for positive coefficients.
+Finally, the chosen functions should have small derivatives so that convergence can be achieved for reasonable grid sizes.
 Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) to perform the symbolic manipulations involved in computing $\sigma$.
 
 \subsubsection{Application}
@@ -71,13 +72,12 @@ For the particular implementations developed in this thesis, the following condi
 \begin{enumerate}
   \item Periodic in $x$ and $y$
   \item Positive absorption coefficient $a(\vec{x})$
-  \item Surface downwelling boundary condition $f$ depends only on angle $\vec{\omega}$, not position $\vec{x}$
+  \item Position-independent surface downwelling boundary condition
   \item Zero upwelling radiance at the bottom boundary
   \item Properly normalized VSF $\beta$, as described in Section \ref{sec:iops}
 \end{enumerate}
 
 The chosen functions are
-
 \begin{align}
   L(x, y, z, \theta, \phi) &= 
     \alpha \left(\sin{\left (\phi + \theta \right )} + 1\right) \nonumber\\
@@ -91,50 +91,45 @@ The chosen functions are
 \end{equation}
 \begin{equation}
   \beta(\Delta) = \frac{\Delta + 1}{4 \pi}
-  \label{eqn:mms_vsf_expr} \\
-\end{equation}
-
-Using the python package Sympy, the following boundary conditions and source function are calculated.
-% TODO: cite
-
-\begin{equation}
-  f(\theta, \phi) = \alpha \left(- \gamma + 1\right) \left(\sin{\left (\phi + \theta \right )} + 1\right)
   \label{eqn:mms_vsf_expr}
 \end{equation}
+Using the python package Sympy, the boundary conditions and source function are calculated to be
+% TODO: cite
+
 \begin{align}
+  &\quad\qquad f(\theta, \phi) = \alpha \left(- \gamma + 1\right) \left(\sin{\left (\phi + \theta \right )} + 1\right),
+  \label{eqn:mms_vsf_expr} \\
   &\sigma(x, y, z, \theta, \phi) = \alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \left(\sin{\left (\phi + \theta \right )} + 1\right) \nonumber\\
   %
-  &\cdot \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right) \left(b + \sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )} + \tanh{\left (- \gamma + z \right )} + 5\right) \nonumber\\
+  &\quad \cdot \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right) \left(b + \sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )} + \tanh{\left (- \gamma + z \right )} + 5\right) \nonumber\\
   %
-  &- b \Bigg[ \frac{\alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \left(\frac{\sin{\left (\phi \right )} \sin{\left (\theta \right )}}{3} + \frac{\cos{\left (\phi \right )}}{3}\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right)}{4 \pi} \nonumber\\
+  &\quad - b \Bigg[ \frac{\alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \left(\frac{\sin{\left (\phi \right )} \sin{\left (\theta \right )}}{3} + \frac{\cos{\left (\phi \right )}}{3}\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right)}{4 \pi} \nonumber\\
   %
-  &- \frac{\alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right)}{4 \pi} \nonumber\\
+  &\quad - \frac{\alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right)}{4 \pi} \nonumber\\
   %
-    &\cdot \left(-\frac{\pi \sin{\left( \phi \right)}\sin{\left( \theta \right)}}{2} - \frac{\sin{\left (\phi \right )} \sin{\left (\theta \right )}}{3} - \frac{\cos{\left (\phi \right )}}{3}\right) \nonumber\\
+    &\quad \cdot \left(-\frac{\pi \sin{\left( \phi \right)}\sin{\left( \theta \right)}}{2} - \frac{\sin{\left (\phi \right )} \sin{\left (\theta \right )}}{3} - \frac{\cos{\left (\phi \right )}}{3}\right) \nonumber\\
   %
-  &- \frac{\alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right)}{4 \pi} \nonumber\\
+  &\quad - \frac{\alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right)}{4 \pi} \nonumber\\
   %
-    &\cdot \left(\frac{\sin{\left( \phi \right)}\sin{\left( \theta \right)}}{3} - \frac{2 \pi \sin{\left (\phi \right )} \cos{\left (\theta \right )}}{3} + \frac{\cos{\left (\phi \right )}}{3} - 2 \pi\right) \nonumber\\
+    &\quad \cdot \left(\frac{\sin{\left( \phi \right)}\sin{\left( \theta \right)}}{3} - \frac{2 \pi \sin{\left (\phi \right )} \cos{\left (\theta \right )}}{3} + \frac{\cos{\left (\phi \right )}}{3} - 2 \pi\right) \nonumber\\
   %
-  &+ \frac{\alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right)}{4 \pi} \nonumber\\
+  &\quad + \frac{\alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right)}{4 \pi} \nonumber\\
   %
-  &\cdot \left(- \frac{\pi \sin{\left (\phi \right )} \sin{\left (\theta \right )}}{2} - \frac{\sin{\left(\phi\right)}\sin{\left(\theta\right)}}{3} + \frac{2 \pi \sin{\left (\phi \right )} \cos{\left (\theta \right )}}{3} - \frac{\cos{\left (\phi \right )}}{3} + 2 \pi\right) \Bigg] \nonumber\\
+  &\quad \cdot \left(- \frac{\pi \sin{\left (\phi \right )} \sin{\left (\theta \right )}}{2} - \frac{\sin{\left(\phi\right)}\sin{\left(\theta\right)}}{3} + \frac{2 \pi \sin{\left (\phi \right )} \cos{\left (\theta \right )}}{3} - \frac{\cos{\left (\phi \right )}}{3} + 2 \pi\right) \Bigg] \nonumber\\
   %
-  &+ 2 \pi z \left(\sin{\left (\phi + \theta \right )} + 1\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right) \sin{\left (\phi \right )} \sin{\left (\theta \right )} \cos{\left (\frac{2 \pi y}{\alpha} \right )} \nonumber\\
+  &\quad + 2 \pi z \left(\sin{\left (\phi + \theta \right )} + 1\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right) \sin{\left (\phi \right )} \sin{\left (\theta \right )} \cos{\left (\frac{2 \pi y}{\alpha} \right )} \nonumber\\
   %
-  &+ 2 \pi z \left(\sin{\left (\phi + \theta \right )} + 1\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right) \sin{\left (\phi \right )} \cos{\left (\theta \right )} \cos{\left (\frac{2 \pi x}{\alpha} \right )} \nonumber\\
+  &\quad + 2 \pi z \left(\sin{\left (\phi + \theta \right )} + 1\right) \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right) \sin{\left (\phi \right )} \cos{\left (\theta \right )} \cos{\left (\frac{2 \pi x}{\alpha} \right )} \nonumber\\
   %
-  &+ \Bigg[\alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \nonumber\\
-  &\cdot \left(\frac{\left(- b - 1\right) \left(- \tanh^{2}{\left (\left(b + 1\right) \left(\gamma - z\right) \right )} + 1\right)}{\tanh{\left (\gamma \left(b + 1\right) \right )}} + 1\right) %\nonumber\\
+  &\quad + \Bigg[\alpha \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \nonumber\\
+  &\quad \cdot \left(\frac{\left(- b - 1\right) \left(- \tanh^{2}{\left (\left(b + 1\right) \left(\gamma - z\right) \right )} + 1\right)}{\tanh{\left (\gamma \left(b + 1\right) \right )}} + 1\right) %\nonumber\\
   %
   \left(\sin{\left (\phi + \theta \right )} + 1\right) \nonumber\\
   %
-  &+ \alpha \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) \left(\sin{\left (\phi + \theta \right )} + 1\right) \nonumber\\
-  &\cdot \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right)\Bigg] \cos{\left (\phi \right )}
+  &\quad + \alpha \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) \left(\sin{\left (\phi + \theta \right )} + 1\right) \nonumber\\
+  &\quad \cdot \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right)\Bigg] \cos{\left (\phi \right )}
   \label{eqn:mms_source_expr}
 \end{align}
-
-Thankfully, Sympy can produce both fortran and \LaTeX output directly, so it was not necessary to copy that mess by hand.
 
 
 % TODO: Revise
