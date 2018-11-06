@@ -28,7 +28,7 @@ For the sake of this model, only the kelp frond is considered, and its base is a
 The ``gentle undulation approximation'' is employed, whereby it is assumed that fronds are perfectly horizontal.
 While at any given time they may point up or down due to water current and gravity, we consider the horizontal
 state to be an average configuration.
-This simplifaction allows for the three-dimensionally distributed population of kelp fronds
+This simplification allows for the three-dimensionally distributed population of kelp fronds
 to be considered a collection of independent populations in two-dimensional depth layers.
 A computer rendering of this scenario is shown in Figure \ref{fig:kelp_array}.
 
@@ -310,7 +310,7 @@ Integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ as depicted in Figure \ref
 								\,dl\,d\theta_f.
 \end{align*}
 
-Assuming that the depth layer has thickness $dz$ and contains $n$ fronds of thickenss $t$,
+Assuming that the depth layer has thickness $dz$ and contains $n$ fronds of thickness $t$,
 the proportion of the depth layer occupied by kelp at any horizontal position can be calculated as
 \begin{equation*}
   P_k = \frac{nt}{dz}\tilde{P}_k.
@@ -328,4 +328,36 @@ Then, the effective absorption coefficient can be calculated at any point in spa
 \end{figure}
 
 \section{Rope Position Distribution}
-%TODO
+Give both explanations: moving rope and convenient solution to numerical dilemma.
+
+\section{Kelp Distribution Visualization}
+% TODO: Add a few plots demonstrating that model does what I say it does
+
+\pagebreak
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5in]{kelp_dist_sharp}
+  \caption{kelp dist sharp}
+  \label{fig:kelp_dist_sharp}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \vspace{-3em}
+  \includegraphics[width=5in]{kelp_dist_smooth}
+  \caption{kelp dist smooth}
+  \label{fig:kelp_dist_smooth}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \vspace{-3em}
+  \includegraphics[width=5in]{kelp_dist_smooth_smallblur}
+  \caption{kelp dist smooth smallblur}
+  \label{fig:kelp_dist_smooth_smallblur}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \vspace{-3em}
+  \includegraphics[width=5in]{kelp_dist_smooth_blur}
+  \caption{kelp dist smooth blur}
+  \label{fig:kelp_dist_smooth_blur}
+\end{figure}

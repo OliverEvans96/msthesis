@@ -27,7 +27,7 @@ There are two forms of verification.
 The first is \textit{verification of codes}, where a whole implementation of an algorithm is tested, and the the difference between the numerical and analytical solutions is \textit{explicitly measured} at every point in the numerical solution.
 The same calculation is repeated for several grid sizes, and it is checked that the convergence order as the grid spacing approaches zero matches the theoretical convergence order of the algorithm.
 The explicit measurement of errors requires that the analytical solution be known, which is generally only possible for some unrealistic or uninteresting set of parameters.
-If the analycal solution were available for the real, interesting case, then it would probably not have been necessary to implement a numerical solution in the first place.
+If the analytical solution were available for the real, interesting case, then it would probably not have been necessary to implement a numerical solution in the first place.
 
 Therefore, the second phase of verification is \textit{verification of calculations}, where a single specific calculation is performed, and the error is \textit{estimated} since it cannot be measured explicitly.
 This is generally done by repeating the calculation for several grid sizes, as above, then using a technique called \textit{Richardson Extrapolation} to estimate the limiting solution as the grid spacing approaches zero.
@@ -38,7 +38,7 @@ Error estimation for a specific calculation can be used to calculate error bars 
 
 The most obvious way to obtain an analytical solution to compare to a numerical solution is by choosing a simple case where the PDE can be solved explicitly, perhaps through separation of variables or by reducing it to an ODE.
 This is referred to as the Method of Exact Solutions.
-However, such simple cases usually result in such a loss of generality as to make them nearly useless.
+However, such simple cases usually result in such a loss of generality that they become useless in testing the complicated aspects of the solution algorithm.
 In order to verify that a code will work in an interesting case, every term in the equation must be exercised during the verification process.
 An alternative process, the Method of Manufactured Solutions, retains arbitrary generality in the equations while making analytical solutions readily available.
 Of course, there is a trade-off: the solutions are not physically realistic.
@@ -52,14 +52,14 @@ Consider a differential equation
   u(\vec{x})=f(\vec{x}) \mbox{ for } \vec{x} \in \Sigma,
   \label{eqn:mms_bc}
 \end{align}
-where $D$ is a differential operator, $u$ is the solution, and $\sigma$ is a source term, $f$ is the boundary condition function, and $\Sigma$ is the set of boundary points at which the boundary condition is applied.
+where $D$ is a differential operator, $u$ is the solution, $\sigma$ is a source term, $f$ is the boundary condition function, and $\Sigma$ is the set of boundary points at which the boundary condition is applied.
 In general, $D$, $\sigma$, and $f$ are known, and solving for $u$ involves determining $D^{-1}$ and calculating $u = D^{-1}\sigma$ while satisfying \eqref{eqn:mms_bc}.
 
 The Method of Manufactured Solutions reverses the normal procedure.
 Here, $u$ is hand-picked at the outset, all parameters and coefficient functions in $D$ are chosen to be nonzero, and the source term $\sigma$ which produces the desired solution is calculated.
 Similarly, the boundary condition is determined from the chosen solution.
 In essence, rather than solving $u = D^{-1}\sigma$ subject to $u=f$, it suffices to compute $\sigma = Du$ and evaluate $f=u$ at the boundary.
-Whereas \textit{inverting} a differential operator analytically is impossible for many equations and often requires ingenuity when it is, \textit{applying} onw is a plug-and-chug application of algebra and calculus.
+Whereas \textit{inverting} a differential operator analytically is impossible for many equations and often requires ingenuity when it is, \textit{applying} one is a plug-and-chug application of algebra and calculus.
 Of course, it is necessary to construct $u$ and any coefficient functions in $D$ from simple, differentiable and integrable functions.
 
 Also, $u$ must satisfy any constraints imposed by the algorithm such as hard-coded boundary conditions or requirements for positive coefficients.
@@ -67,7 +67,7 @@ Finally, the chosen functions should have small derivatives so that convergence 
 Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) to perform the symbolic manipulations involved in computing $\sigma$.
 
 \subsection{Symbolic Variables and Solution}
-In order to verify the numerical implementations described in the previous chapters, it is necessary to first choose a manufactured solution $L(\vec{x}, \vec{\omega})$ to the radiative transfer equation, as well as coefficient functions for the absorption coefficient $a(\vec{x})$ and volume scattering function $\beta(\vec{\omega}\cdot{\vec{\omega'}}$.
+In order to verify the numerical implementations described in the previous chapters, it is necessary to first choose a manufactured solution $L(\vec{x}, \vec{\omega})$ to the radiative transfer equation, as well as coefficient functions for the absorption coefficient $a(\vec{x})$ and volume scattering function $\beta(\vec{\omega}\cdot\vec{\omega'})$.
 For the particular implementations developed in this thesis, the following conditions must be met by the manufactured solution:
 \begin{enumerate}
   \item Periodic solution and absorption coefficient in $x$ and $y$
@@ -166,10 +166,16 @@ As shown in Figure \ref{fig:fd_mms}, second order convergence is observed, demon
 
 \begin{figure}[H]
   \centering
-  \vspace{-3em}
-  \includegraphics[width=4in]{fd_mms}
+  \includegraphics[width=5in]{fd_mms}
   \caption{Code verification for the finite difference solution via the Method of Manufactured Solutions. Each point represents the same simulation run with a different spatial grid sizes, with the angular grid held constant at $n_a=8$. The average absolute difference between the analytical and numerical solutions is shown. A slope of $m=2$ on a log-log scale demonstrates second order convergence, as expected. This demonstrates the correctness of the code.}
   \label{fig:fd_mms}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5in]{mms_asym_err_n_contourf}
+  \caption{mms asym n contourf}
+  \label{fig:mms_asym_err_n_contourf}
 \end{figure}
 
 The quantity that we compare is \textit{perceived irradiance}, which is different than the simple mean irradiance in each depth layer.
@@ -193,6 +199,13 @@ than the absorption coefficient, causing the asymptotic solution to quickly dive
 In figure \ref{fig:asym_conv_compare}, average relative errors for the two converging cases are shown.
 In both cases, the accuracy improves with more scattering events until it plateaus.
 In the first case, 4 scattering events is sufficient, whereas in the second, the accuracy improves until 12 scattering events.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5in]{mms_asym_b_conv}
+  \caption{Code verification for the numerical asymptotics solution via the Method of Manufactured Solutions. A range of $b$-values are run, using 0 - 3 terms in the asymptotic series. Ideally, the $n-th$ order approximation should demonstrate $n+1$-th order convergence as $b \to 0$. The first three approximations are reasonably close, but the $n=3$ approximation converges slower than expected. It is unclear whether this is due to a coding mistake, discretization error, or if there is another cause for the sub-optimal convergence.}
+  \label{fig:mms_asym_b_conv}
+\end{figure}
 
 \section{Verification of Calculations}
 % TODO: Intro
@@ -250,18 +263,198 @@ From
 \begin{equation*}
   \phi \approx \phi_e + g_2 h^2,
 \end{equation*}
-it is clear that $\phi$ is linear in $h^2$.
-Therefore, a simple linear fit through multiple points in $(h^2, \phi)$ space yields $\phi_e$ as the y-intercept, and the slope, $g_2$, can be discarded.
+it is clear that $\phi$ is approximately linear in $h^2$.
+Therefore, a simple linear fit through multiple points in $(h^2, \phi)$ space yields $\phi_e$ as the y-intercept.
+The slope, $g_2$, can be discarded.
 If significant noise due to outliers still distorts the extrapolated values during fitting, a robust fitting algorithm such as Huber \cite{yu_robust_2014} or Ridge \cite{hoerl_ridge_1970} regression can help reduce the influence of outliers.
 
 \section{Computational Resource Requirements}
 \subsection{CPU Time}
+32 cores
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5in]{mms_asym_err_time}
+  \caption{mms asym err time, $n_s=64$, $n_a=8$}
+  \label{fig:mms_asym_err_time}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5in]{mms_asym_err_time_collapsed}
+  \caption{err time collapsed, $n_s=64$, $n_a=8$. $\varepsilon t^2 \propto b^n$}
+  \label{fig:mms_asym_err_time_collapsed}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5in]{fd_mms_time}
+  \caption{mms asym err time, $n_s=64$, $n_a=8$}
+  \label{fig:fd_mms_time}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5in]{compute_time_violin}
+  \caption{mms asym err time}
+  \label{fig:compute_time_violin}
+\end{figure}
+
 \subsection{Memory Usage}
+\subsubsection{Single Matrix}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5in]{memory_store}
+  \caption{Memory to store one copy of the finite difference coefficient matrix}
+  \label{fig:memory_store}
+\end{figure}
+
+\begin{tabular}{lllll}
+\toprule
+{}  &          8  &          10 &          12 &          14 \\
+\midrule                                                    \\
+4   &    1.36 MiB &    3.51 MiB &    7.61 MiB &   14.59 MiB \\
+8   &   10.91 MiB &   28.15 MiB &   60.94 MiB &  116.79 MiB \\
+16  &    87.4 MiB &  225.34 MiB &  487.76 MiB &  934.67 MiB \\
+32  &  699.61 MiB &    1.76 GiB &    3.81 GiB &     7.3 GiB \\
+48  &    2.31 GiB &    5.94 GiB &   12.87 GiB &   24.65 GiB \\
+64  &    5.47 GiB &   14.09 GiB &    30.5 GiB &   58.43 GiB \\
+72  &    7.78 GiB &   20.06 GiB &   43.42 GiB &    83.2 GiB \\
+100 &   20.86 GiB &   53.76 GiB &  116.34 GiB &  222.91 GiB \\
+128 &   43.74 GiB &  112.74 GiB &  243.99 GiB &  467.48 GiB \\
+\bottomrule
+\end{tabular}
+
+\begin{tabular}{llll}
+\toprule
+{}  &          16 &          18 &          20 \\
+\midrule                                             
+4   &   25.57 MiB &   41.88 MiB &      65 MiB \\
+8   &   204.7 MiB &  335.17 MiB &   520.2 MiB \\
+16  &     1.6 GiB &    2.62 GiB &    4.06 GiB \\
+32  &    12.8 GiB &   20.95 GiB &   32.52 GiB \\
+48  &    43.2 GiB &   70.73 GiB &  109.76 GiB \\
+64  &   102.4 GiB &  167.65 GiB &  260.18 GiB \\
+72  &   145.8 GiB &   238.7 GiB &  370.45 GiB \\
+100 &  390.63 GiB &  639.54 GiB &  992.51 GiB \\
+128 &  819.22 GiB &    1.31 TiB &    2.03 TiB \\
+\bottomrule
+\end{tabular}
+
+\subsubsection{LIS Solution Memory Estimate}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5in]{memory_solve}
+  \caption{Memory to solve the linear system of equations with GMRES restarted every 100 iterations. This seems to require roughly five times the memory required to store the matrix.}
+  \label{fig:memory_solve}
+\end{figure}
+
+\begin{tabular}{lllll}
+\toprule
+{} &          8  &          10 &          12 &          14  \\
+\midrule
+4   &    6.81 MiB &   17.57 MiB &   38.05 MiB &   72.94 MiB  \\
+8   &   54.57 MiB &  140.74 MiB &   304.7 MiB &  583.96 MiB  \\
+16  &  437.01 MiB &     1.1 GiB &    2.38 GiB &    4.56 GiB  \\
+32  &    3.42 GiB &    8.81 GiB &   19.06 GiB &   36.52 GiB  \\
+48  &   11.53 GiB &   29.72 GiB &   64.33 GiB &  123.25 GiB  \\
+64  &   27.34 GiB &   70.46 GiB &  152.48 GiB &  292.16 GiB  \\
+72  &   38.92 GiB &  100.32 GiB &  217.11 GiB &  415.99 GiB  \\
+100 &  104.29 GiB &  268.79 GiB &   581.7 GiB &    1.09 TiB  \\
+128 &  218.72 GiB &   563.7 GiB &    1.19 TiB &    2.28 TiB  \\
+\bottomrule
+\end{tabular}
+
+\begin{tabular}{lllll}
+\toprule
+{}  &               16 &          18 &          20 \\ 
+\midrule
+4   &       127.87 MiB &  209.39 MiB &  325.01 MiB \\
+8   &      1023.51 MiB &    1.64 GiB &    2.54 GiB \\
+16  &            8 GiB &    13.1 GiB &   20.32 GiB \\
+32  &           64 GiB &  104.77 GiB &   162.6 GiB \\
+48  &       215.99 GiB &  353.63 GiB &   548.8 GiB \\
+64  &          512 GiB &  838.24 GiB &    1.27 TiB \\
+72  &          729 GiB &    1.17 TiB &    1.81 TiB \\
+100 &         1.91 TiB &    3.12 TiB &    4.85 TiB \\
+128 &            4 TiB &    6.55 TiB &   10.16 TiB \\
+\bottomrule
+\end{tabular}
+
 
 \section{Rules of Thumb}
 \subsection{What grid resolution to use?}
 \subsection{Where is asymptotics valid}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5in]{verify_real_kelp_asym_b_scat_ss_sm_th_a05_br01_72x10_rad_err}
+  \caption{Asym real kelp. Blur radius=0.1}
+  \label{fig:asym_real_kelp_br01}
+\end{figure}
+
+
 \subsection{How many scattering events should be used?}
 
 \section{Comparison to Other Light Models}
 
+
+\subsection{Full 10m}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=6in]{compare_models_n1}
+  \caption{Compare models n=1}
+  \label{fig:compare_models_n1}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=6in]{compare_models_n2}
+  \caption{Compare models n=2}
+  \label{fig:compare_models_n2}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=6in]{compare_models_n3}
+  \caption{Compare models n=3}
+  \label{fig:compare_models_n3}
+\end{figure}
+
+\subsection{First 4m}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=6in]{compare_models_n1_zoom}
+  \caption{Compare models n=1}
+  \label{fig:compare_models_n1}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=6in]{compare_models_n2_zoom}
+  \caption{Compare models n=2}
+  \label{fig:compare_models_n2}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=6in]{compare_models_n3_zoom}
+  \caption{Compare models n=3}
+  \label{fig:compare_models_n3}
+\end{figure}
+
+\subsection{First 2m}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=6in]{compare_models_n1_zoom2}
+  \caption{Compare models n=1}
+  \label{fig:compare_models_n1}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=6in]{compare_models_n2_zoom2}
+  \caption{Compare models n=2}
+  \label{fig:compare_models_n2}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=6in]{compare_models_n3_zoom2}
+  \caption{Compare models n=3}
+  \label{fig:compare_models_n3}
+\end{figure}
