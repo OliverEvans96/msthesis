@@ -70,32 +70,30 @@ Since these functions may need to be fairly complicated in order to achieve full
 In order to verify the numerical implementations described in the previous chapters, it is necessary to first choose a manufactured solution $L(\vec{x}, \vec{\omega})$ to the radiative transfer equation, as well as coefficient functions for the absorption coefficient $a(\vec{x})$ and volume scattering function $\beta(\vec{\omega}\cdot{\vec{\omega'}}$.
 For the particular implementations developed in this thesis, the following conditions must be met by the manufactured solution:
 \begin{enumerate}
-  \item Periodic in $x$ and $y$
-  \item Positive absorption coefficient $a(\vec{x})$
+  \item Periodic solution and absorption coefficient in $x$ and $y$
+  \item Positive solution and absorption coefficient
   \item Position-independent surface downwelling boundary condition
   \item Zero upwelling radiance at the bottom boundary
-  \item Properly normalized VSF $\beta$, as described in Section \ref{sec:iops}
+  \item Properly normalized VSF $\beta(\Delta)$, as described in Section \ref{sec:iops}
 \end{enumerate}
-
 The chosen functions are
 \begin{align}
-  L(x, y, z, \theta, \phi) &= 
+  L(x, y, z, \theta, \phi) &=
     \alpha \left(\sin{\left (\phi + \theta \right )} + 1\right) \nonumber\\
     &\quad\cdot \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \nonumber\\
     &\quad\cdot \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right),
   \label{eqn:mms_sol_expr}
 \end{align}
 \begin{equation}
-  a(x, y, z) = \sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )} + \tanh{\left (- \gamma + z \right )} + 5
+  a(x, y, z) = \sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )} + \tanh{\left (- \gamma + z \right )} + 5,
   \label{eqn:mms_abs_expr}
 \end{equation}
 \begin{equation}
-  \beta(\Delta) = \frac{\Delta + 1}{4 \pi}
+  \beta(\Delta) = \frac{\Delta + 1}{4 \pi},
   \label{eqn:mms_vsf_expr}
 \end{equation}
+where $\alpha=x_{max}-x_{min}=y_{max}-y_{min}$ is the domain width, and $\gamma=z_{max}-z_{min}$ is the domain depth.
 Using the python package Sympy, the boundary conditions and source function are calculated to be
-% TODO: cite
-
 \begin{align}
   &\quad\qquad f(\theta, \phi) = \alpha \left(- \gamma + 1\right) \left(\sin{\left (\phi + \theta \right )} + 1\right),
   \label{eqn:mms_vsf_expr} \\
@@ -134,38 +132,59 @@ Using the python package Sympy, the boundary conditions and source function are 
 
 % TODO: Revise
 \subsubsection{Finite Difference}
-A five dimensional $(x,y,x,\theta,\phi)$ resolution space is nontrivial to characterize.
-For the sake of reducing dimensionality, we define generic spatial and angular resolutions
-$n_s$ and $n_a$ such that $n_s=n_x=n_y$ and $n_a=n_\theta=n_\phi$.
-Remaining is a three-dimensional resolution space, $(n_s,n_z,n_a)$.
-Rather than perform calculations at every possible combination of resolutions in the space,
-we choose a maximum resolution of $20 \times 20 \times 20$,
-and hold two of the three resolutions at the maximum value while varying the third.
-For example, Figure \ref{fig:gs_ns} compares $4 \times 20 \times 20$, $6 \times 20 \times 20$, $8 \times 20 \times 20$, etc.
+
+% TODO: Discuss OAMs (order of accuracy mistakes)
+The only source of error in the finite difference method is discretization error due to the truncation of terms in the Taylor Series during the construction of the finite difference formulas in Section \ref{sec:discretization}.
+Each of the derivatives in this implementation are approximated by two terms in the Taylor series: the leading order and first order terms.
+Therefore, the error should be second order in grid spacing.
+That is, when the grid spacing is sufficiently small, decreasing it further should result in the discretization error approaching zero quadratically.
+Of course, if large grid spacings are used, then quadratic convergence may not be observed even in a correct implementation since higher order terms in the Taylor series error will dominate the quadratic term.
+But for small grid spacings, the second order term dominates.
+The range of small grid spacings for which the lowest order term dominates is known as the \textit{asymptotic range}.
+% TODO: revise.
+Whenever verification is performed, it is essential that the asymptotic range is achieved, either by using finer grids or using a solution and variable coefficients with smaller derivatives.
+% TODO: Discuss what MMS verifies.
+% TODO: Move to overview section, not FD specifically?
+% TODO: Big Oh notation (1D)
+% TODO: Big Oh doesn't carry over to multiple dimensions
+
+In the particular case of the radiative transfer equation in three spatial dimensions,
+there are five discretized variables $(x,y,x,\theta,\phi)$.
+A five dimensional resolution space is nontrivial to characterize, so we define generic spatial and angular resolutions for the sake of reducing dimensionality,
+Let $n_s = n_x = n_y = n_z$ and $n_a = n_\theta = n_\phi$.
+Then, we use the geometric mean to describe the spatial and angular resolution, as
+\begin{align}
+  ds &= (dx\, dy\, dz)^{1/3}, \\
+  da &= (d\theta\, d\phi)^{1/3}.
+\end{align}
+
+This reduces the dimenionality of the resolution space to two, but big oh convergence is really only well-defined for a single variable.
+Therefore, the finite difference verification is performed by holding $n_a=8$, and varying $n_s$ between 4 and 64.
+As shown in Figure \ref{fig:fd_mms}, second order convergence is observed, demonstrating that the code works without order-of-accuracy mistakes.
+% TODO: Discuss multidimensional error further
+% TODO: Discuss log-log plot.
+
+\begin{figure}[H]
+  \centering
+  \vspace{-3em}
+  \includegraphics[width=4in]{fd_mms}
+  \caption{Code verification for the finite difference solution via the Method of Manufactured Solutions. Each point represents the same simulation run with a different spatial grid sizes, with the angular grid held constant at $n_a=8$. The average absolute difference between the analytical and numerical solutions is shown. A slope of $m=2$ on a log-log scale demonstrates second order convergence, as expected. This demonstrates the correctness of the code.}
+  \label{fig:fd_mms}
+\end{figure}
+
 The quantity that we compare is \textit{perceived irradiance}, which is different than the simple mean irradiance in each depth layer.
 Rather, the average is weighted by the normalized spatial kelp distribution to determine the average irradiance experienced by the kelp population.
 For more detail, see Section \ref{sec:perceived_irrad}
 
-Note the different natures of convergence in each dimension.
+% TODO: Revise
 In varying $n_s$, we see that the accuracy is very low for small $n_s$ values.
 This is because in these cases, the horizontal grid cells are too large to capture any detail
 about the kelp fronds near the bottom where they are very small.
 The kelp is effectively not present in these layers, and therefore the perceived irradiance is zero.
 After increasing the resolution past this minimum threshold, however, little improvement results
-from increasing $n_s$ further, as seen in Figure \ref{fig:gs_ns}.
-On the other hand, Figure \ref{fig:gs_nz} shows that increasing the vertical resolution
-consistently improves the accuracy of the solution.
-Figure \ref{fig:gs_na} shows that $n_a$ is somewhere between the two,
-demonstrating clear improvement with increasing resolution, though the improvement is not uniform over depth.
-Figure \ref{fig:gs_compare} shows the trend of increasing accuracy with increasing resolution in each dimension.
 
 % TODO: Revise
 \subsubsection{Numerical Asymptotics}
-
-In this section, the four water cases from Table \ref{tab:petzold} are considered.
-In each case, the full finite difference solution is calculated on an $18 \times 18 \times 18$ grid,
-and asymptotic approximations are given, varying the number of terms used in the asymptotic series.
-Perceived irradiances are shown, as well as errors from the finite difference solution.
 
 In the first two cases, when the scattering coefficient is the same order or smaller as the absorption coefficient,
 the asymptotic approximation converges to the finite difference solution.
@@ -177,7 +196,63 @@ In the first case, 4 scattering events is sufficient, whereas in the second, the
 
 \subsection{Verification of Calculations}
 \subsubsection{Richardson Extrapolation}
-\subsubsection{Grid Convergence Index} %TODO: Leave out?
+Richardson extrapolation, is a technique for estimating the continuum value of a scalar functional derived from a solution to a differential equation by using values of the scalar obtained from numerical solutions on several different grids.
+The technique was developed by Richardson in 1912 with an application paper related to a stresses on a dam, and is also known as $h^2$ extrapolation since it was originally applied to a second order method.
+
+Let the scalar of interest be called $\phi$ and the grid spacing $h$.
+Denote the exact solution as
+\begin{equation}
+  \phi_e = \lim_{h \to 0} \phi(h),
+\end{equation}
+
+The crux of the technique is to assume that discretization error can be written as a linear combination of powers of $h$, as in a Taylor series.
+That is,
+\begin{equation}
+  \phi - \phi_e = g_0 + g_1 h + g_2 h^2 + g_3 h^3 + \cdots.
+\end{equation}
+Assuming that a second order numerical method is used, the first two terms on the right hand side are zero.
+For a first order method, only the first term is necessarily zero.
+Of course, in a ``zeroth order'' method, the absolute error is bounded from below by $|g_0|$, and so does not approach zero as the grid is refined.
+``Zeroth order'' methods are also known as ``incorrect.''
+
+The original techniques involves numerical solutions on two grids with spacings $h_1 < h_2$ (i.e., grid 1 is finer), from which scalars $\phi_1$ and $\phi_2$ are calculated respectively.
+The ratio $r = h_2/h_1$ is called the grid refinement ratio.
+
+Then,
+\begin{align*}
+  \phi_1 &= \phi_e + g_2 h_1^2 + O(h^3), \\
+  \phi_2 &= \phi_e + g_2 h_2^2 + O(h^3).
+\end{align*}
+Solving for $g_2$ yields
+\begin{equation*}
+  g_2 = \frac{\phi_1 - \phi_e}{h_1^2} + O(h^3), \\
+\end{equation*}
+so
+\begin{align*}
+  \phi_1 &= \phi_e + \frac{h_2^2}{h_1^2}(\phi_1 - \phi_e) + O(h^3) \\
+  &=  \phi_e + r^2(\phi_1 - \phi_e) + O(h^3) \\
+  &= \phi_e(1-r^2) + \phi_1 r^2 + O(h^3). \\
+\end{align*}
+Hence, the approximate continuum solution is
+\begin{equation*}
+  \phi_e = \frac{\phi_2 - \phi_1 r^2}{1 - r^2} + O(h^3).
+\end{equation*}
+In essence, Richardson extrapolation allows for $\phi$ values from two solutions of order $h^p$ to be combined to produce an approximation of order $h^{p+1}$ to the continuum value of $\phi$.
+
+\subsection{Modified Richardson Extrapolation}
+Of course, the above equations are only approximations.
+In reality, higher order terms introduce noise which may distort the extrapolated value
+when only two grid sizes are used.
+In order to reduce this noise, the concept can be easily generalized to incorporate more than two numerical solutions, as follows.
+
+From
+\begin{equation*}
+  \phi \approx \phi_e + g_2 h^2,
+\end{equation*}
+it is clear that $\phi$ is linear in $h^2$.
+Therefore, a simple linear fit through multiple points in $(h^2, \phi)$ space yields $\phi_e$ as the y-intercept, and the slope, $g_2$, can be discarded.
+If significant noise due to outliers still distorts the extrapolated values during fitting, a robust fitting algorithm such as Huber \cite{yu_robust_2014} or Ridge \cite{hoerl_ridge_1970} regression can help reduce the influence of outliers.
+
 \subsubsection{Systematic Grid Convergence Study}
 
 \section{Computational Resource Requirements}
