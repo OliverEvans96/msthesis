@@ -8,7 +8,7 @@ Then, the two methods are compared, to determine the conditions under which the 
 approximation is valid.
 Finally, results are compared to simpler kelp models.
 
-\section{Verification and Validation of Computational Codes}
+\section{Confidence Building in Computational Codes}
 %TODO: Citations
 As Roache explains, there are two aspects to confidence building for numerical codes, specifically those which solve PDEs:
 verification deals with \textit{solving the equations right}, while validation deals with \textit{solving the right equations}.
@@ -34,7 +34,7 @@ This is generally done by repeating the calculation for several grid sizes, as a
 This estimated limiting solution is then compared to the actual numerical solutions.
 Error estimation for a specific calculation can be used to calculate error bars to display on a plot to represent discretization error in the solution.
 
-\subsection{Method of Manufactured Solutions}
+\section{Code Verification: Method of Manufactured Solutions}
 
 The most obvious way to obtain an analytical solution to compare to a numerical solution is by choosing a simple case where the PDE can be solved explicitly, perhaps through separation of variables or by reducing it to an ODE.
 This is referred to as the Method of Exact Solutions.
@@ -66,7 +66,7 @@ Also, $u$ must satisfy any constraints imposed by the algorithm such as hard-cod
 Finally, the chosen functions should have small derivatives so that convergence can be achieved for reasonable grid sizes.
 Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) to perform the symbolic manipulations involved in computing $\sigma$.
 
-\subsubsection{Application}
+\subsection{Symbolic Variables and Solution}
 In order to verify the numerical implementations described in the previous chapters, it is necessary to first choose a manufactured solution $L(\vec{x}, \vec{\omega})$ to the radiative transfer equation, as well as coefficient functions for the absorption coefficient $a(\vec{x})$ and volume scattering function $\beta(\vec{\omega}\cdot{\vec{\omega'}}$.
 For the particular implementations developed in this thesis, the following conditions must be met by the manufactured solution:
 \begin{enumerate}
@@ -131,7 +131,7 @@ Using the python package Sympy, the boundary conditions and source function are 
 
 
 % TODO: Revise
-\subsubsection{Finite Difference}
+\subsection{Finite Difference}
 
 % TODO: Discuss OAMs (order of accuracy mistakes)
 The only source of error in the finite difference method is discretization error due to the truncation of terms in the Taylor Series during the construction of the finite difference formulas in Section \ref{sec:discretization}.
@@ -184,7 +184,7 @@ The kelp is effectively not present in these layers, and therefore the perceived
 After increasing the resolution past this minimum threshold, however, little improvement results
 
 % TODO: Revise
-\subsubsection{Numerical Asymptotics}
+\subsection{Numerical Asymptotics}
 
 In the first two cases, when the scattering coefficient is the same order or smaller as the absorption coefficient,
 the asymptotic approximation converges to the finite difference solution.
@@ -194,8 +194,9 @@ In figure \ref{fig:asym_conv_compare}, average relative errors for the two conve
 In both cases, the accuracy improves with more scattering events until it plateaus.
 In the first case, 4 scattering events is sufficient, whereas in the second, the accuracy improves until 12 scattering events.
 
-\subsection{Verification of Calculations}
-\subsubsection{Richardson Extrapolation}
+\section{Verification of Calculations}
+% TODO: Intro
+\subsection{Richardson Extrapolation}
 Richardson extrapolation, is a technique for estimating the continuum value of a scalar functional derived from a solution to a differential equation by using values of the scalar obtained from numerical solutions on several different grids.
 The technique was developed by Richardson in 1912 with an application paper related to a stresses on a dam, and is also known as $h^2$ extrapolation since it was originally applied to a second order method.
 
@@ -239,7 +240,7 @@ Hence, the approximate continuum solution is
 \end{equation*}
 In essence, Richardson extrapolation allows for $\phi$ values from two solutions of order $h^p$ to be combined to produce an approximation of order $h^{p+1}$ to the continuum value of $\phi$.
 
-\subsection{Modified Richardson Extrapolation}
+\subsection{Generalized Richardson Extrapolation}
 Of course, the above equations are only approximations.
 In reality, higher order terms introduce noise which may distort the extrapolated value
 when only two grid sizes are used.
@@ -253,23 +254,16 @@ it is clear that $\phi$ is linear in $h^2$.
 Therefore, a simple linear fit through multiple points in $(h^2, \phi)$ space yields $\phi_e$ as the y-intercept, and the slope, $g_2$, can be discarded.
 If significant noise due to outliers still distorts the extrapolated values during fitting, a robust fitting algorithm such as Huber \cite{yu_robust_2014} or Ridge \cite{hoerl_ridge_1970} regression can help reduce the influence of outliers.
 
-\subsubsection{Systematic Grid Convergence Study}
-
 \section{Computational Resource Requirements}
-\subsection{Finite Difference}
-\subsubsection{Numerical Asymptotics}
-
+\subsection{CPU Time}
+\subsection{Memory Usage}
 
 \section{Rules of Thumb}
 \subsection{What grid resolution to use?}
-\subsubsection{Finite Difference}
-\subsubsection{Numerical Asymptotics}
-
 \subsection{Where is asymptotics valid}
 \subsection{How many scattering events should be used?}
 
 \section{Comparison to Other Light Models}
-
 
 % TODO: Probably exclude
 \section{Sensitivity Analysis}
