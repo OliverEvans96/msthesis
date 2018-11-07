@@ -1,0 +1,44 @@
+\chapter{MEMORY USAGE}
+\label{chap:memory_usage}
+
+\begin{sidewaysfigure}
+  \centering
+  \caption{Memory to store one copy of the finite difference coefficient matrix}
+  \begin{tabular}{llllllll}
+  \toprule
+  {} &          8  &          10 &          12 &          14 &          16 &          18 &          20 \\
+  \midrule
+  4   &    1.36 MiB &    3.51 MiB &    7.61 MiB &   14.59 MiB &   25.57 MiB &   41.88 MiB &      65 MiB \\
+  8   &   10.91 MiB &   28.15 MiB &   60.94 MiB &  116.79 MiB &   204.7 MiB &  335.17 MiB &   520.2 MiB \\
+  16  &    87.4 MiB &  225.34 MiB &  487.76 MiB &  934.67 MiB &     1.6 GiB &    2.62 GiB &    4.06 GiB \\
+  32  &  699.61 MiB &    1.76 GiB &    3.81 GiB &     7.3 GiB &    12.8 GiB &   20.95 GiB &   32.52 GiB \\
+  48  &    2.31 GiB &    5.94 GiB &   12.87 GiB &   24.65 GiB &    43.2 GiB &   70.73 GiB &  109.76 GiB \\
+  64  &    5.47 GiB &   14.09 GiB &    30.5 GiB &   58.43 GiB &   102.4 GiB &  167.65 GiB &  260.18 GiB \\
+  72  &    7.78 GiB &   20.06 GiB &   43.42 GiB &    83.2 GiB &   145.8 GiB &   238.7 GiB &  370.45 GiB \\
+  100 &   20.86 GiB &   53.76 GiB &  116.34 GiB &  222.91 GiB &  390.63 GiB &  639.54 GiB &  992.51 GiB \\
+  128 &   43.74 GiB &  112.74 GiB &  243.99 GiB &  467.48 GiB &  819.22 GiB &    1.31 TiB &    2.03 TiB \\
+  \bottomrule
+  \end{tabular}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}
+  \centering
+  \caption{Memory to solve the linear system of equations with GMRES restarted
+every 100 iterations. This seems to require roughly five times the memory required
+to store the matrix.}
+  \begin{tabular}{llllllll}
+  \toprule
+  {} &          8  &          10 &          12 &          14 &           16 &          18 &          20 \\
+  \midrule
+  4   &    6.81 MiB &   17.57 MiB &   38.05 MiB &   72.94 MiB &   127.87 MiB &  209.39 MiB &  325.01 MiB \\
+  8   &   54.57 MiB &  140.74 MiB &   304.7 MiB &  583.96 MiB &  1023.51 MiB &    1.64 GiB &    2.54 GiB \\
+  16  &  437.01 MiB &     1.1 GiB &    2.38 GiB &    4.56 GiB &        8 GiB &    13.1 GiB &   20.32 GiB \\
+  32  &    3.42 GiB &    8.81 GiB &   19.06 GiB &   36.52 GiB &       64 GiB &  104.77 GiB &   162.6 GiB \\
+  48  &   11.53 GiB &   29.72 GiB &   64.33 GiB &  123.25 GiB &   215.99 GiB &  353.63 GiB &   548.8 GiB \\
+  64  &   27.34 GiB &   70.46 GiB &  152.48 GiB &  292.16 GiB &      512 GiB &  838.24 GiB &    1.27 TiB \\
+  72  &   38.92 GiB &  100.32 GiB &  217.11 GiB &  415.99 GiB &      729 GiB &    1.17 TiB &    1.81 TiB \\
+  100 &  104.29 GiB &  268.79 GiB &   581.7 GiB &    1.09 TiB &     1.91 TiB &    3.12 TiB &    4.85 TiB \\
+  128 &  218.72 GiB &   563.7 GiB &    1.19 TiB &    2.28 TiB &        4 TiB &    6.55 TiB &   10.16 TiB \\
+  \bottomrule
+  \end{tabular}
+\end{sidewaysfigure}
