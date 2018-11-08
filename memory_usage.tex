@@ -1,6 +1,23 @@
 \chapter{MEMORY USAGE}
 \label{chap:memory_usage}
 
+The matrix size in memory in bytes is calculated as follows.
+\begin{lstlisting}[language=Python]
+def calc_size(ns, na):
+    nx = ns
+    ny = ns
+    nz = ns
+    ntheta = na
+    nphi = na
+    nomega = ntheta * (nphi-2) + 2
+
+    nnz = nx * ny * nomega * ( nz * (6 + nomega) - 1)
+
+    return 8*nnz
+\end{lstlisting}
+
+Memory requirement for LIS solution via GMRES with restart=100 is well-estimated by multiplying the above by 5.
+
 \begin{sidewaysfigure}
   \centering
   \caption{Memory to store one copy of the finite difference coefficient matrix}
