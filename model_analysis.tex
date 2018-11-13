@@ -206,7 +206,6 @@ Of course, the above equations are only approximations.
 In reality, higher order terms introduce noise which may distort the extrapolated value
 when only two grid sizes are used.
 In order to reduce this noise, the concept can be easily generalized to incorporate more than two numerical solutions, as follows.
-
 From
 \begin{equation*}
   \phi \approx \phi_e + g_2 h^2,
@@ -215,6 +214,13 @@ it is clear that $\phi$ is approximately linear in $h^2$.
 Therefore, a simple linear fit through multiple points in $(h^2, \phi)$ space yields $\phi_e$ as the y-intercept.
 The slope, $g_2$, can be discarded.
 If significant noise due to outliers still distorts the extrapolated values during fitting, a robust fitting algorithm such as Huber \cite{yu_robust_2014} or Ridge \cite{hoerl_ridge_1970} regression can help reduce the influence of outliers.
+
+Additionally, this take on Richardson extrapolation is trivially applied to multiple dimenisions.
+For a grid which has several resolution parameters $h_1, h_2, \ldots, h_n$ (e.g. multiple spatial dimensions, or spatial and angular grid resolutions), if the algorithm is second-order in each resolution parameter, then
+\begin{equation*}
+  \phi \approx \phi_e + g_{21} h_1^2 + g_{22} h_2^2 + \ldots + g_{2n} h_n^2.
+\end{equation*}
+Hence, fitting a plane or hyper-plane through several points in $(h_1^2, h_2^2, \ldots, h_n^2, \phi)$ space similarly produces $\phi_e$ as the y-intercept.
 
 \section{Computational Resource Requirements}
 \subsection{CPU Time}
