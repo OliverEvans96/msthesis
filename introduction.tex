@@ -11,8 +11,8 @@ Specifically, the sugar kelp \textit{Saccharina latissima} has been demonstrated
 Furthermore, seaweed cultivation has been proposed as a nutrient remediation technique for natural waters \cite{kim_field_2014}.
 Nitrogen leakage into water bodies is a significant ecological problem, and is especially relevant in close proximity to large conventional agriculture facilities and wastewater treatment plants.
 Waste water treatment plants (WWTPs) in particular are facing increasingly stringent regulation of nutrients in their effluent discharges from the US Environmental Protection Agency (USEPA) and state regulatory agencies.
-Nutrient management at WWTPs requires significant infrastructure, operations, and maintenance investments for tertiary treatment processes. Many treatment works are constrained financially or by space limitations in their ability to expand their treatment works.
-As an alternative to conventional nutrient remediation techniques, the cultivation of the macroalgae \textit{Saccharina latissima} (sugar kelp) within the nutrient plume of WWTP ocean outfalls has been proposed \cite{yang_kelp_2015}.
+Nutrient management at WWTPs requires significant infrastructure, operations, and maintenance investments for tertiary treatment processes. Many treatment works are constrained financially or by space limitations in their ability to expand their operations.
+As an alternative to conventional nutrient remediation techniques, the cultivation of the \textit{Saccharina latissima} within the nutrient plume of WWTP ocean outfalls has been proposed \cite{yang_kelp_2015}.
 The purpose of such an undertaking would be twofold: to prevent eutrophication of the surrounding ecosystem by sequestering nutrients, and to provide supplemental nutrients that benefit macroalgae cultivation.
 
 \begin{figure}[h]
@@ -24,7 +24,8 @@ The purpose of such an undertaking would be twofold: to prevent eutrophication o
 
 Large scale macroalgae cultivation has long existed in Eastern Asia due to the popularity of seaweed in Asian cuisine, and low labor costs that facilitate its manual seeding and harvest.
   More recently, less labor-intense and more industrialized kelp aquaculture has been developing in Scandinavia and in the Northeastern United States and Canada.
-For example, the MACROSEA project is a four year international research collaboration led by SINTEF, an independent research organization in Norway, and funded by the Research Council of Norway targeting ``successful and predictable production of high quality biomass thereby making significant steps towards industrial macroalgae cultivation in Norway''.
+  For example, the MACROSEA project is a four year international research collaboration led by SINTEF, an independent research organization in Norway, and funded by the Research Council of Norway.
+  The project's aim is to achieve ``successful and predictable production of high quality biomass thereby making significant steps towards industrial macroalgae cultivation in Norway''.
 Figure \ref{fig:sonja} shows seaweed being harvested onboard a SINTEF research vessel.
 The project includes both cultivators and scientists, working to develop a precise understanding of the full life cycle of kelp and its interaction with its environment.
 
@@ -33,7 +34,7 @@ The development of mathematical models enables insight into a system which would
 For example, imagine that a company is interested in a new IMTA site, and is looking for a suitable location.
 Running simulations to predict the potential productivity of each area would be of great assistance in choosing the best site.
 Similarly, if a new cultivation technique is under consideration, simulation can estimate its viability without
-having to deploy it on a large scale and risk failure or inefficiency.
+having to deploy it on a large scale and risk failure or avoidable inefficiency.
 
 Recently, a growth model \cite{broch_modelling_2012} for \textit{S. latissima} has been produced and integrated into the SINMOD \cite{wassmann_modelling_2006} hydrodynamic and ecosystem model of SINTEF.
 This kelp model considers factors such as temperature, nutrient concentration, light availability, and water current.
@@ -43,7 +44,7 @@ However, it does not consider the effect of the kelp itself on the light field.
 This is an important consideration, as high kelp densities should lead to low light levels which would inhibit further growth.
 However, without accounting for self-shading, the kelp is not adequately penalized for growing too densely,
 which is expected to cause overpredictions in the total biomass production.
-The purpose of this thesis is to develop a first principles light model which adequately predicts the effects of self-shading.
+The purpose of this thesis is to develop a first principles light model which adequately predicts the effects of self-shading on seaweed.
 
 
 \section{Background on Kelp Models}
@@ -53,7 +54,7 @@ Several authors in the second half of the twentieth century were interested in d
 The first such mathematical model was developed by W.J. North for the Kelp Habitat Improvement Project at the California Institute of Technology in 1968 using seven variables.
 By 1974, Nick Anderson greatly expanded on North's work, and created the first comprehensive model of kelp growth which he programmed using FORTRAN \cite{anderson_mathematical_1974}.
 In his model, he accounts for solar radiation intensity as a function of time of year and time of day, and refraction on the surface of the water.
-He uses a simple model for shading, simply specifying a single parameter which determines the percentage of light that is allowed to pass through the kelp canopy floating on the surface of the water.
+He uses a simple model for shading, specifying a single parameter which determines the percentage of light that is allowed to pass through the kelp canopy floating on the surface of the water.
 He also accounts for attenuation due to turbidity using Beer's Law.
 Using this data on the availability of light, he calculates the photosynthesis rates and the growth experienced by the kelp.
 
@@ -73,14 +74,21 @@ In the same year, Nyman et. al. \cite{nyman_macrocystis_1990} published a simila
 In 1996 and 1998 respectively, P. Duarte and J.G. Ferreira used the size-class approach to create a more general model of macroalgae growth, and Yoshimori et. al. created a differential equation model of \textit{Laminaria religiosa} with specific emphasis on temperature dependence of growth rate \cite{duarte_model_1997,yoshimori_mathematical_1998}.
 These were some of the first models of kelp growth that did not specifically relate to \textit{Macrocystis pyrifera} (``giant kelp'').
 
+The model developed by Broch et. al. at SINTEF \cite{broch_modelling_2012, broch_modelling_2013, handa_seasonal_2013} uses a super-individual approach, whereby a small number of individual kelp fronds are explicitly simulated at several discrete depth layers.
+Each super-individual is assumed to represent a certain number of actual individuals in the population.
+The number of individuals represented by each super-individual may change over the course of the simulation due to population loss.
+The super-individual approach has the advantage of capturing some of the dynamics at the individual scale, while compromising full detail for the sake of reduced computational cost.
+
 \section{Background on Radiative Transfer}
-In terms of optical quantities, of primary interest is the radiance at each point in all directions, which affects the photosynthetic rate of the kelp, and therefore the total amount of biomass producible in a given area as well as the total nutrient remediation potential.
-The equation governing the radiance throughout the system is known as the radiative transfer equation (RTE), which has been largely unutilized in the fields of oceanography and aquaculture.
-The radiative transfer equation has been used extensively in stellar astrophysics \cite{chandrasekhar_radiative_1960,petkova_novel_2011}; its application to marine biology is fairly recent \cite{mobley_radiative_2001}.
+In terms of optical quantities, of primary interest is the radiance, which describes the rate of energy flow through each point in space in \textit{each} direction.
+Irradiance, which describes the energy flow through a point in space in \textit{any} direction, and is calculated by integrating radiance over all angles.
+Irradiance, in turn, determines the photosynthetic rate of the kelp, and therefore the total amount of biomass producible in a given area as well as the total nutrient remediation potential.
+The equation governing the radiance throughout the system is known as the radiative transfer equation (RTE), which has been used extensively in stellar astrophysics \cite{chandrasekhar_radiative_1960,petkova_novel_2011}; its application to marine biology is fairly recent \cite{mobley_radiative_2001}.
 In its full form, radiance is a function of 3 spatial dimensions, 2 angular dimensions, and frequency, making for a formidable problem.
-In this work, frequency is ignored; only monochromatic radiation is considered.
+In this work, frequency is ignored; only the total radiation in the photosynthetic spectrum, known as photosynthetically active radiation (PAR), is considered.
 The RTE states that along a given path, radiance is decreased by absorption and scattering out of the path, while it is increased by emission and scattering into the path.
 In the case of macroalgae cultivation, emission is negligible, owing only perhaps to some small luminescent phytoplankton or other anomaly, and can therefore be safely ignored.
+However, the emission term will be retained in the calculations of this thesis, as it is mathematically useful to verify the correctness of the solution algorithm.
 
 \section{Overview of Thesis}
 The remainder of this document is organized as follows.
@@ -92,9 +100,13 @@ An asymptotic expansion is explored for cases where absorption dominates scatter
 In Chapter \ref{chap:numerical}, details are given for the numerical solution of the equations from Chapters \ref{chap:kelp} and \ref{chap:light}.
 Both the full finite difference solution and the asymptotic approximation are described.
 Next, in Chapter \ref{chap:parameters}, the availability of necessary parameters in the literature is discussed.
-For those which are not readily available, rough estimates are given or experimental methods for their determination are described.
-Then, in Chapter \ref{chap:model_analysis}, necessary grid resolution for adequate accuracy in the full finite difference solution is determined.
-The finite difference solution is compared to the asymptotic approximation for a few sets of optical properties.
-Further, we showcase the effect of varying a few key parameters on the light field predicted by the asymptotic approximation, and
-a comparison is given between the light fields predicted with and without considering self-shading by the kelp.
-Finally, Chapter \ref{chap:conclusion} concludes the thesis by giving a brief summary of the model, discusses and its performance, and suggests improvements and avenues for future work.
+Parameter values used in the simulations in this work are documented.
+For those parameters whose values are not readily available, rough estimates are given or experimental methods for their determination are sketched.
+Then, in Chapter \ref{chap:model_analysis}, sources of numerical error are discussed, namely the use of a discrete grid, and the use of the asymptotic approximation.
+Fortran implementations of the solution algorithms are verified by analyzing their numerical convergence properties for fiticious scenarios using the Method of Manufactured Solutions.
+Realistic scenarios are then considered, and numerical errors are estimated in order to develop guidelines to aid in choosing the appropriate solution algorithm and grid resolution for a given set of optical properties.
+CPU time and memory requirements are discussed for both the asymptotic and finite difference algorithms as functions of grid resolution.
+The chapter concludes by comparing the model presented here to other simpler light models.
+As expected, the presence of self-shading in this model results in the prediction of lower light levels regions of high kelp density.
+However, the presence of scattering in the model increases light levels elsewhere, especially near the surface of the water.
+Finally, Chapter \ref{chap:conclusion} concludes the thesis by briefly summarizing of the model, discussing its achievements and limitations, and suggesting improvements and avenues for future work.
