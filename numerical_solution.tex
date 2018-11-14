@@ -1,23 +1,27 @@
 \chapter{NUMERICAL SOLUTION}
 \label{chap:numerical}
+In this chapter, the mathematical details involved in the numerical solution of the equations described in Chapters \ref{chap:kelp} and \ref{chap:light} are presented.
+Two solution algorithms are used: finite difference and numerical asymptotics.
+Both algorithms require a discrete spatial-angular grid, described in Section \ref{sec:grid}.
+In the finite difference algorithm, the continuuum differential equation is approximated at every point in the grid.
+This forms a large sparse system of linear equations which must be solved simultaneously with an iterative method.
+The computational cost for this approach is high in terms of CPU usage, and especially in its memory requirement.
 
-In this chapter, the mathematical details involved in the numerical solution of the previously described equations are presented.
-It is assumed that this model is run in conjunction with a model describing the growth of kelp over its life cycle, which calls this light model periodically to update the light field.
 
 \section{Super-Individuals}
 \label{sec:si}
 
 Rather than model each kelp frond, subsets of the population, called super-individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
-Specifically, at each depth $k$, there are $n$ super-individuals, indexed by $i$.
-Super-individual $i$ has a frond area $A_{ki}$ and represents $n_{ki}$ individual fronds.
+Specifically, at each depth $k$, there are $S_k$ super-individuals, indexed by $q$.
+Super-individual $q$ has a frond area $A_{kq}$ and represents $S_{kq}$ individual fronds.
 
-From \eqref{eqn:length-from-area}, the frond length of the super-individual is $l_{ki} = \sqrt{2A_{ki}f_r}$.
+From \eqref{eqn:length-from-area}, the frond length of the super-individual is $l_{kq} = \sqrt{2A_{kq}f_r}$.
 Given the super-individual data, we calculate the mean $\mu$ and standard deviation $\sigma$ frond
 lengths using the formulas
 \begin{align}
-  \mu_k &= \frac{\ds \sum_{i=1}^N l_{ki}}{\ds \sum_{i=1}^N n_{ki}},
+  \mu_k &= \frac{\ds \sum_{q=1}^{S_k} l_{kq}}{\ds \sum_{q=1}^{S_k} S_{kq}},
   \label{eqn:si_mean} \\
-  \sigma_k &= \frac{\ds \sum_{i=1}^N \left( l_{ki} - \mu_k \right)^2}{\ds \sum_{i=1}^N n_{ki}}.
+  \sigma_k &= \frac{\ds \sum_{q=1}^{S_k} \left( l_{kq} - \mu_k \right)^2}{\ds \sum_{q=1}^{S_k} S_{kq}}.
   \label{eqn:si_std}
 \end{align}
 We then assume that frond lengths are normally distributed in each depth layer
@@ -31,7 +35,7 @@ It is assumed that all simulated quantities are constant over the interior of a 
 Other legitimate choices of grids exists; this one was chosen for its relative simplicity.
 
 The domain of the radiative transfer equation is embedded in five dimensions: three spatial ($x$, $y$, and $z$) and two angular (azimuthal $\theta$ and polar $\phi$).
-The number of grid cells in each dimension are denoted by $n_x$, $n_y$, $n_z$,
+The number of grid cells in each dimension are denoted $n_x$, $n_y$, $n_z$,
 $n_\theta$, and $n_\phi$, with uniform spacings $dx$, $dy$, $dz$, $d\theta$, and
 $d\phi$ between adjacent grid points.
 
@@ -48,12 +52,12 @@ It is convenient, however, to use a single index $p$ to refer to directions $\ve
 Then, the center of a generic grid cell will be denoted as
 $(x_i, y_j, z_k, \vec{\omega}_p)$, and the boundaries between adjacent grid cells
 will be referred to as \textit{edges}.
-One-indexing is employed throughout this document.
+One-indexing is employed throughout this document (i.e., array elements are counted starting at 1, not 0).
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=8cm]{spatialgrid.pdf}
-  \caption{Spatial grid.}
+  \caption{Spatial grid. Discrete quantities are calculated at grid cell centers.}
   \label{fig:spatial_grid}
 \end{figure}
 
@@ -65,7 +69,7 @@ Also, note that no grid center is located on the plane $z=0$; the surface radian
 \begin{figure}[H]
   \centering
   \includegraphics[width=8cm]{angulargrid.pdf}
-  \caption{Angular grid at each point in space.}
+  \caption{Angular grid at each point in space with poles treated separately.}
   \label{fig:angular_grid}
 \end{figure}
 
@@ -80,9 +84,11 @@ $p=1$ and $p=n_{\vec{\omega}}$ refer to the north and south poles respectively,
 $p\leq\nomega/2$ refers to the northern hemisphere, and $p>\nomega/2$ refers to the southern hemisphere.
 Further, the symbol $\Omega_p$ is used to refer to the two dimension angular interval centered at $\omega_p$.
 The solid angle subtended by $\Omega_p$ is denoted $\abs{\Omega_p}$.
+The functions $\hat{p}(l,m)$, $\hat{l}(p)$, and $\hat{m}(p)$ are mappings between the two sets of angular indices.
 Refer to Appendix \ref{chap:grid_details} for a more rigorous discussion of the discrete spatial-angular grid.
 
 \section{Quadrature Rules}
+As a prerequisite to algorithm development, a few key integrals are calculated here.
 Since it is assumed that all quantities are constant within a spatial-angular grid cell,
 the midpoint rule is employed for both spatial and angular integration.
 Presented here is a basic derivation of the formulas for integration in the spatial-angular grid.
@@ -101,14 +107,14 @@ The double integral of a function $f(\vec{x})$ over a depth layer $k$ is approxi
   \int_\xmin^\xmax\int_\ymin^\ymax f(x, y, z_k)\, dy\, dx &\approx \int_\xmin^\xmax \int_\ymin^\ymax \sum_{i=1}^{n_x}\sum_{j=1}^{n_y} \mathcal{X}^X_{ijk}(x,y,z_k) f(x_i, y_j, z_k)\, dy\, dx \\
   &= \sum_{i=1}^{n_x}\sum_{j=1}^{n_y} f(x_i, y_j, z_k) \int_\xmin^\xmax \int_\ymin^\ymax \mathcal{X}^X_{ijk}(x,y,z_k) \, dy\, dx \\
   &= \sum_{i=1}^{n_x}\sum_{j=1}^{n_y} \abs{X_{ijk}} f(x_i, y_j, z_k) \\
-  &= dx\, dy\, dx\, \sum_{i=1}^{n_x}\sum_{j=1}^{n_y} f(x_i, y_j, z_k).
+  &= dx\, dy\, \sum_{i=1}^{n_x}\sum_{j=1}^{n_y} f(x_i, y_j, z_k).
 \end{align*}
 The path integral of $f(\vec{x})$ over a path $\vec{l}(s)$ from $s=0$ to $s=\tilde{s}$ is
 \begin{align*}
-  \int_0^{\tilde{s}} f(\vec{l}(s))\, ds &= \sum_{i=1}^{n_x}\sum_{j=1}^{n_y}\sum_{k=1}^{n_z} f(x_i, y_j, z_k)\, ds_{ijk},
+  \int_0^{\tilde{s}} f(\vec{l}(s))\, ds &\approx \sum_{i=1}^{n_x}\sum_{j=1}^{n_y}\sum_{k=1}^{n_z} f(x_i, y_j, z_k)\, ds_{ijk},
 \end{align*}
 where $ds_{ijk}$ is the total path distance of $\vec{l}(s)$ through $X_{ijk}$.
-Full details of the path integral algorithm for the case of straight line paths are found in Appendix \ref{chap:ray_tracing}.
+Full details of the path integral algorithm for straight line paths are found in Appendix \ref{chap:ray_tracing}.
 
 \subsection{Angular Quadrature}
 Define the \textit{angular characteristic function} as
@@ -134,18 +140,19 @@ Presented here are details of the evaluation of the asymptotic approximations \e
 \subsection{Scattering Integral}
 \label{sec:scatter_integral}
 
-Specifically, the amount of light scattered between angular grid cells is found by integrating $\beta$ as follows.
-Consider two angular grid cells, $\Omega$ and $\Omega'$.
-Since $\beta(\vec{\omega}\cdot\vec{\omega}')$ is the probability density of scattering between $\vec{\omega}$ and $\vec{\omega}'$, the average probability density of scattering from $\vec{\omega} \in \Omega$ to $\vec{\omega}' \in \Omega'$ (or vice versa) is
+The amount of light scattered between angular grid cells is found by integrating $\beta$ as follows.
+Consider two angular grid cells, $\Omega_p$ and $\Omega_{p'}$.
+Since $\beta(\vec{\omega}\cdot\vec{\omega}')$ is the probability density of scattering between $\vec{\omega}$ and $\vec{\omega}'$, the average probability density of scattering from $\vec{\omega} \in \Omega_p$ to $\vec{\omega}' \in \Omega_{p'}$ (or vice versa) is
 \begin{equation*}
-  \beta_{pp'} = \frac{1}{\abs{\Omega}\abs{\Omega'}} \int_\Omega\int_{\Omega'}\beta(\vec{\omega}\cdot\vec{\omega}')\, d\vec{\omega'}\, d\vec{\omega}.
+  \beta_{pp'} = \frac{1}{\abs{\Omega_p}\abs{\Omega_{p'}}} \int_{\Omega_p}\int_{\Omega_{p'}}\beta(\vec{\omega}\cdot\vec{\omega}')\, d\vec{\omega'}\, d\vec{\omega} \approx \beta(\vec{\omega}\cdot\vec{\omega}'),
 \end{equation*}
+assuming that $\beta$ is approximately constant over $\Omega_p$ and $\Omega_{p'}$.
 Denote the radiance at $(x_i, y_j, z_k, \vec{\omega}_p)$ by $L_{ijkp}$.
 Then, the total radiance scattered into $\Omega_p$ from $\Omega_{p'}$ is
 \begin{align*}
-  \int_{\Omega}\int_{\Omega'}\beta(\vec{\omega} \cdot \vec{\omega}')L(\vec{x},\vec{\omega}')\, d\vec{\omega}'\, d\vec{\omega}
-  &= L_{ijkp'} \int_\Omega\int_{\Omega_{p'}} \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'\, d\vec{\omega} \\
-  &= \beta_{pp'}\abs{\Omega}\abs{\Omega'}L_{ijkp'}.
+  \int_{\Omega_p}\int_{\Omega_{p'}}\beta(\vec{\omega} \cdot \vec{\omega}')L(\vec{x},\vec{\omega}')\, d\vec{\omega}'\, d\vec{\omega}
+  &\approx L_{ijkp'} \int_{\Omega_p}\int_{\Omega_{p'}} \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'\, d\vec{\omega} \\
+  &= \beta_{pp'}\abs{\Omega_p}\abs{\Omega_{p'}}L_{ijkp'}.
 \end{align*}
 Hence, the average radiance scattered from $\Omega_{p'}$ into some $\vec{\omega} \in \Omega_p$ is $\beta_{pp'}\abs{\Omega'}L_{ijkp'}$.
 Therefore, the radiance gain due to scattering into $\vec{\omega}_p$ from all other angles is
@@ -156,29 +163,20 @@ Therefore, the radiance gain due to scattering into $\vec{\omega}_p$ from all ot
 
 \subsection{Ray Integral}
 Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the discrete grid can be constructed using the ray tracing algorithm described in Appendix \ref{chap:ray_tracing}.
-Let $\nu=1,\ldots,N\nobreak-\nobreak1$ index the spatial grid cells traversed (wholly or partially) by the ray, and define the \textit{path-length characteristic function}
+Let $\nu=1,\ldots,N\nobreak-\nobreak1$ index the spatial grid cells traversed (wholly or partially) by the ray, and define the \textit{path--length characteristic function}
 \begin{equation*}
   \mathcal{X}^l_\nu(s) = \begin{cases}
     1, & s_\nu \leq s < s_{\nu+1}, \\
-    0, & \mbox{otherwise}.
+    0, & \mbox{otherwise},
     \end{cases}
 \end{equation*}
+where $s \in [s_\nu, s_{\nu+1}]$ parameterizes the path segment traversing cell $\nu$ and $ds_\nu = s_{\nu+1} - s_\nu.$ is the length of the segment.
 Then, the piecewise constant representations of the path absorption coefficient $\tilde{a}(s)$ and the effective source $\tilde{g}_n(s)$ from Section \ref{sec:asymptotic_sol} are
 \begin{align*}
   \tilde{g}_n(s) &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\mathcal{X}^l_\nu(s), \\
   \tilde{a}(s) &= \sum_{\nu=1}^{N-1}\tilde{a}_{\nu}\mathcal{X}^l_\nu(s).
 \end{align*}
 
-As the ray traverses the spatial grids, it crosses $N-2$ spatial grid edges.
-Let the nondecreasing path lengths at which these crossings occur be denoted by
-$\left\{s_\nu\right\}_{\nu=1}^{N}$, with the convention $s_1=0$ and $s_{N}=\tilde{s}$.
-This implies that edge $\nu$ preceeds cell $\nu$.
-$\{s_\nu\}$ is not strictly increasing if the ray directly intersects a grid corner,
-which means that multiple edges are traversed at the same path length.
-Hence, the path lengths through the grid cells, indexed by $\nu=1,\ldots,N-1$, are
-\begin{equation*}
-  ds_\nu = s_{\nu+1} - s_\nu.
-\end{equation*}
 Given $s$, the index of the next edge crossing is
 \begin{equation*}
   \hat{\nu}(s) = \min\left\{ \nu \in \{1,\ldots,N\} : s_\nu>s \right\},
@@ -190,8 +188,8 @@ and the path length between $s$ and the next edge crossing is
 Then, evaluating \eqref{eqn:asymptotics_soln_n} at $s=\tilde{s}$ is calculated as
 \begin{align*}
   u_n(\tilde{s}) &= \int_0^{\tilde{s}}\tilde{g}_n(s')\exp\left( -\int_{s'}^{\tilde{s}}\tilde{a}(s'')\,ds'' \right)\, ds' \\
-  &= \int_0^{s_N} \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\mathcal{X}^l_\nu(s') \exp\left( -\int_{s'}^{\tilde{s}}\sum_{j=1}^{N-1}\tilde{a}_{j}\mathcal{X}^l_j(s'')\,ds'' \right)\, ds' \\
-  &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\int_0^{s_N} \mathcal{X}^l_\nu(s') \exp\left( -\sum_{j=1}^{N-1}\tilde{a}_{j}\int_{s'}^{\tilde{s}}\mathcal{X}^l_j(s'')\,ds'' \right)\, ds' \\
+  &= \int_0^{\tilde{s}} \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\mathcal{X}^l_\nu(s') \exp\left( -\int_{s'}^{\tilde{s}}\sum_{j=1}^{N-1}\tilde{a}_{j}\mathcal{X}^l_j(s'')\,ds'' \right)\, ds' \\
+  &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\int_0^{\tilde{s}} \mathcal{X}^l_\nu(s') \exp\left( -\sum_{j=1}^{N-1}\tilde{a}_{j}\int_{s'}^{\tilde{s}}\mathcal{X}^l_j(s'')\,ds'' \right)\, ds' \\
   &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(-\tilde{a}_{\hat{\nu}(s')-1}\tilde{d}(s') -\sum_{j=\hat{\nu}(s')}^{N-1}\tilde{a}_{j}ds_j\right)\, ds' \\
   &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\int_{s_\nu}^{s_{\nu+1}}  \exp\left(-\tilde{a}_{\nu}(s_{\nu+1}-s') -\sum_{j=\nu+1}^{N-1}\tilde{a}_{j}ds_j\right)\, ds'.
 \end{align*}
@@ -255,19 +253,19 @@ For the upper and lower boundaries, we need an asymmetric finite difference
 method.
 In general, the Taylor Series of a function $f$ about $x$ is
 \begin{equation*}
-  f'(x+\varepsilon) = \sum_{n=1}^\infty \frac{f^{(n)}(x)}{n!} \varepsilon^n. \\
+  f(x+\varepsilon) = \sum_{n=1}^\infty \frac{f^{(n)}(x)}{n!} \varepsilon^n. \\
 \end{equation*}
 
 Truncating after the first few terms, we have
 \begin{equation}
   \label{eqn:afd1}
-  f'(x+\varepsilon)  = f(x) + f'(x)\varepsilon + \frac{f''(x)}{2}\varepsilon^2 + \mathcal{O}(\varepsilon^3).
+  f(x+\varepsilon)  = f(x) + f'(x)\varepsilon + \frac{f''(x)}{2}\varepsilon^2 + \mathcal{O}(\varepsilon^3).
 \end{equation}
 
 Similarly, replacing $\varepsilon$ with $-\varepsilon/2$ we have
 \begin{equation}
   \label{eqn:afd2}
-  f'(x-\frac{\varepsilon}{2}) = f(x) - \frac{f'(x)\varepsilon}{2} + \frac{f''(x)\varepsilon^2}{8} + \mathcal{O}(\varepsilon^3).
+  f(x-\frac{\varepsilon}{2}) = f(x) - \frac{f'(x)\varepsilon}{2} + \frac{f''(x)\varepsilon^2}{8} + \mathcal{O}(\varepsilon^3).
 \end{equation}
 
 Rearranging \eqref{eqn:afd1} produces
@@ -278,26 +276,25 @@ Rearranging \eqref{eqn:afd1} produces
 
 Combining \eqref{eqn:afd2} with \eqref{eqn:afd3} gives
 \begin{align*}
-  \varepsilon f'(x) &= 2f(x) - 2f(x-\frac{\varepsilon}{2}) + f''(x)\frac{\varepsilon^2}{8} + \mathcal{O}(\varepsilon^3) \\
-                    &= 2f(x) - 2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{4} - \frac{f(x)}{4} - \frac{f'(x)\varepsilon}{4} + \mathcal{O}(\varepsilon^3) \\
-                    &= \frac{4}{5}\left( 2f(x)-2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{4} - \frac{f(x)}{4} \right) + \mathcal{O}(\varepsilon^3).
+  \varepsilon f'(x) &= 2f(x) - 2f(x-\frac{\varepsilon}{2}) + \frac{f''(x)\varepsilon^2}{4} + \mathcal{O}(\varepsilon^3) \\
+  &= 2f(x) - 2f(x-\frac{\varepsilon}{2}) + \left[ \frac{f(x+\varepsilon)}{2} - \frac{f(x)}{2} - \frac{f'(x)\varepsilon}{2} \right] + \mathcal{O}(\varepsilon^3) \\
+  &= \frac{3}{2}f(x) - 2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{2} - \frac{f'(x)}{2} + \mathcal{O}(\varepsilon^3) \\
+ \Rightarrow \quad \frac{3}{2}\varepsilon f'(x) &= \frac{3}{2}f(x) - 2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{2} + \mathcal{O}(\varepsilon^3) \\
 \end{align*}
-
-Then, dividing by $\varepsilon$ gives
-\begin{equation*}
-  f'(x) = \frac{-8f(x-\frac{\varepsilon}{2}) + 7f(x) + f(x+\varepsilon)}{5\varepsilon} + \mathcal{O}(\varepsilon^2).
-\end{equation*}
-
+Then, dividing by $3/2\, \varepsilon$ gives
+\begin{equation}
+  f'(x) = \frac{-4f(x-\frac{\varepsilon}{2}) + 3f(x) + f(x+\varepsilon)}{3\varepsilon} + \mathcal{O}(\varepsilon^2).
+\end{equation}
 Similarly, substituting $\varepsilon \to -\varepsilon$, we have
-\begin{equation*}
-  f'(x) = \frac{- f(x-\varepsilon) - 7f(x) + 8f(x+\frac{\varepsilon}{2})}{5\varepsilon} + \mathcal{O}(\varepsilon^2).
-\end{equation*}
+\begin{equation}
+  f'(x) = \frac{- f(x-\varepsilon) - 3f(x) + 4f(x+\frac{\varepsilon}{2})}{3\varepsilon} + \mathcal{O}(\varepsilon^2).
+\end{equation}
 
 
 \subsection{Difference Equations}
 \label{sec:difference_equations}
 
-For every spatial grid cell, the scattering integral is discretized as described in Section \ref{sec:scatter_integral}, as
+For every spatial grid cell, the scattering integral is discretized as described in Section \ref{sec:scatter_integral} as
 \begin{equation*}
   \vec{\omega} \cdot \nabla L_p = -(a_{ijk}+b) L_p + \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'}L_{p'} + \sigma_{ijkp},
 \end{equation*}
@@ -305,7 +302,6 @@ or equivalently,
 \begin{equation*}
   \vec{\omega} \cdot \nabla L_p + (a_{ijk}+b)L_p - \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{p'} = \sigma_{ijkp}.
 \end{equation*}
-
 On the interior of the spatial domain, we apply the central difference formula in each dimension, which yields
 \begin{equation*}
   \begin{aligned}
@@ -327,31 +323,29 @@ using the surface radiance value, which gives
   \begin{aligned}
     \sigma_{ijkp} &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
-    &+ \frac{-8f_p + 7L_{ijkp} + L_{ij,k+1,p}}{5dz}\cos\hat{\phi}_p \\
+    &+ \frac{-4f_p + 3L_{ijkp} + L_{ij,k+1,p}}{3dz}\cos\hat{\phi}_p \\
     &+ (a_{ijk}+b)L_{ijkp} \\
     &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
   \end{aligned}
 \end{equation*}
-Combining $L_{ijkp}$ terms on the left and moving the boundary condition to the
-right gives
+Combining $L_{ijkp}$ terms and moving the boundary condition to the other side gives
 \begin{equation*}
   \begin{aligned}
     &\frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
     + &\frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
-    + &\frac{L_{ij,k+1,p}}{5dz}\cos\hat{\phi}_p \\
-    + &(a_{ijk}+b) + \frac{7}{5dz} \cos\hat{\phi}_p)L_{ijkp} \\
-    - &\sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'} = \frac{8f_p}{5dz} \cos\hat{\phi}_p + \sigma_{ijkp}.
+    + &\frac{L_{ij,k+1,p}}{3dz}\cos\hat{\phi}_p \\
+    + &\left(a_{ijk}+b + \frac{\cos\hat{\phi}_p}{dz} \right) L_{ijkp} \\
+    - &\sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'} = \frac{4f_p}{3dz} \cos\hat{\phi}_p + \sigma_{ijkp}.
   \end{aligned}
 \end{equation*}
-
-Likewise for the bottom boundary condition, we have
+Likewise, for the bottom boundary condition, we have
 \begin{equation*}
   \begin{aligned}
-    \sigma_{ijkp} &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
-    &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
-    &- \frac{L_{ij,k-1,p}}{5dz}\cos\hat{\phi}_p \\
-    &+ (a_{ijk}+b) - \frac{7}{5dz}\cos\hat{\phi}_p)L_{ijkp} \\
-    &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
+    &\frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
+    + &\frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
+    - &\frac{L_{ij,k-1,p}}{3dz}\cos\hat{\phi}_p \\
+    + &\left(a_{ijk}+b - \frac{\cos\hat{\phi}_p}{dz} \right) L_{ijkp} \\
+    - &\sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'} = \sigma_{ijkp}
   \end{aligned}
 \end{equation*}
 
@@ -365,7 +359,6 @@ Now, for upwelling light at the first depth layer (non-BC), we apply FD2.
     &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
   \end{aligned}
 \end{equation*}
-
 Grouping $L_{ijkp}$ terms gives
 \begin{equation*}
   \begin{aligned}
@@ -376,7 +369,6 @@ Grouping $L_{ijkp}$ terms gives
     &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
   \end{aligned}
 \end{equation*}
-
 Similarly, for downwelling light at the lowest depth layer, we have
 \begin{equation*}
   \begin{aligned}
