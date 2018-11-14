@@ -89,7 +89,7 @@ We then assume that frond lengths are normally distributed in each depth layer
 with mean $\mu_k$ and standard deviation $\sigma_k$.
 
 \subsection{Integration of Distributions}
-The computational crux of calculating the kelp distribution is to integrate $P_{2D}(\theta_f, l)$ from \eqref{eq:p2d} over the occupancy region $R_s(\theta, s)$, defined by \eqref{eqn:rs_th} and \eqref{eqn:rs_l}, for every point $(\theta,s)$ in the $xy$--domain.
+The computational crux of calculating the kelp distribution is to integrate $P_{2D}(\theta_f, l)$ from \eqref{eqn:p2d} over the occupancy region $R_s(\theta, s)$, defined by \eqref{eqn:rs_th} and \eqref{eqn:rs_l}, for every point $(\theta,s)$ in the $xy$--domain.
 To recap, the population distribution is
 \begin{align*}
 	P_{2D}(\theta_f,l) &= P_{\theta_f}(\theta_f) \cdot P_l(l), \\
@@ -300,12 +300,12 @@ For the spatial interior of the domain, we use the second order central differen
 When applying the PDE on the upper or lower boundary, we use the forward and backward difference (FD2 and BD2) formulas respectively.
 The forward difference is given by
 \begin{equation*}
-    \label{eq:FD2}
+    \label{eqn:FD2}
     f'(x) = \frac{-3f(x)+4f(x+dx)-f(x+2dx)}{2dx} + \mathcal{O}(\varepsilon^3),
 \end{equation*}
 and the backward difference by
 \begin{equation*}
-    \label{eq:BD2}
+    \label{eqn:BD2}
     f'(x) = \frac{3f(x)-4f(x-dx)+f(x-2dx)}{2dx} + \mathcal{O}(\varepsilon^3).
 \end{equation*}
 

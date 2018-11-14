@@ -172,12 +172,12 @@ Therefore, the probability of a frond simultaneously having a given frond length
 Given independent events $A$ and $B$, the probability of their intersection is the product of their individual probabilities.
 That is,
 \begin{equation*}
-	\label{eq:ind_prob}
+	\label{eqn:ind_prob}
 	P(A \cap B) = P(A)P(B).
 \end{equation*}
 Then the probability of frond length $l$ and frond angle $\theta_f$ coinciding is
 \begin{equation}
-  \label{eq:p2d}
+  \label{eqn:p2d}
 	P_{2D}(\theta_f,l) = P_{\theta_f}(\theta_f) \cdot P_l(l).
 \end{equation}
 A contour plot of this 2D distribution for a specific set of parameters is shown in Figure \ref{fig:dist_2d}, where probability is represented by color in the 2D plane.
@@ -186,7 +186,7 @@ In Figure \ref{fig:kelp_sample}, 50 samples are drawn from this distribution and
 
 It is important to note that if $P_{\theta_f}$ were dependent on $l$, the above definition of $P_{2D}$ would no longer be valid.
 For example, it might be more realistic to say that larger fronds are less likely to bend towards the direction of the current.
-In this case, \eqref{eq:ind_prob} would no longer hold, and it would be necessary to use the more general Bayes' Theorem
+In this case, \eqref{eqn:ind_prob} would no longer hold, and it would be necessary to use the more general Bayes' Theorem
 \begin{equation*}
 	P(A \cap B) = P(A)P(B|A) = P(B)P(B|A),
 \end{equation*}
@@ -239,17 +239,17 @@ where
 \end{equation*}
 Then, using the relationships in Section \ref{sec:shape}, the above equation can be rewritten in terms of the frond ratios $f_s$ and $f_r$ as
 \begin{equation}
-	\label{eq:rf_rel}
+	\label{eqn:rf_rel}
 	s_f'(\theta';l) = \frac{l}{\sin\theta' + S(\theta')\frac{2f_r}{1+f_s}\cos\theta'}.
 \end{equation}
-For convenience, denote the denominator of \eqref{eq:rf_rel} as $d_f'(\theta')$.
+For convenience, denote the denominator of \eqref{eqn:rf_rel} as $d_f'(\theta')$.
 To generalize to a frond pointed at an angle $\theta_f$, we introduce the coordinate system $(\theta,s)$ such that
 \begin{equation*}
 	\theta = \theta' + \theta_f - \frac{\pi}{2}.
 \end{equation*}
 Then, for a frond pointed at the arbitrary angle $\theta_f$, the function for the outer edges can be written as
 \begin{equation}
-	\label{eq:rf_abs}
+	\label{eqn:rf_abs}
 	s_f(\theta;l) = s_f'\left(\theta - \theta_f + \frac{\pi}{2} \right).
 \end{equation}
 Similarly, define
@@ -296,7 +296,7 @@ Any frond longer than these at the same angle will also occupy the point.
 
 \subsection{Probability of Occupancy}
 We are interested in the probability that, given a fixed point $(\theta,s)$, values of $l$ and $\theta_f$ chosen from the distributions described in Section \ref{sec:dist} will fall in the occupancy region.
-This is found by integrating $P_{2D}(\theta_f, l)$ from \eqref{eq:p2d} over $R_s(\theta,s)$, the occupancy region for the point of interest.
+This is found by integrating $P_{2D}(\theta_f, l)$ from \eqref{eqn:p2d} over $R_s(\theta,s)$, the occupancy region for the point of interest.
 
 \begin{figure}[h]
 	\centering
