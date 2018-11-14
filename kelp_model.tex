@@ -411,12 +411,28 @@ A physical interpretation of this Gaussian blurring is that $P_k^b$ is the time-
 This interpretation is a bit incongruous with the rest of the model since there is no other explicit mention of time--averaging; while the frond length and position distributions can be thought of as continuous approximations to the population distribution at a single point in time, this idea does not apply to the rope's position, since there is only one.
 
 \subsection{Absorption coefficient plots}
+% TODO: Clean up figures
+A variety of numerically calculated absorption coefficient fields are shown here in order to demonstrate some key features of the kelp distribution.
+In each figure, the absorption coefficient is plotted on the color axis, while the norm of its gradient is shown with contours, with brighter contour lines representing regions of large derivatives.
+As mentioned above, large derivatives generate large discretization error, and are therefore undesirable.
+Of course, the distributions must be sufficiently well--defined to capture the characteristics of the kelp.
+
+Figure \ref{fig:kelp_dist_sharp} shows a sharp kelp distribution with an unrealistically high current velocity, with all fronds identically equal in length, and with no blurring applied.
+Note the kite--shaped distribution, as expected.
+Also note the regions of high derivatives near the origin and inner edges.
+This sharp distribution requires excessively large numerical grids to approximate well, and is therefore undesireable.
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{kelp_dist_sharp}
   \caption{Absorption coefficient profile in the limiting case of $v_w>>1$, $\sigma_l=0$ and $\sigma_b=0$ demonstrates the kite--shaped fronds. Note the high gradient near the inner edge of the frond.}
   \label{fig:kelp_dist_sharp}
 \end{figure}
+
+In Figure \ref{fig:kelp_dist_smooth}, the current velocity has been reduced, and a nonzero standard deviation has been given to the frond distribution.
+With a variety of frond lengths, the edges are no longer as clearly defined, although the general character of the distribution is sensible --- the kelp is most dense near the rope in the direction of the current.
+However, note that there remains a small neighborhood of sharp derivatives encompassing the origin.
+Such a distribution would still cause numerical difficulties for the numerical algorithm.
+
 \begin{figure}[H]
   \centering
   \vspace{-3em}
@@ -424,6 +440,9 @@ This interpretation is a bit incongruous with the rest of the model since there 
   \caption{Absorption coefficient profile for realistic values of $v_w$ and $\sigma_l$, but with $\sigma_b=0$. Note the large gradient at the origin. By continuing to increase the plotting resolution, the gradient would be found to be unbounded.}
   \label{fig:kelp_dist_smooth}
 \end{figure}
+
+Figure \ref{fig:kelp_dist_smooth_smallblur} is similar to Figure \ref{fig:kelp_dist_smooth}, except it has been post--processed with a small Gaussian blur of radius \SI{10}{cm}, not so large that it significantly distorts the shape of the distribution, but sufficient to remove the discontinuity in the origin.
+Such a kelp distribution is ideal, as it balances accuracy with ease of numerical approximation.
 \begin{figure}[H]
   \centering
   \vspace{-3em}
@@ -431,6 +450,10 @@ This interpretation is a bit incongruous with the rest of the model since there 
   \caption{A small blur radius of $\sigma_b=\SI{0.1}{\m}$ eliminates the derivative singularity at the origin.}
   \label{fig:kelp_dist_smooth_smallblur}
 \end{figure}
+
+In Figure \ref{fig:kelp_dist_smooth_blur}, too large of a blur has been applied; the character of the Gaussian kernel has overwhelmed that of the kelp distribution.
+While this may still provide a better spatial description of the kelp than a fully horizontally uniform distribution, and unnecessary amount of information has been sacrificed for marginal gains in smoothness over Figure \ref{fig:kelp_dist_smooth_smallblur}.
+Such a large blur is unlikely to reduce the discretization error, since other factors are contributing to it more significantly.
 \begin{figure}[H]
   \centering
   \vspace{-3em}
