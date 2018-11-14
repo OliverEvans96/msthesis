@@ -142,11 +142,11 @@ The substitution $u=(l-\mu_l)/\sqrt{2\sigma_l^2};\; du=dl/\sqrt{2\sigma_l^2}$ pr
 Note that the above integrand can be explicitly evaluated at any value of $\theta_f$, and is not restricted to values on a discrete grid.
 The integral is then evaluated numerically using a quadrature rule of any chosen degree.
 At present, a Gauss-Legendre quadrature with degree 101 is applied.
-If the quadrature degree is chosen too low (e.g. 5), the resulting distribution is marked by obvious numerical artifacts.
+If the quadrature degree is chosen too low (e.g. 5), the resulting distribution is marked by numerical artifacts including discontinuities.
 Since the kelp calculation is orders of magnitude faster than the light field calculation, there is no issue with choosing a high quadrature degree.
 
 \subsection{Gaussian Convolution}
-% TODO
+*TODO: numerical blurring details
 
 \section{Quadrature Rules}
 As a prerequisite to algorithm development, a few key integrals are calculated here.
