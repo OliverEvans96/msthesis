@@ -1,25 +1,46 @@
 \chapter{LIGHT MODEL}
 \label{chap:light}
 
-Now that we have formulated the distribution of kelp throughout the medium, we introduce the Radiative Transfer Equation, which is used to calculate the light field.
+Now that the spatial kelp distribution has been modeled, the radiative transfer equation is introduced, which is used to calculate the light field.
+An asymptotic series centered at the case of no scattering is developed, which forms the basis for the faster and less memory--intensive of the two solution algorithms presented in Chapter \ref{chap:numerical}.
 
 \section{Optical Definitions}
 Before introducing the radiative transfer equation, it is necessary to discuss some basic radiometric quantities of interest which characterize the light field, as well as inherent optical properties which describe the medium of propagation.
+It is necessary to begin by saying that the study of light is riddled with different sets of units which vary between disciplines.
+
+From a physics point of view, light is a form of electromagnetic radiation which carries energy determined exclusively by its wavelength.
+\textit{Radiometric units} thus describe the transfer of energy, measured in Watts, with quantities such as radiance, irradiance, and radiant flux to describe various types of energy transfer.
+These quantities come in frequency--dependent and frequency--integrated varieties, depending on the context.
+From the standpoint of human perception, the importance of light is not in the raw energy that it transfers, but the degree to which it facilitates vision.
+
+Therefore, \textit{Photometric units} take all of the quantities from radiometry, rename them, and weight them by a \textit{luminosity function} which describes frequency dependence of the human eye's sensitivity to light.
+Various luminosity functions exist which describe the eye's response to light in different circumstances.
+In photometric units, radiance becomes luminance, irradiance becomes illuminance, and so on.
+
+Meanwhile, plant biologists prefer to measure light by counting photons in the photosynthetic frequency band.
+The most common quantity in plant biology is \textit{photosynthetically active radiation} (PAR), which is generally measured in moles of photons per square meter per second.
+All photons in the photosynthetic band (\SI{400}{\nm}--\SI{700}{\nm}) may be counted equally or weighted according to a plant's photosynthetic response.
+Radiometric quantities are used throughout this thesis.
 
 \subsection{Radiometric Quantities}
-
-One of the most fundamental quantities in optics is radiant flux $\Phi$, which has units of energy per time.
-The quantity of primary interest in modeling the light field is radiance $L$, which is defined as the radiant flux per steradian per projected surface area perpendicular to the direction of propagation of the beam.
+One of the most fundamental quantities in optics is radiant flux $\Phi$, which has units of energy per time (Watts).
+Considering an element of surface area $A$, the energy \textit{density} moving through the surface is called irradiance, denoted $I$, and has units energy per time.
+Note that the angle $\vartheta$ of the surface relative to the light source should also be considered for full detail. Assuming the surface to be flat and the light source to be distant (parallel rays), the flux through the surface is $\Phi=IA\cos\vartheta$.
+Further, the angular dependence of the light field must be considered.
+The radiance $L$, expresses this dependence, and is defined as the radiant flux per steradian per projected surface area perpendicular to the direction of propagation of the beam.
 That is,
 \begin{equation*}
 	L = \frac{d^2\Phi}{dA d\vec{\omega}},
 \end{equation*}
-where $\vec{\omega}$ is an element of solid angle, and $A$ is an element of projected surface area.
+where $\vec{\omega}$ is an element of solid angle.
 Once the radiance $L$ is calculated everywhere, the irradiance is
 \begin{equation*}
-  I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\vec{\omega}.
+  I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\vec{\omega},
 \end{equation*}
-Irradiance is sometimes given in units of moles of photons (a mole of photons is also called an Einstein) per second, with the conversion \cite{mobley_light_1994} given by
+This quantity is also called \textit{scalar irradiance} since it does not consider light through particular surface, but rather weights radiance from all directions equally.
+For brevity, this quantity will be simply called irradiance here.
+
+Irradiance can be approximately converted to PAR units of moles of photons (a mole of photons is also called an Einstein) per second, with the conversion \cite{mobley_light_1994} given by
 \begin{equation}
   \SI{1}{\W} = \SI{4.2}{\micro\mole \,photons\per\second}.
   \label{eqn:watts_photons}
@@ -28,15 +49,14 @@ This is not an exact conversion, but has been found to be accurate to roughly $\
 
 \subsection{Perceived Irradiance}
 \label{sec:perceived_irrad}
-
 Assuming that the irradiance $I(\vec{x})$ is known,
-the average irradiance at each depth can be calculated as
+the average irradiance at a depth $z$ is calculated as
 \begin{equation*}
   %\bar{I}_k = \frac{\sum_{ij}I_{ijk}}{n_x n_y},
   \bar{I}(z) = \frac{\iint I(x,y,z)\, dx\, dy}{\iint 1\, dx\, dy}.
 \end{equation*}
 More relevant, however, is the average irradiance perceived by the kelp.
-To calculate this value, we simply take a weight the irradiance by the
+To calculate this value, the irradiance is weighted by the
 normalized spatial kelp distribution before taking the mean.
 Then, the average perceived irradiance at each depth is
 \newcommand{\Iperk}{\tilde{I}}
@@ -58,7 +78,7 @@ The scattering coefficient $b$ (units m$^{-1}$), defines the proportional loss
 of radiance per unit length due to scattering, and is assumed to be constant over space.
 Scattered light is not lost from the light field, it simply changes direction.
 
-The volume scattering function (VSF) $\beta(\Delta): [-1, 1] \to \RR^+$ (units sr$^{-1}$) defines the probability of light scattering at any given angle from its source.
+The volume scattering function (VSF) $\beta(\Delta): [-1, 1] \to \RR^+$ (units sr$^{-1}$) defines the probability of light scattering at any given angle from its source, where $\Delta=\cos\vartheta$ is the cosine of the angle between the initial and final directions.
 Formally, given two directions $\vec{\omega}$ and $\vec{\omega}'$, $\beta(\vec{\omega} \cdot \vec{\omega}')$ is the probability density of light scattering from $\vec{\omega}$ into $\vec{\omega}'$ (or vice-versa).
 Now, since a single direction subtends no solid angle, the probability of scattering occurring exactly from $\vec{\omega}$ to $\vec{\omega}'$ is 0.
 Rather, we say that the probability of radiance being scattered from a direction $\omega$ into an element of solid angle $\Omega$ is $\int_\Omega \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'$.
@@ -73,21 +93,19 @@ so that for any $\omega$,
 \end{equation*}
 i.e., the probability of light being scattered to some direction on the unit sphere is 1.
 
-TODO:
 \section{The Radiative Transfer Equation}
-We are now prepared to present the full details of Radiative Transfer Equation, whose solution is the radiance in the medium as a function of position $x$ and angle $\vec{\omega}$.
+We are now prepared to present the full details of radiative transfer equation, whose solution is the radiance in the medium as a function of position $x$ and angle $\vec{\omega}$.
 
 \subsection{Ray Notation}
 Consider a fixed position $\vec{x}$ and direction $\vec{\omega}$ such that
-$\vec{\omega} \cdot \hat{z} \neq 0$.
-Let $\vec{l}(\vec{x}, \vec{\omega}, s)$ denote the linear path containing $\vec{x}$ in the direction $\vec{\omega}$.
-Assume that the ray is not horizontal.
-Then, it originates either at the surface or bottom of the domain, with initial z coordinate given by
+$\vec{\omega} \cdot \hat{z} \neq 0$ (the ray is not horizontal).
+Let $\vec{l}(\vec{x}, \vec{\omega}, s)$ denote the linear path from one domain boundary to another containing $\vec{x}$ in the direction $\vec{\omega}$.
+Since the ray is not horizontal, it originates either at the surface or bottom of the domain, with initial $z$ coordinate given by
 \begin{equation*}
   z_0 =
    \begin{cases}
-    0, & \vec{\omega} \cdot \hat{z} < 0 \\
-    \zmax, & \vec{\omega} \cdot \hat{z} > 0.
+    0, & \vec{\omega} \cdot \hat{z} > 0 \\
+    \zmax, & \vec{\omega} \cdot \hat{z} < 0.
   \end{cases}
 \end{equation*}
 Hence, the ray path is parameterized as
@@ -115,24 +133,24 @@ medium produces four phenomena of interest:
   \item Radiance is decreased due to scattering out of the path to other
     directions;
   \item Radiance is increased due to scattering into the path from other
-      directions.
-  \item Radiance is increased or decreased due to light sources or sinks
+      directions;
+  \item Radiance is increased or decreased due to light sources or sinks.
 \end{enumerate}
 
 \subsection{Equation of Transfer}
-Combining these phenomena yields the Radiative Transfer Equation along
-$\vec{l}(\vec{x}, \vec{\omega})$,
-\begin{equation}
+Combining these phenomena yields the radiative transfer equation along
+$\vec{l}(\vec{x}, \vec{\omega}, s)$ evaluated at $(\vec{x}, \vec{\omega})$,
+\begin{align}
   \label{eqn:rte1d}
-  \frac{dL}{ds}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega})
-  = -(a(\vec{x}) + b)L(\vec{x}, \vec{\omega})
-  + b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x})\, d\vec{\omega}' + \sigma(\vec{x}, \vec{\omega}),
-\end{equation}
+  \frac{dL\left(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}\right)}{ds}\Bigg|_{s=\tilde{s}}
+  = &-(a(\vec{x}) + b)L(\vec{x}, \vec{\omega}) \nonumber \\
+  &+ b \int_{4\pi} \beta(\vec{\omega}\cdot\vec{\omega}') L(\vec{x})\, d\vec{\omega}' + \sigma(\vec{x}, \vec{\omega}),
+\end{align}
 where $\int_{4\pi}$ denotes integration over the unit sphere.
 The derivative of $L$ over the path can be rewritten as
 \begin{align*}
-  \frac{dL}{ds}(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega})
-    &= \frac{d\vec{l}}{ds}(\vec{x}, \vec{\omega}, s) \cdot \nabla L(\vec{x}, \vec{\omega}', \vec{\omega}) \\
+  \frac{dL\left(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}\right)}{ds}\Bigg|_{s=\tilde{s}}
+    &= \left[\frac{d\vec{l}(\vec{x}, \vec{\omega}, s)}{ds} \cdot \nabla L(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}', \vec{\omega})\right]\Bigg|_{s=\tilde{s}} \\
     &= \vec{\omega} \cdot \nabla L(\vec{x}, \vec{\omega}),
 \end{align*}
 which reveals the vector form of the radiative transfer equation,
@@ -162,7 +180,8 @@ We use periodic boundary conditions in the $x$ and $y$ directions,
 In the $z$ direction, we specify a spatially uniform downwelling light just
 under the surface of the water by a function $f(\vec{\omega})$.
 Or if $\zmin>0$, then the radiance at $z=\zmin$ should be specified instead (as opposed to the radiance at the first grid cell center).
-Further, we assume that no upwelling light enters the domain from the bottom, so
+Further, we assume that no upwelling light enters the domain from the bottom.
+Letting $\vec{x_s}$ be a point on the surface of the domain and $\vec{x_b}$ a point on the bottom, we have
 \begin{align*}
   L(\vec{x_s}, \vec{\omega}) &= f(\vec{\omega}) \mbox{ if } \vec{\omega} \cdot \hat{z} > 0, \\
   L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0.
@@ -176,7 +195,8 @@ In reality, the scattering cannot be considered to occur in discrete events, but
 
 Since this is only an approximation, it is important to note that while the asymptotic series converges as $b \to 0$, it is not necessary that the series converges as the number of terms increases, although it may occur in certain cases.
 Especially in cases of large scattering, the asymptotic series diverges rapidly.
-The convergence properties will be expaned upon in -TODO-
+The convergence properties of the algorithm are discussed in detail in Chapter \ref{chap:model_analysis}.
+
 \subsection{Asymptotic Expansion}
 Taking $b$ to be small, we introduce the asymptotic series
 \newcommand{\Lasym}{L_0(\vec{x},\vec{\omega}) + b L_1(\vec{x},\vec{\omega}) + b^2 L_2(\vec{x},\vec{\omega}) + \cdots}
@@ -187,7 +207,7 @@ Taking $b$ to be small, we introduce the asymptotic series
 \begin{align*}
   L(\vec{x},\vec{\omega}) = \Lasym.
 \end{align*}
-Since the source, $\sigma$ may also depend on $b$, it deserves a similar expansion,
+Since the source $\sigma$ may also depend on $b$, it deserves a similar expansion,
 \begin{align*}
   \sigma(\vec{x},\vec{\omega}) = \sigasym.
 \end{align*}
@@ -271,12 +291,12 @@ Then, the first equation from the asymptotic expansion, \eqref{eqn:asymptotics_0
 where $H(x)$ is the Heaviside step function.
 This equation is solved by multiplying by the appropriate integrating factor, as follows.
 \begin{align*}
-  \exp\left(\int_0^s \tilde{a}(s')\, ds'\right)\tilde\sigma_0(s) &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \frac{du_0}{ds} + \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \tilde{a}(s) u_0(s) \\
+  \exp\left(\int_0^s \tilde{a}(s')\, ds'\right)\tilde\sigma_0(s) &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \frac{du_0}{ds}(s) + \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) \tilde{a}(s) u_0(s) \\
   &= \frac{d}{ds}\left[\exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_0(s)\right].
 \end{align*}
 Then, integrating both sides yields
 \begin{align*}
-  \int_0^s \exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right)\tilde\sigma_0(s')\, ds' &= \int_0^s \frac{d}{ds}\left[\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) u_0(s')\right]\, ds' \\
+  \int_0^s \exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right)\tilde\sigma_0(s')\, ds' &= \int_0^s \frac{d}{ds'}\left[\exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) u_0(s')\right]\, ds' \\
   &= \exp\left(\int_0^s \tilde{a}(s')\, ds'\right) u_0(s) - f(\vec{\omega})H(\vec{\omega}\cdot\hat{z}).
 \end{align*}
 Hence,
@@ -315,7 +335,7 @@ Then, since $\tilde{g}_n$ depends only on $L_{n-1}$ and is therefore independent
 This is exactly \eqref{eqn:asymptotics_ode_0} with $\tilde{\sigma}_0 \to \tilde{g}_n$ and $f(\vec{\omega}) \to 0$.
 Hence,
 \begin{equation}
-  u_n(s) = \int_0^s\tilde{g}_n(s')\exp\left( -\int_{s''}^{s'}\tilde{a}(s'')\,ds'' \right)\, ds'.
+  u_n(s) = \int_0^s\tilde{g}_n(s')\exp\left( -\int_{s'}^{s}\tilde{a}(s'')\,ds'' \right)\, ds'.
   \label{eqn:asymptotics_soln_n}
 \end{equation}
 As before, the conversion back to full spatial and angular coordinates is
