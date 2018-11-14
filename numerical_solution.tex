@@ -89,7 +89,61 @@ We then assume that frond lengths are normally distributed in each depth layer
 with mean $\mu_k$ and standard deviation $\sigma_k$.
 
 \subsection{Integration of Distributions}
-% TODO
+The computational crux of calculating the kelp distribution is to integrate $P_{2D}(\theta_f, l)$ from \eqref{eq:p2d} over the occupancy region $R_s(\theta, s)$, defined by \eqref{eqn:rs_th} and \eqref{eqn:rs_l}, for every point $(\theta,s)$ in the $xy$--domain.
+To recap, the population distribution is
+\begin{align*}
+	P_{2D}(\theta_f,l) &= P_{\theta_f}(\theta_f) \cdot P_l(l), \\
+  P_l(l) &= \frac{1}{\sqrt{2\pi\sigma_l^2}}\exp\left(\frac{-(l-\mu_l)^2}{2\sigma_l^2}\right), \\
+	P_{\theta_f}(\theta_f) &= \frac{\exp\left(\eta v_w\cos(\theta_f-\theta_w)\right)}{2\pi I_0(\eta v_w)},
+\end{align*}
+and the occupancy region for $(\theta, s)$ is $R_s(\theta, s) = (\theta_f, l)$ such that
+\begin{align*}
+	\theta - \alpha &< \theta_f < \theta + \alpha, \\
+	&l > l_{\min}(\theta,s).
+\end{align*}
+
+To compute the integral, we symbolically convert the two-dimensional integral to a one-dimensional integral in terms of the error function
+\begin{equation}
+  \erf(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2}\, dt,
+\end{equation}
+which is a builtin function in most programming languages, including Fortran.
+So, we evaluate
+\begin{align*}
+	\tilde{P}_k(\theta, s) &= \int_{R_s(\theta,s)}P_{2D}(\theta_f,l)\, d\theta_f\, dl \\
+  &= \int_{\theta-\alpha}^{\theta+\alpha}
+  \int_{l_{min}(\theta,s)}^{\infty}
+  P_{\theta_f}(\theta_f) \cdot P_l(l)
+  \, dl\, d\theta_f, \\
+  %
+  &= \frac{1}{\sqrt{2\pi\sigma_l^2}}
+  \int_{\theta-\alpha}^{\theta+\alpha}
+  P_{\theta_f}(\theta_f)
+  \int_{l_{min}(\theta,s)}^{\infty}
+  \exp\left(\frac{-(l-\mu_l)^2}{2\sigma_l^2}\right)
+  \, dl\, d\theta_f. \\
+\end{align*}
+The substitution $u=(l-\mu_l)/\sqrt{2\sigma_l^2};\; du=dl/\sqrt{2\sigma_l^2}$ produces
+\begin{align*}
+  \tilde{P}_k(\theta, s)
+  &= \frac{1}{\sqrt{\pi}}
+  \int_{\theta-\alpha}^{\theta+\alpha}
+  P_{\theta_f}(\theta_f)
+  \int_{\frac{l_{min}(\theta,s)-\mu_l}{\sqrt{2\sigma_l^2}}}^{\infty}
+  e^{-u^{2}}\, du
+  \, d\theta_f \\
+  %
+  &= \frac{1}{2}
+  \int_{\theta-\alpha}^{\theta+\alpha}
+  P_{\theta_f}(\theta_f)
+  \left[1 - \erf\left(\frac{l_{min}(\theta,s)-\mu_l}{\sqrt{2\sigma_l^2}}\right)\right]
+  d\theta_f
+\end{align*}
+
+Note that the above integrand can be explicitly evaluated at any value of $\theta_f$, and is not restricted to values on a discrete grid.
+The integral is then evaluated numerically using a quadrature rule of any chosen degree.
+At present, a Gauss-Legendre quadrature with degree 101 is applied.
+If the quadrature degree is chosen too low (e.g. 5), the resulting distribution is marked by obvious numerical artifacts.
+Since the kelp calculation is orders of magnitude faster than the light field calculation, there is no issue with choosing a high quadrature degree.
 
 \subsection{Gaussian Convolution}
 % TODO
