@@ -1,6 +1,7 @@
 \chapter{RAY TRACING ALGORITHM}
 \label{chap:ray_tracing}
 
+
 In order to evaluate a path integral through the discrete grid, it
 is first necessary to construct a one-dimensional piecewise constant integrand
 which is discontinuous at unevenly spaced points corresponding to the
@@ -103,3 +104,11 @@ For full implementation details, see the \texttt{traverse\_ray} subroutine in \t
 % step to reach an edge. Save $ds$ of the path through this cell. Also save abs.
 % coef. and source.
 % % TODO: Improve
+
+As the ray traverses the spatial grids, it crosses $N-2$ spatial grid edges.
+Let the nondecreasing path lengths at which these crossings occur be denoted by
+$\left\{s_\nu\right\}_{\nu=1}^{N}$, with the convention $s_1=0$ and $s_{N}=\tilde{s}$.
+This implies that edge $\nu$ preceeds cell $\nu$.
+$\{s_\nu\}$ is not strictly increasing if the ray directly intersects a grid corner,
+which means that multiple edges are traversed at the same path length.
+Hence, the path lengths through the grid cells, indexed by $\nu=1,\ldots,N-1$, are

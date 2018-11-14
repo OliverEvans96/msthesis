@@ -7,26 +7,6 @@ In the finite difference algorithm, the continuuum differential equation is appr
 This forms a large sparse system of linear equations which must be solved simultaneously with an iterative method.
 The computational cost for this approach is high in terms of CPU usage, and especially in its memory requirement.
 
-
-\section{Super-Individuals}
-\label{sec:si}
-
-Rather than model each kelp frond, subsets of the population, called super-individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
-Specifically, at each depth $k$, there are $S_k$ super-individuals, indexed by $q$.
-Super-individual $q$ has a frond area $A_{kq}$ and represents $S_{kq}$ individual fronds.
-
-From \eqref{eqn:length-from-area}, the frond length of the super-individual is $l_{kq} = \sqrt{2A_{kq}f_r}$.
-Given the super-individual data, we calculate the mean $\mu$ and standard deviation $\sigma$ frond
-lengths using the formulas
-\begin{align}
-  \mu_k &= \frac{\ds \sum_{q=1}^{S_k} l_{kq}}{\ds \sum_{q=1}^{S_k} S_{kq}},
-  \label{eqn:si_mean} \\
-  \sigma_k &= \frac{\ds \sum_{q=1}^{S_k} \left( l_{kq} - \mu_k \right)^2}{\ds \sum_{q=1}^{S_k} S_{kq}}.
-  \label{eqn:si_std}
-\end{align}
-We then assume that frond lengths are normally distributed in each depth layer
-with mean $\mu_k$ and standard deviation $\sigma_k$.
-
 \section{Discrete Grid}
 \label{sec:grid}
 
@@ -87,6 +67,33 @@ The solid angle subtended by $\Omega_p$ is denoted $\abs{\Omega_p}$.
 The functions $\hat{p}(l,m)$, $\hat{l}(p)$, and $\hat{m}(p)$ are mappings between the two sets of angular indices.
 Refer to Appendix \ref{chap:grid_details} for a more rigorous discussion of the discrete spatial-angular grid.
 
+\section{Kelp Distribution}
+
+\subsection{Super-Individuals}
+\label{sec:si}
+
+Rather than model each kelp frond, subsets of the population, called super-individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
+Specifically, at each depth $k$, there are $S_k$ super-individuals, indexed by $q$.
+Super-individual $q$ has a frond area $A_{kq}$ and represents $S_{kq}$ individual fronds.
+
+From \eqref{eqn:length-from-area}, the frond length of the super-individual is $l_{kq} = \sqrt{2A_{kq}f_r}$.
+Given the super-individual data, we calculate the mean $\mu$ and standard deviation $\sigma$ frond
+lengths using the formulas
+\begin{align}
+  \mu_k &= \frac{\ds \sum_{q=1}^{S_k} l_{kq}}{\ds \sum_{q=1}^{S_k} S_{kq}},
+  \label{eqn:si_mean} \\
+  \sigma_k &= \frac{\ds \sum_{q=1}^{S_k} \left( l_{kq} - \mu_k \right)^2}{\ds \sum_{q=1}^{S_k} S_{kq}}.
+  \label{eqn:si_std}
+\end{align}
+We then assume that frond lengths are normally distributed in each depth layer
+with mean $\mu_k$ and standard deviation $\sigma_k$.
+
+\subsection{Integration of Distributions}
+% TODO
+
+\subsection{Gaussian Convolution}
+% TODO
+
 \section{Quadrature Rules}
 As a prerequisite to algorithm development, a few key integrals are calculated here.
 Since it is assumed that all quantities are constant within a spatial-angular grid cell,
@@ -125,7 +132,6 @@ Define the \textit{angular characteristic function} as
   \end{cases}
 \end{equation*}
 
-
 Then, the integral of a function $f(\vec{\omega})$ is approximated as
 \begin{align*}
   \int_{4\pi} f(\vec{\omega})\, d\vec{\omega} &\approx \int_{4\pi} \sum_{p=1}^\nomega f(\vec{\omega}_p) \mathcal{X}^\Omega_p(\vec{\omega})\, d\vec{\omega} \\
@@ -133,9 +139,6 @@ Then, the integral of a function $f(\vec{\omega})$ is approximated as
   &= \sum_{p=1}^\nomega f(\vec{\omega}_p) \int_{\Omega_p} d\vec{\omega} \\
   &= \sum_{p=1}^\nomega f(\vec{\omega}_p) \abs{\Omega_p}.
 \end{align*}
-
-\section{Numerical Asymptotics}
-Presented here are details of the evaluation of the asymptotic approximations \eqref{eqn:asymptotics_soln_0} and \eqref{eqn:asymptotics_soln_n} to the radiative transfer equation \eqref{eqn:rte}.
 
 \subsection{Scattering Integral}
 \label{sec:scatter_integral}
@@ -160,6 +163,9 @@ Therefore, the radiance gain due to scattering into $\vec{\omega}_p$ from all ot
   \int_{4\pi}\beta(\vec{\omega_p}\cdot\vec{\omega_{p'}})L(\vec{x}, \vec{\omega}')\, d\vec{\omega} \approx \sum_{p=1}^\nomega \beta_{pp'}\abs{\Omega'}L_{ijkp}.
   \label{eqn:scatter_integral}
 \end{equation}
+
+\section{Numerical Asymptotics}
+Presented here are details of the evaluation of the asymptotic approximations \eqref{eqn:asymptotics_soln_0} and \eqref{eqn:asymptotics_soln_n} to the radiative transfer equation \eqref{eqn:rte}.
 
 \subsection{Ray Integral}
 Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the discrete grid can be constructed using the ray tracing algorithm described in Appendix \ref{chap:ray_tracing}.
