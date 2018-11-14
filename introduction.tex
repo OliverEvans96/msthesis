@@ -96,17 +96,24 @@ In Chapter \ref{chap:kelp}, a probabilistic model is developed to describe the s
 Chapter \ref{chap:light} begins with a survey of fundamental radiometric quantities and optical properties of matter.
 The spatial kelp distribution from Chapter \ref{chap:kelp} is used to determine optical properties of the combined water-kelp medium,
 and the radiative transfer equation, an integro-partial differential equation which describes the the light field as a function of position and angle, is discussed.
-An asymptotic expansion is explored for cases where absorption dominates scattering in the medium, such as in very clear water or high kelp density.
+An asymptotic expansion is explored for the case of low scattering, allowing for analytical, ordered approximations to the true light field.
 In Chapter \ref{chap:numerical}, details are given for the numerical solution of the equations from Chapters \ref{chap:kelp} and \ref{chap:light}.
-Both the full finite difference solution and the asymptotic approximation are described.
-Next, in Section \ref{sec:parameters}, the availability of necessary parameters in the literature is discussed.
-Parameter values used in the simulations in this work are documented.
-For those parameters whose values are not readily available, rough estimates are given or experimental methods for their determination are sketched.
-Then, in Chapter \ref{chap:model_analysis}, sources of numerical error are discussed, namely the use of a discrete grid, and the use of the asymptotic approximation.
-Fortran implementations of the solution algorithms are verified by analyzing their numerical convergence properties for fiticious scenarios using the Method of Manufactured Solutions.
-Realistic scenarios are then considered, and numerical errors are estimated in order to develop guidelines to aid in choosing the appropriate solution algorithm and grid resolution for a given set of optical properties.
-CPU time and memory requirements are discussed for both the asymptotic and finite difference algorithms as functions of grid resolution.
-The chapter concludes by comparing the model presented here to other simpler light models.
+Both the full finite difference solution and the asymptotic approximation are thoroughly developed.
+
+Chapter \ref{chap:model_analysis} is an in--depth discussion of sources of error in both solution procedures.
+The concepts of verifying codes in general as well as specific calculations are discussed.
+Exact discretization errors are calculated via the method of manufactured solutions in order to demonstrate
+that the methods exhibit convergence properties which build confidence in their correctness.
+A method for estimating errors for realistic cases is also developed.
+
+Next, Chapter \ref{chap:application} surveys practical considerations to keep in mind when applying the algorithms in real situations.
+Relevant model parameter values from the literature are collected, and estimates are given for those not readily available.
+Following that is a set of guidelines for choosing which algorithm and which algorithm parameters to use based on the optical scenario to be simulated.
+Advantages and disadvantages of both approaches are presented.
+While the finite difference technique can be applied to any situation, it often requires prohibitively large CPU and memory resources, whereas the numerical asymptotic solution is generally faster and its memory footprint never exceeds the capacity of a standard laptop for reasonable grid sizes.
+The chapter concludes with a comparison to other two simpler light models, and specific qualitative differences are noted.
 As expected, the presence of self-shading in this model results in the prediction of lower light levels regions of high kelp density.
 However, the presence of scattering in the model increases light levels elsewhere, especially near the surface of the water.
-Finally, Chapter \ref{chap:conclusion} concludes the thesis by briefly summarizing of the model, discussing its achievements and limitations, and suggesting improvements and avenues for future work.
+
+Finally, Chapter \ref{chap:conclusion} concludes the thesis by briefly summarizing the model, discussing its achievements and limitations, and suggesting improvements and avenues for future work.
+Several appendices follow with further details about the algorithm, as well as the full source code of the Fortran model developed.
