@@ -1,9 +1,9 @@
 \chapter{KELP MODEL}
 \label{chap:kelp}
 
-In order to properly model the spatial distribution of light around the kelp, it is first necessary to formulate a spatial description of the kelp, which we do in this chapter.
-We take a probabilistic approach to describing the kelp.
-We begin by describing the distribution of kelp fronds, and through algebraic manipulation, we are able to assign to each point in space a probability that kelp occupies the location.
+In order to properly model the spatial distribution of light around the kelp, it is first necessary to formulate a spatial description of the kelp.
+Probability distributions are given for the size and orientation of the individual kelp fronds, which are inverted to determine the probability of a point in space being occupied by kelp.
+Ultimately, the kelp density at any point in space is calculated, which informs the absorption coefficient of the effective kelp--water medium.
 
 
 \section{Physical Setup}
@@ -25,7 +25,7 @@ which may be advantageous for IMTA.
 We consider only the case of a rigid vertical rope which does not sway in the current.
 The mature \textit{Saccharina latissima} plant consists of a single frond (leaf), a stipe (stem) and a holdfast (root structure).
 For the sake of this model, only the kelp frond is considered, and its base is attached directly to the rope.
-The ``gentle undulation approximation'' is employed, whereby it is assumed that fronds are perfectly horizontal.
+The ``gentle undulation approximation'' is employed, whereby it is assumed that fronds are on modeled as perfectly horizontal.
 While at any given time they may point up or down due to water current and gravity, we consider the horizontal
 state to be an average configuration.
 This simplification allows for the three-dimensionally distributed population of kelp fronds
@@ -35,7 +35,7 @@ A computer rendering of this scenario is shown in Figure \ref{fig:kelp_array}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=3.5in]{kelp_array}
-	\captionof{figure}{Rendering of four nearby vertical kelp ropes as represented in the spatial distribution model. Note the kite-shaped fronds and horizontal orientation.}
+	\captionof{figure}{Rendering of four nearby vertical kelp ropes as represented in the spatial distribution model. Note the kite--shaped fronds and horizontal orientation.}
   \label{fig:kelp_array}
 \end{figure}
 
@@ -101,7 +101,7 @@ Since it is assumed that fronds extend perfectly horizontally, no angular elevat
 The frond is assumed to be kite-shaped with length $l$ from base to tip, and width $w$ from left to right.
 In Figure \ref{fig:frond}, the base is shown at the bottom and the tip is shown at the top.
 The proximal length is the shortest distance from the base to the diagonal connecting the left and right corners, and is notated as $f_a$.
-Likewise, the distal length is the shortest distance from that diagonal to the tip, notated $f_b$.
+Likewise, the distal length, notated $f_b$, is the shortest distance from that diagonal to the tip.
 It is therefore clear that
  \begin{equation*}
 	 f_a + f_b = l.
@@ -135,16 +135,16 @@ It is useful to convert between frond length and surface area, which can be done
 
 \subsection{Length and Angle Distributions}
 \label{sec:dist}
-The distribution of frond lengths is assumed to be normal, with mean $\mu_l$ and standard deviation $\sigma_l$.
+In any given depth layer, the distribution of frond lengths is assumed to be normal, with mean $\mu_l$ and standard deviation $\sigma_l$.
 That is, it has the probability density function (PDF)
 \begin{equation*}
   P_l(l) = \frac{1}{\sqrt{2\pi\sigma_l^2}}\exp\left(\frac{(l-\mu_l)^2}{2\sigma_l^2}\right).
 \end{equation*}
 
-It is further assumed that frond angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution, defined on $[-\pi,\pi]$ rather than $(-\infty,\infty)$.
+It is further assumed that frond orientation angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution, defined on $[-\pi,\pi]$ rather than $(-\infty,\infty)$.
 The von Mises distribution has two parameters, $\mu$ and $\kappa$, which shift and sharpen its peak respectively, as shown in Figure \ref{fig:vonmises}.
 $\kappa$ is analogous to $1/\sigma$ in the normal distribution.
-In the absence of current, the frond angles are be distributed uniformly, while as current velocity increases, they become increasingly likely to align in the current direction, depending on the stiffness of the frond.
+In the absence of current, the frond angles are distributed uniformly, while as current velocity increases, they become increasingly likely to align parallel to the current, depending on the stiffness of the frond and stipe.
 Assuming a linear relationship between the current velocity and the steepness of the angular distribution, define the \textit{frond alignment coefficient} $\eta$, with units of inverse velocity(\SI{}{\s\per\m}).
 Then, use $\mu = \theta_w$ and $\kappa = \eta v_w$ as the von Mises distribution parameters.
 Note that $\theta_w$ and $v_w$ vary over depth, while $\eta$ is assumed constant for the population.
@@ -176,16 +176,17 @@ That is,
 	P(A \cap B) = P(A)P(B).
 \end{equation*}
 Then the probability of frond length $l$ and frond angle $\theta_f$ coinciding is
-\begin{equation*}
+\begin{equation}
+  \label{eq:p2d}
 	P_{2D}(\theta_f,l) = P_{\theta_f}(\theta_f) \cdot P_l(l).
-\end{equation*}
+\end{equation}
 A contour plot of this 2D distribution for a specific set of parameters is shown in Figure \ref{fig:dist_2d}, where probability is represented by color in the 2D plane.
 Darker green represents higher probability, while lighter beige represents lower probability.
 In Figure \ref{fig:kelp_sample}, 50 samples are drawn from this distribution and plotted.
 
 It is important to note that if $P_{\theta_f}$ were dependent on $l$, the above definition of $P_{2D}$ would no longer be valid.
 For example, it might be more realistic to say that larger fronds are less likely to bend towards the direction of the current.
-In this case, \eqref{eq:ind_prob} would no longer hold, and it would be necessary to use the more general relation
+In this case, \eqref{eq:ind_prob} would no longer hold, and it would be necessary to use the more general Bayes' Theorem
 \begin{equation*}
 	P(A \cap B) = P(A)P(B|A) = P(B)P(B|A),
 \end{equation*}
@@ -213,7 +214,7 @@ This is made possible by the simple kite-shape fronds, and would be considerably
 To determine under what conditions a frond will occupy a given point, we begin by
 describing the shape of the frond in Cartesian coordinates and then convert to polar coordinates.
 Of primary interest are the edges connected to the frond tip.
-For convenience, we will use a rotated coordinate system $(\theta',s)$ such that the line connecting the base to the tip points in the $+y$ direction ($\theta=\pi/2$), with the base at $(0,0)$.
+For convenience, we will use a rotated polar coordinate system $(\theta',s)$ such that the line connecting the base to the tip points in the $+y$ direction ($\theta=\pi/2$), with the base at $(0,0)$.
 Denote the Cartesian analogue of this coordinate system as $(x',y')$ which is related to $(\theta',s)$ by
 \begin{align*}
 	x' &= s\cos\theta' \\
@@ -230,26 +231,31 @@ This function has the form
 \end{equation*}
 Using the equations in Section \ref{sec:rot_coords}, this can be written in polar coordinates after some rearrangement as
 \begin{equation*}
-	s_f'(\theta') = \frac{l}{\sin\theta' + S(\theta')\frac{2f_b}{w}\cos\theta'},
+	s_f'(\theta';l) = \frac{l}{\sin\theta' + S(\theta')\frac{2f_b}{w}\cos\theta'},
 \end{equation*}
 where
 \begin{equation*}
 	S(\theta') = \sign(\cos\theta').
 \end{equation*}
 Then, using the relationships in Section \ref{sec:shape}, the above equation can be rewritten in terms of the frond ratios $f_s$ and $f_r$ as
-\begin{equation*}
+\begin{equation}
 	\label{eq:rf_rel}
-	s_f'(\theta') = \frac{l}{\sin\theta' + S(\theta')\frac{2f_r}{1+f_s}\cos\theta'}.
-\end{equation*}
+	s_f'(\theta';l) = \frac{l}{\sin\theta' + S(\theta')\frac{2f_r}{1+f_s}\cos\theta'}.
+\end{equation}
+For convenience, denote the denominator of \eqref{eq:rf_rel} as $d_f'(\theta')$.
 To generalize to a frond pointed at an angle $\theta_f$, we introduce the coordinate system $(\theta,s)$ such that
 \begin{equation*}
 	\theta = \theta' + \theta_f - \frac{\pi}{2}.
 \end{equation*}
 Then, for a frond pointed at the arbitrary angle $\theta_f$, the function for the outer edges can be written as
-\begin{equation*}
+\begin{equation}
 	\label{eq:rf_abs}
-	s_f(\theta) = s_f'\left(\theta - \theta_f + \frac{\pi}{2} \right).
-\end{equation*}
+	s_f(\theta;l) = s_f'\left(\theta - \theta_f + \frac{\pi}{2} \right).
+\end{equation}
+Similarly, define
+\begin{equation}
+	d_f(\theta) = d_f'\left(\theta - \theta_f + \frac{\pi}{2} \right).
+\end{equation}
 
 \subsection{Conditions for Occupancy}
 We now formulate the conditions under which a kite shape frond occupies a point
@@ -260,21 +266,21 @@ allows a spatial distribution of the kelp fronds to be calculated.
 Consider a fixed frond of length $l$ at an angle $\theta_f$. The point
 $(\theta,s)$ is occupied by the frond if
 \begin{align*}
-	\left|\theta_f - \theta \right| < \alpha,
+	\left|\theta_f - \theta \right| < \alpha
+  \mbox{ and }
 	s < s_f(\theta).
 \end{align*}
-
 Equivalently, the opposite perspective can be taken.
 Letting the point $(\theta,s)$ be fixed, a frond occupies the point if
 \begin{align}
 	\theta - \alpha < \theta_f < \theta + \alpha,
 	\label{eqn:rs_th} \\
-	l > l_{min}(\theta,s),
+	l > l_{\min}(\theta,s),
 	\label{eqn:rs_l}
 \end{align}
 where
 \begin{equation*}
-	l_{min}(\theta,s) = s \cdot \frac{l}{s_f(\theta)}.
+	l_{\min}(\theta,s) = s \cdot \frac{l}{s_f(\theta;l)} = s \cdot d_f(\theta).
 \end{equation*}
 Then, considering the point to be fixed, \eqref{eqn:rs_th} and \eqref{eqn:rs_l} define the spacial region $R_s(\theta,s)$ called the ``occupancy region for $(\theta,s)$'' with the property that if the tip of a frond lies within this region (i.e., $(\theta_f,l) \in R_s(\theta,s)$), then it occupies the point.
 $R_s(3\pi/4,1.5)$ is shown in blue in Figure \ref{fig:shade_area} and the smallest possible occupying fronds for several values of $\theta_f$ are shown in various colors.
@@ -289,13 +295,13 @@ Any frond longer than these at the same angle will also occupy the point.
 
 \subsection{Probability of Occupancy}
 We are interested in the probability that, given a fixed point $(\theta,s)$, values of $l$ and $\theta_f$ chosen from the distributions described in Section \ref{sec:dist} will fall in the occupancy region.
-This is found by integrating $P_{2D}$ over the occupancy region for $(\theta,s)$.
+This is found by integrating $P_{2D}(\theta_f, l)$ from \eqref{eq:p2d} over $R_s(\theta,s)$, the occupancy region for the point of interest.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=4.5in]{cart_shade}
 	\captionof{figure}{Contour plot of $P_{2D}(\theta_f,l)$ overlayed with the
-    region in the $\theta_f$\nobreak-\nobreak$l$ plane which results in a frond occupying the point $(\theta,s)=(3\pi/4,3/2)$.}
+    region in the $\theta_f$\nobreak--\nobreak$l$ plane which results in a frond occupying the point $(\theta,s)=(3\pi/4,3/2)$.}
 	\label{fig:cart_shade}
 \end{figure}
 
@@ -305,20 +311,27 @@ Integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ as depicted in Figure \ref
 								P_{2D}(\theta_f,l)
 								\,dl\,d\theta_f \nonumber \\
 							&= \int_{\theta-\alpha}^{\theta+\alpha}
-								\int_{l_{min}(\theta_f)}^\infty
+								\int_{l_{\min}(\theta_f)}^\infty
 								P_{2D}(\theta_f,l)
 								\,dl\,d\theta_f.
 \end{align*}
 
 Assuming that the depth layer has thickness $dz$ and contains $n$ fronds of thickness $t$,
-the proportion of the depth layer occupied by kelp at any horizontal position can be calculated as
+the proportion of the vertical length of the discrete depth layer occupied by kelp at any position $(x,y,z)$ is given by
 \begin{equation*}
-  P_k = \frac{nt}{dz}\tilde{P}_k.
+  P_k(x, y) = \frac{nt}{dz}\tilde{P}_k(x, y).
 \end{equation*}
-Then, the effective absorption coefficient can be calculated at any point in space as
+In the continuum limit as the number of discrete depth depth layers approaches infinity, $P_k(x,y,z)$ can be interpreted as the probability of the point $(x,y,z)$ being occupied by kelp.
+In a three dimensional context, the number of fronds is more likely to be specified by a number density $\rho_n=n/dz$ over the vertical length of the rope with units \SI{}{\per\m}, in which case
 \begin{equation*}
-  a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w.
+  P_k(x, y, z) = t \rho_n(z) \tilde{P}_k(x, y, z).
 \end{equation*}
+Then, since the point $\vec{x}$ has a probability $P_k(\vec{x})$ of being occupied by kelp and a probability $(1-P_k(\vec{x}))$ of being occupied by the surrounding aquatic medium,
+the effective absorption coefficient can be calculated as
+\begin{equation*}
+  a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w,
+\end{equation*},
+where $a_k$ is the absorption coefficient of the kelp alone, and $a_w$ is the absorption coefficient of the water and its dissolved and suspended contents.
 
 \begin{figure}[h]
 	\centering
@@ -327,37 +340,100 @@ Then, the effective absorption coefficient can be calculated at any point in spa
 	\label{fig:prob_shade}
 \end{figure}
 
-\section{Rope Position Distribution}
-Give both explanations: moving rope and convenient solution to numerical dilemma.
+\section{Discontinuity at the rope}
+While the above model of the kelp distribution is straightforward to evaluate, it does have a significant numerical difficulty in its application.
+Since the length and orientations are both continuous in the polar coordinates $s>0$ and $\theta$, the resulting kelp density and effective absorption coefficient are as well.
+However, they are not necessarily continuous in Cartesian coordinates.
+In the case of no water current, $v_w=0$, the flat von Mises distribution produces a continuous solution at the origin.
+In the more general case, though, there is a high kelp density on one side of the origin in the direction of the current, and a low kelp density immediately on the other side.
+Since rope is assumed to be infinitely thin and have a fixed position, the sharp corners of the kelp fronds eminate from exactly the same point.
+Hence, there is in general a discontinuity in the kelp distribution at the origin, and therefore its derivatives are unbounded on the domain.
 
-\section{Kelp Distribution Visualization}
-% TODO: Add a few plots demonstrating that model does what I say it does
+This is not appealing numerically since the algorithms used in this thesis to solve the differential equation describing the light field, are based on interpolation on a discrete Cartesian grid.
+According to Taylor's theorem, the error incurred by performing such interpolation is bounded by a constant multiple of the appropriate maximum derivative of the interpolated function over the domain.
+If the derivatives of the absorption coefficient are unbounded, then so too is the discretization error in the final solution.
+That is, the solution is not guaranteed to converge.
 
-\pagebreak
+Luckily, there is a straightforward solution, which is to post-process the spatial kelp distribution with a Gaussian blur in the $x$ and $y$ dimensions.
+This is achieved via convolution of the solution with a 2D Gaussian kernel centered at the origin.
+Any blur whatsoever is sufficient to bound the derivatives, and the larger the blur radius, the smaller they become.
+Obviously, as the blur radius is increased, the kelp distribution tends toward a constant and no longer captures any information about the $xy$ distribution of the kelp.
+Therefore, a small blur radius should be used.
+
+\subsection{One dimensional Gaussian blur}
+As a one dimensional analogy, consider the Heaviside step function,
+\begin{equation*}
+  H(x) = \begin{cases}
+    0, & x < 0, \\
+    1, & x > 0.
+  \end{cases}
+\end{equation*}
+Clearly, the function is infinitely steep at the origin.
+Consider the normalized Gaussian kernel centered at the origin with radius $\sigma_b$, given by
+\begin{equation}
+  k(x;\sigma_b) = \frac{1}{\sqrt{2\pi\sigma_b}^2} \exp\left({-\frac{x^2}{2\sigma_b^2}}\right).
+\end{equation}
+A blur is applied by convolving the function with the kernel according to the formula
+\begin{align*}
+  \tilde{H}(x) &= (k*H)(x) = \int_{-\infty}^{\infty}H(\tau)k(x-\tau;\sigma_b)\, d\tau \\
+  &= \int_{0}^{\infty}k(x-\tau;\sigma_b)\, d\tau.
+\end{align*}
+The substitution $u=\tau=x,\, du=d\tau$ yields
+\begin{equation*}
+  \tilde{H}(x) = \int_{-x}^\infty k(u;\sigma_b)\, du.
+\end{equation*}
+Note that since the kernel is normalized, the integral from 0 to infinity is $1/2$.
+Further, since the kernel is even, the integral over $[-x, 0]$ is equal to the integral over $[0, x]$.
+Hence,
+\begin{equation*}
+  \tilde{H}(x) = \frac{1}{2} + \int_{0}^x k(u;\sigma_b)\, du.
+\end{equation*}
+Then, by the fundamental theorem of calculus, the derivative of the convolved function is simply $k(x;\sigma_b)$, whose maximum value is $k(0;\sigma_b) = 1/\sqrt{2\pi\sigma_b^2}$.
+Then, since the derivative is a linear operator, this result can be generalized to the following statement:
+Applying a Gaussian blur of radius $\sigma_b$ to a function with a maximum discontinuity of size $J$ produces a function whose first derivative is bounded by
+\begin{equation*}
+  \frac{1}{\sqrt{2\pi}}\frac{J}{\sigma_b}.
+\end{equation*}
+The same logic applies to directional derivatives of multidimensional scalar functions.
+
+\subsection{Multidimensional Gaussian blur}
+In light of the above arguments, the derivatives of the absorption coefficient are bounded by applying a two--dimensional Gaussian blur in $xy$--plane to $\tilde{P}_k$ using the kernel
+\begin{equation}
+  k(x, y; \sigma_b) = \frac{1}{\sqrt{2\pi\sigma_b^2}} \exp\left(\frac{x^2 + y^2}{2\sigma_b^2}\right).
+\end{equation}
+Hence, the blurred solution is
+\begin{equation}
+  \tilde{P}_k^b(x, y, z) = \int_{-\infty}^\infty \int_{-\infty}^\infty k(x-x', y-y', z; \sigma_b) \tilde{P}_k(x', y', z)\, dx'\, dy'.
+\end{equation}
+
+A physical interpretation of this Gaussian blurring is that $\tilde{P}_k^b$ is the time--averaged kelp distribution, assuming that the rope is allowed to move horizontally, and $k(x, y; \sigma)$ is the PDF of the rope's location distribution.
+This interpretation is a bit incongruous with the rest of the model since there is no other explicit mention of time--averaging; while the frond length and position distributions can be thought of as continuous approximations to the population distribution at a single point in time, this idea does not apply to the rope's position, since there is only one.
+
+\subsection{Absorption coefficient plots}
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{kelp_dist_sharp}
-  \caption{kelp dist sharp}
+  \caption{Absorption coefficient profile in the limiting case of $v_w>>1$, $\sigma_l=0$ and $\sigma_b=0$ demonstrates the kite--shaped fronds. Note the high gradient near the inner edge of the frond.}
   \label{fig:kelp_dist_sharp}
 \end{figure}
 \begin{figure}[H]
   \centering
   \vspace{-3em}
   \includegraphics[width=5in]{kelp_dist_smooth}
-  \caption{kelp dist smooth}
+  \caption{Absorption coefficient profile for realistic values of $v_w$ and $\sigma_l$, but with $\sigma_b=0$. Note the large gradient at the origin. By continuing to increase the plotting resolution, the gradient would be found to be unbounded.}
   \label{fig:kelp_dist_smooth}
 \end{figure}
 \begin{figure}[H]
   \centering
   \vspace{-3em}
   \includegraphics[width=5in]{kelp_dist_smooth_smallblur}
-  \caption{kelp dist smooth smallblur}
+  \caption{A small blur radius of $\sigma_b=\SI{0.1}{\m}$ eliminates the derivative singularity at the origin.}
   \label{fig:kelp_dist_smooth_smallblur}
 \end{figure}
 \begin{figure}[H]
   \centering
   \vspace{-3em}
   \includegraphics[width=5in]{kelp_dist_smooth_blur}
-  \caption{kelp dist smooth blur}
+  \caption{Over-blurring kelp distribution with $\sigma_b=\SI{10}{\m}$ causes it to lose a great deal of spatial resolution. This should be avoided.}
   \label{fig:kelp_dist_smooth_blur}
 \end{figure}
