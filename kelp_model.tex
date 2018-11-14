@@ -138,7 +138,7 @@ It is useful to convert between frond length and surface area, which can be done
 In any given depth layer, the distribution of frond lengths is assumed to be normal, with mean $\mu_l$ and standard deviation $\sigma_l$.
 That is, it has the probability density function (PDF)
 \begin{equation*}
-  P_l(l) = \frac{1}{\sqrt{2\pi\sigma_l^2}}\exp\left(\frac{(l-\mu_l)^2}{2\sigma_l^2}\right).
+  P_l(l) = \frac{1}{\sqrt{2\pi\sigma_l^2}}\exp\left(-\frac{(l-\mu_l)^2}{2\sigma_l^2}\right).
 \end{equation*}
 
 It is further assumed that frond orientation angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution, defined on $[-\pi,\pi]$ rather than $(-\infty,\infty)$.
@@ -279,9 +279,10 @@ Letting the point $(\theta,s)$ be fixed, a frond occupies the point if
 	\label{eqn:rs_l}
 \end{align}
 where
-\begin{equation*}
+\begin{equation}
 	l_{\min}(\theta,s) = s \cdot \frac{l}{s_f(\theta;l)} = s \cdot d_f(\theta).
-\end{equation*}
+  \label{eqn:l_min}
+\end{equation}
 Then, considering the point to be fixed, \eqref{eqn:rs_th} and \eqref{eqn:rs_l} define the spacial region $R_s(\theta,s)$ called the ``occupancy region for $(\theta,s)$'' with the property that if the tip of a frond lies within this region (i.e., $(\theta_f,l) \in R_s(\theta,s)$), then it occupies the point.
 $R_s(3\pi/4,1.5)$ is shown in blue in Figure \ref{fig:shade_area} and the smallest possible occupying fronds for several values of $\theta_f$ are shown in various colors.
 Any frond longer than these at the same angle will also occupy the point.
@@ -397,16 +398,16 @@ Applying a Gaussian blur of radius $\sigma_b$ to a function with a maximum disco
 The same logic applies to directional derivatives of multidimensional scalar functions.
 
 \subsection{Multidimensional Gaussian blur}
-In light of the above arguments, the derivatives of the absorption coefficient are bounded by applying a two--dimensional Gaussian blur in $xy$--plane to $\tilde{P}_k$ using the kernel
+In light of the above arguments, the derivatives of the absorption coefficient are bounded by applying a two--dimensional Gaussian blur in $xy$--plane to $P_k$ using the kernel
 \begin{equation}
   k(x, y; \sigma_b) = \frac{1}{\sqrt{2\pi\sigma_b^2}} \exp\left(\frac{x^2 + y^2}{2\sigma_b^2}\right).
 \end{equation}
 Hence, the blurred solution is
 \begin{equation}
-  \tilde{P}_k^b(x, y, z) = \int_{-\infty}^\infty \int_{-\infty}^\infty k(x-x', y-y', z; \sigma_b) \tilde{P}_k(x', y', z)\, dx'\, dy'.
+  P_k^b(x, y, z) = \int_{-\infty}^\infty \int_{-\infty}^\infty k(x-x', y-y', z; \sigma_b) P_k(x', y', z)\, dx'\, dy'.
 \end{equation}
 
-A physical interpretation of this Gaussian blurring is that $\tilde{P}_k^b$ is the time--averaged kelp distribution, assuming that the rope is allowed to move horizontally, and $k(x, y; \sigma)$ is the PDF of the rope's location distribution.
+A physical interpretation of this Gaussian blurring is that $P_k^b$ is the time--averaged kelp distribution, assuming that the rope is allowed to move horizontally, and $k(x, y; \sigma)$ is the PDF of the rope's location distribution.
 This interpretation is a bit incongruous with the rest of the model since there is no other explicit mention of time--averaging; while the frond length and position distributions can be thought of as continuous approximations to the population distribution at a single point in time, this idea does not apply to the rope's position, since there is only one.
 
 \subsection{Absorption coefficient plots}
