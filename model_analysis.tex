@@ -1,37 +1,64 @@
 \chapter{CODE VERIFICATION}
 \label{chap:model_analysis}
-The algorithms described in this chapter are implemented in Fortran, with source code listed in Appendix \ref{chap:fortran} and available online.
-The correctness of the implementations is verified in Chapter \Rom{\ref{chap:model_analysis}}, and their performance is subsequently analyzed.
+The purpose of a numerical simulation is generally to accurately predict the behavior of a real system.
+All mathematical modeling and numerical calculation, however, deals only with approximations.
+It is therefore crucial to understand the degree to which these approximations reflect the actual scenario of interest, and to what extent their predictions can be trusted.
+In this chapter, the validity of the numerical approximations to the continuum model is discussed.
+Concepts relating to determining the correctness of a whole code of specific results are surveyed.
+The Fortran implementations of the finite difference and asymptotic solutions of the radiative transfer equation are verified to be free of detectable coding mistakes.
 
-% TODO: Revise
-In this chapter, both numerical implementations of the model are probed.
-We begin by verifying that the methods are mistake-free by looking at convergence orders.
-Then, the two methods are compared, to determine the conditions under which the asymptotic
-approximation is valid.
-Finally, results are compared to simpler kelp models.
+\section{Sources of Error in Numerical Simulations}
+While simulations attempt to realistically reproduce real--life observations, many factors conspire to distort the numerical results they produce.
+The following is an overview of the errors incurred throughout the process of creating and evaluating numerical models.
+Some of these errors are \textit{ordered}, meaning that they can be decreased predictably by performing additional computations, while others are not.
 
-\section{Confidence Building in Computational Codes}
+First, any mathematical model is based on simplifying assumptions compared to the real system.
+Any assumptions which do not hold precisely for the real system contribute to differences between model outputs and the real behavior.
+Such differences can be termed \textit{conceptual modelling errors}, and are a present in the exact solutions to the mathematical equations comprising the model.
+Once a model is formulated, it contains free parameters which can be varied to emulate different physical scenarios.
+To evaluate the model, specific parameters must be used which reflect the scenario of interest.
+The values of these parameters often are obtained experimentally, and may not be known with exact precision.
+Error resulting from inaccurate physical parameter values can be called \textit{parameter uncertainty error}.
+
+Mathematical models accurate enough to be useful are usually difficult or impossible to solve analytically.
+Therefore, either mathematical simplifications or numerical approximations, or both, may be employed in order to obtain a solution.
+For example, in the low--scattering solution presented in Section \ref{sec:symbolic_asymptotics}, the exact solution is expanded in a Taylor Series, from which only the first few terms are used, with the rest discarded.
+The error resulting from using a finite number of terms from an infinite series is refered to as \textit{truncation error}.
+Truncation error is ordered, as an arbitrary number of terms can be used to better approximate the true solution.
+When a continuous equation is solved numerically, it is necessary to compute the solution on a finite number of discrete points rather than on the complete domain.
+The error incurred by doing so is called \textit{discretization error}.
+Discretization error is also ordered, as arbitrarily fine grids can be chosen in order to better approximate the continuum solution.
+
+Finally, once the model, solution algorithm, and discretization scheme are chosen, a computer is used to perform the actual calculations.
+Computers do not operate on the full set of real numbers, but rather on a finite subset of the real numbers with a predetermined floating point precision, depending on the hardware and software environment.
+The loss of accuracy in computations due to the use of floating point numbers is termed \textit{round--off error}.
+
+
+\section{Verification and Validation}
 %TODO: Citations
-As Roache explains, there are two aspects to confidence building for numerical codes, specifically those which solve PDEs:
+As Roache explains, there are two aspects to building confidence in numerical codes, specifically those which solve PDEs:
 verification deals with \textit{solving the equations right}, while validation deals with \textit{solving the right equations}.
 Validation involves comparison with experimental evidence in order to determine that governing equations
 accurately describe physical phenomenon, and that their solutions match observation.
-Validation is an ongoing process.
-As new experimental data becomes available, the equations can be solved in an attempt to replicate the observation.
+That is, it is the process of checking that conceptual modelling errors are sufficiently small to model the system as accurately as necessary.
+Validation is an ongoing process; as new experimental data becomes available, the equations can be solved under appropriate conditions in an attempt to replicate the new observations.
 Verification, however, is a purely mathematical exercise, and has nothing to do with the physical system being modeled.
 It deals only with the agreement between an equation and its numerical solution produced by a particular implementation of an algorithm.
+It involves checking that ordered sources of numerical error (truncation and discretization errors) decrease as expected when additional computations are performed.
 Unlike validation, verification is something to be started and finished.
 If a set of parameters to the model can be chosen to exercise all terms in the equation, comparison between the numerical and exact solution is sufficient to demonstrate the correctness of a computational code, and the process need not be repeated unless the code is modified.
 
-Due to lack of sufficient experimental data, rigorous validation of the model is left as future work.
-However, verification of both the finite difference and numerical asymptotics algorithms is presented here.
+Due to lack of sufficient experimental data, rigorous validation of the present radiative transfer code is left as future work.
+However, verification of both the finite difference and numerical asymptotics algorithms is demonstrated here.
 There are two forms of verification.
-The first is \textit{verification of codes}, where a whole implementation of an algorithm is tested, and the the difference between the numerical and analytical solutions is \textit{explicitly measured} at every point in the numerical solution.
+The first is \textit{code verification}, where the overall implementation of an algorithm is tested, and the the difference between the numerical and analytical solutions is \textit{explicitly measured} at every point in the numerical solution.
 The same calculation is repeated for several grid sizes, and it is checked that the convergence order as the grid spacing approaches zero matches the theoretical convergence order of the algorithm.
 The explicit measurement of errors requires that the analytical solution be known, which is generally only possible for some unrealistic or uninteresting set of parameters.
 If the analytical solution were available for the real, interesting case, then it would probably not have been necessary to implement a numerical solution in the first place.
+Nevertheless, analyzing a well--chosen unrealistic situation is sufficient to check that the order of the code's discretization error matches the theoretical order of the algorithm.
 
-Therefore, the second phase of verification is \textit{verification of calculations}, where a single specific calculation is performed, and the error is \textit{estimated} since it cannot be measured explicitly.
+For realistic conditions, however, a second stage of verification is emplyed: \textit{verification of calculations}.
+In this phase, a single specific calculation is performed, and the error is \textit{estimated} since it cannot be measured explicitly when the exact solution is not available.
 This is generally done by repeating the calculation for several grid sizes, as above, then using a technique called \textit{Richardson Extrapolation} to estimate the limiting solution as the grid spacing approaches zero.
 This estimated limiting solution is then compared to the actual numerical solutions.
 Error estimation for a specific calculation can be used to calculate error bars to display on a plot to represent discretization error in the solution.
@@ -39,15 +66,15 @@ Error estimation for a specific calculation can be used to calculate error bars 
 \section{Code Verification: Method of Manufactured Solutions}
 
 The most obvious way to obtain an analytical solution to compare to a numerical solution is by choosing a simple case where the PDE can be solved explicitly, perhaps through separation of variables or by reducing it to an ODE.
-This is referred to as the Method of Exact Solutions.
+This is referred to as the method of exact solutions (MES).
 However, such simple cases usually result in such a loss of generality that they become useless in testing the complicated aspects of the solution algorithm.
 In order to verify that a code will work in an interesting case, every term in the equation must be exercised during the verification process.
-An alternative process, the Method of Manufactured Solutions, retains arbitrary generality in the equations while making analytical solutions readily available.
+An alternative process, the method of manufactured solutions (MMS), retains arbitrary generality in the equations while making analytical solutions readily available.
 Of course, there is a trade-off: the solutions are not physically realistic.
-However, this is not an issue.
-As stated previously, \textit{verification is a purely mathematical endeavor}.
+However, this is not an issue; as stated previously, \textit{verification is a purely mathematical endeavor}.
 Determining that a code solves an equation correctly is unrelated to physical realism.
 
+The method of manufactured solutions is performed as follows.
 Consider a differential equation
 \begin{align}
   Du(\vec{x}) = \sigma(\vec{x}), \label{eqn:mms_de} \\
@@ -55,22 +82,24 @@ Consider a differential equation
   \label{eqn:mms_bc}
 \end{align}
 where $D$ is a differential operator, $u$ is the solution, $\sigma$ is a source term, $f$ is the boundary condition function, and $\Sigma$ is the set of boundary points at which the boundary condition is applied.
-In general, $D$, $\sigma$, and $f$ are known, and solving for $u$ involves determining $D^{-1}$ and calculating $u = D^{-1}\sigma$ while satisfying \eqref{eqn:mms_bc}.
+Normally, $D$, $\sigma$, and $f$ are known, and solving for $u$ involves determining $D^{-1}$ and calculating $u = D^{-1}\sigma$ subject to \eqref{eqn:mms_bc}.
 
 The Method of Manufactured Solutions reverses the normal procedure.
-Here, $u$ is hand-picked at the outset, all parameters and coefficient functions in $D$ are chosen to be nonzero, and the source term $\sigma$ which produces the desired solution is calculated.
+Here, $u$ is hand-picked at the outset to be easy to calculate, all parameters and coefficient functions in $D$ are chosen to be nonzero, and the source term $\sigma$ which produces the desired solution is calculated.
 Similarly, the boundary condition is determined from the chosen solution.
 In essence, rather than solving $u = D^{-1}\sigma$ subject to $u=f$, it suffices to compute $\sigma = Du$ and evaluate $f=u$ at the boundary.
 Whereas \textit{inverting} a differential operator analytically is impossible for many equations and often requires ingenuity when it is, \textit{applying} one is a plug-and-chug application of algebra and calculus.
 Of course, it is necessary to construct $u$ and any coefficient functions in $D$ from simple, differentiable and integrable functions.
 
-Also, $u$ must satisfy any constraints imposed by the algorithm such as hard-coded boundary conditions or requirements for positive coefficients.
-Finally, the chosen functions should have small derivatives so that convergence can be achieved for reasonable grid sizes.
-Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) to perform the symbolic manipulations involved in computing $\sigma$.
+Also, $u$ must satisfy any constraints imposed by the algorithm such as hard-coded boundary conditions or acceptable coefficient ranges.
+Finally, the chosen functions should have small derivatives so that the asymptotic region can be achieved for reasonable grid sizes.
+Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) to symbolically compute the source term.
 
-\subsection{Symbolic Variables and Solution}
+\subsection{Synthetic Data}
+\label{sec:synthetic_data}
 In order to verify the numerical implementations described in the previous chapters, it is necessary to first choose a manufactured solution $L(\vec{x}, \vec{\omega})$ to the radiative transfer equation, as well as coefficient functions for the absorption coefficient $a(\vec{x})$ and volume scattering function $\beta(\vec{\omega}\cdot\vec{\omega'})$.
-For the particular implementations developed in this thesis, the following conditions must be met by the manufactured solution:
+Together, the chosen solution and coefficient functions are referred to as \textit{synthetic data}.
+The code developed for this thesis imposes the following conditions on the manufactured solution:
 \begin{enumerate}
   \item Periodic solution and absorption coefficient in $x$ and $y$
   \item Positive solution and absorption coefficient
@@ -78,6 +107,7 @@ For the particular implementations developed in this thesis, the following condi
   \item Zero upwelling radiance at the bottom boundary
   \item Properly normalized VSF $\beta(\Delta)$, as described in Section \ref{sec:iops}
 \end{enumerate}
+The actual expressions chosen for the synthetic data are quite unwieldy, and are listed in full in Appendix \ref{chap:synthetic_data}.
 
 
 % TODO: Revise
@@ -90,7 +120,7 @@ Therefore, the error should be second order in grid spacing.
 That is, when the grid spacing is sufficiently small, decreasing it further should result in the discretization error approaching zero quadratically.
 Of course, if large grid spacings are used, then quadratic convergence may not be observed even in a correct implementation since higher order terms in the Taylor series error will dominate the quadratic term.
 But for small grid spacings, the second order term dominates.
-The range of small grid spacings for which the lowest order term dominates is known as the \textit{asymptotic range}.
+The range of small grid spacings for which the lowest order term dominates is known as the \textit{asymptotic range} (a.k.a. ``the sweet spot'').
 % TODO: revise.
 Whenever verification is performed, it is essential that the asymptotic range is achieved, either by using finer grids or using a solution and variable coefficients with smaller derivatives.
 % TODO: Discuss what MMS verifies.
@@ -105,10 +135,10 @@ Let $n_s = n_x = n_y = n_z$ and $n_a = n_\theta = n_\phi$.
 Then, we use the geometric mean to describe the spatial and angular resolution, as
 \begin{align}
   ds &= (dx\, dy\, dz)^{1/3}, \\
-  da &= (d\theta\, d\phi)^{1/3}.
+  da &= (d\theta\, d\phi)^{1/2}.
 \end{align}
 
-This reduces the dimenionality of the resolution space to two, but big oh convergence is really only well-defined for a single variable.
+This reduces the dimenionality of the resolution space to two, but it would be preferrable to deal only with a single variable.
 Therefore, the finite difference verification is performed by holding $n_a=8$, and varying $n_s$ between 4 and 64.
 As shown in Figure \ref{fig:fd_mms}, second order convergence is observed, demonstrating that the code works without order-of-accuracy mistakes.
 % TODO: Discuss multidimensional error further
@@ -128,32 +158,12 @@ As shown in Figure \ref{fig:fd_mms}, second order convergence is observed, demon
   \label{fig:mms_asym_err_n_contourf}
 \end{figure}
 
-The quantity that we compare is \textit{perceived irradiance}, which is different than the simple mean irradiance in each depth layer.
-Rather, the average is weighted by the normalized spatial kelp distribution to determine the average irradiance experienced by the kelp population.
-For more detail, see Section \ref{sec:perceived_irrad}
-
-% TODO: Revise
-In varying $n_s$, we see that the accuracy is very low for small $n_s$ values.
-This is because in these cases, the horizontal grid cells are too large to capture any detail
-about the kelp fronds near the bottom where they are very small.
-The kelp is effectively not present in these layers, and therefore the perceived irradiance is zero.
-After increasing the resolution past this minimum threshold, however, little improvement results
-
-% TODO: Revise
 \subsection{Numerical Asymptotics}
-
-In the first two cases, when the scattering coefficient is the same order or smaller as the absorption coefficient,
-the asymptotic approximation converges to the finite difference solution.
-However, in the very turbid water of the San Diego Harbor, the scattering coefficient is an order of magnitude higher
-than the absorption coefficient, causing the asymptotic solution to quickly diverge.
-In figure \ref{fig:asym_conv_compare}, average relative errors for the two converging cases are shown.
-In both cases, the accuracy improves with more scattering events until it plateaus.
-In the first case, 4 scattering events is sufficient, whereas in the second, the accuracy improves until 12 scattering events.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{mms_asym_b_conv}
-  \caption{Code verification for the numerical asymptotics solution via the Method of Manufactured Solutions. A range of $b$-values are run, using 0 - 3 terms in the asymptotic series. Ideally, the $n-th$ order approximation should demonstrate $n+1$-th order convergence as $b \to 0$. The first three approximations are reasonably close, but the $n=3$ approximation converges slower than expected. It is unclear whether this is due to a coding mistake, discretization error, or if there is another cause for the sub-optimal convergence.}
+  \caption{Code verification for the numerical asymptotics solution via the Method of Manufactured Solutions. A range of $b$-values are run, using 0 - 3 terms in the asymptotic series. Ideally, the $n$--$th$ order approximation should demonstrate $n+1$-th order convergence as $b \to 0$. The first three approximations are reasonably close, but the $n=3$ approximation converges slower than expected. It is unclear whether this is due to a coding mistake, discretization error, or if there is another cause for the sub-optimal convergence.}
   \label{fig:mms_asym_b_conv}
 \end{figure}
 
@@ -213,7 +223,7 @@ From
   \phi \approx \phi_e + g_2 h^2,
 \end{equation*}
 it is clear that $\phi$ is approximately linear in $h^2$.
-Therefore, a simple linear fit through multiple points in $(h^2, \phi)$ space yields $\phi_e$ as the y-intercept.
+Therefore, a simple linear fit through multiple points in $(h^2, \phi)$ space yields $\phi_e$ as the $\phi$--intercept.
 The slope, $g_2$, can be discarded.
 If significant noise due to outliers still distorts the extrapolated values during fitting, a robust fitting algorithm such as Huber \cite{yu_robust_2014} or Ridge \cite{hoerl_ridge_1970} regression can help reduce the influence of outliers.
 
@@ -222,4 +232,4 @@ For a grid which has several resolution parameters $h_1, h_2, \ldots, h_n$ (e.g.
 \begin{equation*}
   \phi \approx \phi_e + g_{21} h_1^2 + g_{22} h_2^2 + \ldots + g_{2n} h_n^2.
 \end{equation*}
-Hence, fitting a plane or hyper-plane through several points in $(h_1^2, h_2^2, \ldots, h_n^2, \phi)$ space similarly produces $\phi_e$ as the y-intercept.
+Hence, fitting a plane or hyper-plane through several points in $(h_1^2, h_2^2, \ldots, h_n^2, \phi)$ space similarly produces $\phi_e$ as the $\phi$--intercept.
