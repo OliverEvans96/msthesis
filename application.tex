@@ -12,7 +12,7 @@ Guidelines are presented in this Chapter to aid the user in making these decisio
 Finally, comparison is made to simpler light models, and specific differences are noted.
 With all of this information, a potential user may decide if and how to use the model presented in this thesis.
 
-\section{Parameter Values}
+\section{Physical Parameters}
 \label{sec:parameters}
 In this Section, physical model parameters are discussed.
 In the case that this model is run in conjunction with a kelp growth model and ocean model,
@@ -53,7 +53,7 @@ No data in the literature exist for the frond thickness, so a best estimate is p
     Kelp absorptance & $A_k$ & 0.8 & \cite{colombo-pallotta_photosynthetic_2006} \\% & Actually for \textit{Macrocystis Pyrifera}\\
     Water absorption coefficient & $a_w$ & See Table \ref{tab:petzold} & \cite{petzold_volume_1972} \\%  & ? \\
     Scattering coefficient & $b$  & See Table \ref{tab:petzold} & \cite{petzold_volume_1972} \\%  & ? \\
-    Volume scattering function & $\beta$ & tabulated & \cite{petzold_volume_1972,sokolov_parameterization_2010}, \\% & Currently using Petzold \\ 
+    Volume scattering function & $\beta$ & tabulated & \cite{petzold_volume_1972,sokolov_parameterization_2010}, \\% & Currently using Petzold \\
     Frond thickness & $t$ & \SI{0.4}{\mm} & estimated \\
     Surface solar irradiance & $I_0$ & \SI{50}{\W\per\m\squared} & \cite{broch_modelling_2012}  \\% & Irradiance for maximal photosynthesis, converted from photons \\
     \bottomrule
@@ -126,50 +126,48 @@ Then, an optimal value for the frond alignment coefficient $\eta$ can be found b
 It may, of course, turn out that this simple linear relationship does not hold, in which case a more appropriate description can be determined.
 
 \section{Algorithm Parameters}
-% TODO
 
-\section{Computational Resources}
-\subsection{CPU Time}
-32 cores
+\subsection{Computational Demand}
+\subsubsection{CPU Time}
+%\begin{figure}[H]
+%  \centering
+%  \includegraphics[width=5in]{mms_asym_err_time}
+%  \caption{mms asym err time, $n_s=64$, $n_a=8$. 32 cores.}
+%  \label{fig:mms_asym_err_time}
+%\end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5in]{mms_asym_err_time}
-  \caption{mms asym err time, $n_s=64$, $n_a=8$}
-  \label{fig:mms_asym_err_time}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5in]{mms_asym_err_time_collapsed}
-  \caption{err time collapsed, $n_s=64$, $n_a=8$. $\varepsilon t^2 \propto b^n$}
-  \label{fig:mms_asym_err_time_collapsed}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5in]{fd_mms_time}
-  \caption{mms asym err time, $n_s=64$, $n_a=8$}
-  \label{fig:fd_mms_time}
-\end{figure}
+%\begin{figure}[H]
+%  \centering
+%  \includegraphics[width=5in]{fd_mms_time}
+%  \caption{mms asym err time, $n_s=64$, $n_a=8$. 32 cores.}
+%  \label{fig:fd_mms_time}
+%\end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{compute_time_violin}
-  \caption{mms asym err time}
+  \caption{mms asym err time. 32 cores.}
   \label{fig:compute_time_violin}
 \end{figure}
 
-\subsection{Memory Usage}
-\subsubsection{Single Matrix}
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=5in]{memory_store}
-  \caption{Memory to store one copy of the finite difference coefficient matrix. See Table \ref{tab:mem_store} for values.}
-  \label{fig:memory_store}
+  \includegraphics[width=5in]{mms_asym_err_time_collapsed}
+  \caption{To give an idea of the trade--off between accuracy and speed; $n_s=64$, $n_a=8$. $\varepsilon t^2 \propto b^n$. 32 cores.}
+  \label{fig:mms_asym_err_time_collapsed}
 \end{figure}
 
-\subsubsection{LIS Solution Memory Estimate}
+\subsection{Memory Usage}
+% \subsubsection{Single Matrix}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=5in]{memory_store}
+%   \caption{Memory to store one copy of the finite difference coefficient matrix. See Table \ref{tab:mem_store} for values.}
+%   \label{fig:memory_store}
+% \end{figure}
+%
+% \subsubsection{LIS Solution Memory Estimate}
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{memory_solve}
@@ -177,74 +175,79 @@ It may, of course, turn out that this simple linear relationship does not hold, 
   \label{fig:memory_solve}
 \end{figure}
 
+%\section{Grid Size and Discretization Error}
+\section{Optical Conditions for Asymptotics}
 
-\section{Rules of Thumb}
-\subsection{Grid Size and Discretization Error}
-\subsection{Optical Conditions for Asymptotics}
+\subsection{Raw data}
+
+\newcommand\rdfigwidth{4.5in}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=5in]{verify_real_kelp_asym_b_scat_ss_sm_th_a05_br01_72x10_rad_err}
+  \includegraphics[width=\rdfigwidth]{verify_real_kelp_asym_b_scat_ss_sm_th_a05_br01_72x10_rad_err}
   \caption{Asym real kelp. Blur radius=0.1}
   \label{fig:asym_real_kelp_br01}
 \end{figure}
 
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=\rdfigwidth]{asym_err_vs_b_a01}
+%   \caption{asym err vs b a01}
+%   \label{fig:asym_err_vs_b_a01}
+% \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=5in]{asym_err_vs_b_a01}
-  \caption{asym err vs b a01}
-  \label{fig:asym_err_vs_b_a01}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5in]{asym_err_vs_ab}
+  \includegraphics[width=\rdfigwidth]{asym_err_vs_ab}
   \caption{asym err vs ab}
   \label{fig:asym_err_vs_ab}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=5in]{best_n_data_vs_ab}
+  \includegraphics[width=\rdfigwidth]{best_n_data_vs_ab}
   \caption{best n data vs ab}
   \label{fig:best_n_data_vs_ab}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=5in]{min_n_data_vs_ab_eps01}
+  \includegraphics[width=\rdfigwidth]{min_n_data_vs_ab_eps01}
   \caption{min n data vs ab eps01}
   \label{fig:min_n_data_vs_ab_eps01}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=5in]{min_n_data_vs_ab_eps005}
+  \includegraphics[width=\rdfigwidth]{min_n_data_vs_ab_eps005}
   \caption{min n data vs ab eps005}
   \label{fig:min_n_data_vs_ab_eps005}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=5in]{min_n_data_vs_ab_eps001}
+  \includegraphics[width=\rdfigwidth]{min_n_data_vs_ab_eps001}
   \caption{min n data vs ab eps001}
   \label{fig:min_n_data_vs_ab_eps001}
 \end{figure}
 
+\subsection{Error Model}
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=6in]{asym_err_data_xi_model}
+  %\vspace{-1em}
+  \includegraphics[width=5in]{asym_err_data_xi_model}
+  %\vspace{-1em}
   \caption{asym err data xi model}
   \label{fig:asym_err_data_xi_model}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5in]{asym_err_vs_x_all_n_fit_all}
-  \caption{asym err vs x all n fit all}
-  \label{fig:asym_err_vs_x_all_n_fit_all}
-\end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=5in]{asym_err_vs_x_all_n_fit_all}
+%   \caption{asym err vs x all n fit all}
+%   \label{fig:asym_err_vs_x_all_n_fit_all}
+% \end{figure}
 
 \begin{figure}[H]
   \centering
@@ -267,15 +270,8 @@ It may, of course, turn out that this simple linear relationship does not hold, 
   \label{fig:nbar_model_vs_ab_3eps}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5in]{verify_real_kelp_asym_b_scat_ss_sm_th_a05_br01_72x10_rad_err}
-  \caption{Asym real kelp. Blur radius=0.1}
-  \label{fig:asym_real_kelp_br01}
-\end{figure}
 
 \section{Comparison to Other Light Models}
-
 
 \subsection{Full 10m}
 \begin{figure}[H]
@@ -297,42 +293,42 @@ It may, of course, turn out that this simple linear relationship does not hold, 
   \label{fig:compare_models_n3}
 \end{figure}
 
-\subsection{First 4m}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=6in]{compare_models_n1_zoom}
-  \caption{Compare models n=1}
-  \label{fig:compare_models_n1}
-\end{figure}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=6in]{compare_models_n2_zoom}
-  \caption{Compare models n=2}
-  \label{fig:compare_models_n2}
-\end{figure}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=6in]{compare_models_n3_zoom}
-  \caption{Compare models n=3}
-  \label{fig:compare_models_n3}
-\end{figure}
-
-\subsection{First 2m}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=6in]{compare_models_n1_zoom2}
-  \caption{Compare models n=1}
-  \label{fig:compare_models_n1}
-\end{figure}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=6in]{compare_models_n2_zoom2}
-  \caption{Compare models n=2}
-  \label{fig:compare_models_n2}
-\end{figure}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=6in]{compare_models_n3_zoom2}
-  \caption{Compare models n=3}
-  \label{fig:compare_models_n3}
-\end{figure}
+% \subsection{First 4m}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=6in]{compare_models_n1_zoom}
+%   \caption{Compare models n=1}
+%   \label{fig:compare_models_n1}
+% \end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=6in]{compare_models_n2_zoom}
+%   \caption{Compare models n=2}
+%   \label{fig:compare_models_n2}
+% \end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=6in]{compare_models_n3_zoom}
+%   \caption{Compare models n=3}
+%   \label{fig:compare_models_n3}
+% \end{figure}
+%
+% \subsection{First 2m}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=6in]{compare_models_n1_zoom2}
+%   \caption{Compare models n=1}
+%   \label{fig:compare_models_n1}
+% \end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=6in]{compare_models_n2_zoom2}
+%   \caption{Compare models n=2}
+%   \label{fig:compare_models_n2}
+% \end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=6in]{compare_models_n3_zoom2}
+%   \caption{Compare models n=3}
+%   \label{fig:compare_models_n3}
+% \end{figure}
