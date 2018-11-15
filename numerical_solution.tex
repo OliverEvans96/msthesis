@@ -185,19 +185,14 @@ Define the \textit{angular characteristic function} as
     0, & \mbox{otherwise}.
   \end{cases}
 \end{equation*}
-
-Then, the integral of a function $f(\vec{\omega})$ is approximated as
+Then, the integral of a function $f(\vec{\omega})$ over all angles is approximated as
 \begin{align*}
   \int_{4\pi} f(\vec{\omega})\, d\vec{\omega} &\approx \int_{4\pi} \sum_{p=1}^\nomega f(\vec{\omega}_p) \mathcal{X}^\Omega_p(\vec{\omega})\, d\vec{\omega} \\
   &= \sum_{p=1}^\nomega f(\vec{\omega}_p) \int_{4\pi} \mathcal{X}^\Omega_p(\vec{\omega})\, d\vec{\omega} \\
   &= \sum_{p=1}^\nomega f(\vec{\omega}_p) \int_{\Omega_p} d\vec{\omega} \\
   &= \sum_{p=1}^\nomega f(\vec{\omega}_p) \abs{\Omega_p}.
 \end{align*}
-
-\subsection{Scattering Integral}
-\label{sec:scatter_integral}
-
-The amount of light scattered between angular grid cells is found by integrating $\beta$ as follows.
+Similarly, the amount of light scattered between angular grid cells is found by integrating $\beta$ over specific regions.
 Consider two angular grid cells, $\Omega_p$ and $\Omega_{p'}$.
 Since $\beta(\vec{\omega}\cdot\vec{\omega}')$ is the probability density of scattering between $\vec{\omega}$ and $\vec{\omega}'$, the average probability density of scattering from $\vec{\omega} \in \Omega_p$ to $\vec{\omega}' \in \Omega_{p'}$ (or vice versa) is
 \begin{equation*}
@@ -219,9 +214,8 @@ Therefore, the radiance gain due to scattering into $\vec{\omega}_p$ from all ot
 \end{equation}
 
 \section{Numerical Asymptotics}
-Presented here are details of the evaluation of the asymptotic approximations \eqref{eqn:asymptotics_soln_0} and \eqref{eqn:asymptotics_soln_n} to the radiative transfer equation \eqref{eqn:rte}.
-
-\subsection{Ray Integral}
+\label{sec:num_asymptotics}
+The asymptotic approximations \eqref{eqn:asymptotics_soln_0} and \eqref{eqn:asymptotics_soln_n} to the radiative transfer equation \eqref{eqn:rte} are evaluated numerically as follows.
 Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the discrete grid can be constructed using the ray tracing algorithm described in Appendix \ref{chap:ray_tracing}.
 Let $\nu=1,\ldots,N\nobreak-\nobreak1$ index the spatial grid cells traversed (wholly or partially) by the ray, and define the \textit{path--length characteristic function}
 \begin{equation*}
@@ -354,7 +348,7 @@ Similarly, substituting $\varepsilon \to -\varepsilon$, we have
 \subsection{Difference Equations}
 \label{sec:difference_equations}
 
-For every spatial grid cell, the scattering integral is discretized as described in Section \ref{sec:scatter_integral} as
+For every spatial grid cell, the scattering integral is discretized as in Section \ref{sec:num_asymptotics} by
 \begin{equation*}
   \vec{\omega} \cdot \nabla L_p = -(a_{ijk}+b) L_p + \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'}L_{p'} + \sigma_{ijkp},
 \end{equation*}
@@ -408,7 +402,6 @@ Likewise, for the bottom boundary condition, we have
     - &\sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'} = \sigma_{ijkp}
   \end{aligned}
 \end{equation*}
-
 Now, for upwelling light at the first depth layer (non-BC), we apply FD2.
 \begin{equation*}
   \begin{aligned}
@@ -436,7 +429,7 @@ Similarly, for downwelling light at the lowest depth layer, we have
     &+ \frac{L_{i,j+1,kp}-L_{i,j-1,kp}}{2dy}\sin\hat{\phi}_p\sin\hat{\theta}_p \\
     &+ \frac{-4L_{ij,k-1,p} + L_{ij,k-2,p}}{2dz}\cos\hat{\phi}_p \\
     &+ \left(a_{ijk}+b + 3\frac{\cos\hat\phi_p}{2dz} \right)L_{ijkp} \\
-    &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}
+    &- \sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'}.
   \end{aligned}
 \end{equation*}
 
