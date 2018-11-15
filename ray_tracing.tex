@@ -47,25 +47,25 @@ after the first cell. i.e., $i^e=1$ refers not to the plane $x=\xmin$, but to $x
 Let $(i_0, j_0, k_0)$ be the indices of the grid cell containing $\vec{p_0}$.
 That is,
 \begin{align}
-  i_0 &= \ceil\left(\frac{p_{0x}-\xmin}{dx}\right) \\
-  j_0 &= \ceil\left(\frac{p_{0y}-\ymin}{dy}\right) \\
-  k_0 &= \ceil\left(\frac{p_{0z}-\zmin}{dz}\right)
+  i_0 &= \ceil\left(\frac{p_{0x}-\xmin}{dx}\right), \\
+  j_0 &= \ceil\left(\frac{p_{0y}-\ymin}{dy}\right), \\
+  k_0 &= \ceil\left(\frac{p_{0z}-\zmin}{dz}\right).
 \end{align}
 Then,
 \begin{align}
-  i_0^e &= i_0 + \sigma_x \\
-  j_0^e &= j_0 + \sigma_y \\
-  k_0^e &= k_0 + \sigma_z
+  i_0^e &= i_0 + \sigma_x, \\
+  j_0^e &= j_0 + \sigma_y, \\
+  k_0^e &= k_0 + \sigma_z.
 \end{align}
 Now, we calculate the distance from $p_0$ along the path to edges in each dimension.
 \begin{align}
-  s_i^x = \hat{s}\frac{x_i^e-p_{0x}}{p_{1x}-p_{0x}} \\
-  s_j^y = \hat{s}\frac{y_j^e-p_{0y}}{p_{1y}-p_{0y}} \\
-  s_k^z = \hat{s}\frac{z_k^e-p_{0z}}{p_{1z}-p_{0z}}
+  s_i^x = \hat{s}\frac{x_i^e-p_{0x}}{p_{1x}-p_{0x}}, \\
+  s_j^y = \hat{s}\frac{y_j^e-p_{0y}}{p_{1y}-p_{0y}}, \\
+  s_k^z = \hat{s}\frac{z_k^e-p_{0z}}{p_{1z}-p_{0z}}.
 \end{align}
 
 For each grid cell, we check the path lengths
-required to cross the next $x$, $y$, and $z$ edge-planes,
+required to cross the next $x$, $y$, and $z$ edge-planes.
 Then, we move to the next grid cell in whichever dimension
 is crossed soonest.
 
@@ -112,3 +112,5 @@ This implies that edge $\nu$ preceeds cell $\nu$.
 $\{s_\nu\}$ is not strictly increasing if the ray directly intersects a grid corner,
 which means that multiple edges are traversed at the same path length.
 Hence, the path lengths through the grid cells, indexed by $\nu=1,\ldots,N-1$, are
+
+* TODO *
