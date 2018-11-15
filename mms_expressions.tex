@@ -1,7 +1,8 @@
 \chapter{SYNTHETIC DATA}
 \label{chap:synthetic_data}
 
-The chosen functions are
+In order to perform code verification via the Method of Manufactured solutions, analytical functions for radiance, absorption coefficient, and volume scattering function must be chosen which are simple to evaluate, are differentiable, and satisfy the constraints imposed by the algorithm implementation that are listed in Section \ref{sec:synthetic_data}.
+The functions chosen to meet the above conditions are
 \begin{align}
   L(x, y, z, \theta, \phi) &=
     \alpha \left(\sin{\left (\phi + \theta \right )} + 1\right) \nonumber\\

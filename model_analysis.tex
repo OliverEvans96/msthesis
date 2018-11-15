@@ -42,7 +42,7 @@ verification deals with \textit{solving the equations right}, while validation d
 Validation involves comparison with experimental evidence in order to determine that governing equations
 accurately describe physical phenomenon, and that their solutions match observation.
 That is, it is the process of checking that conceptual modelling errors are sufficiently small to model the system as accurately as necessary.
-Validation is an ongoing process; as new experimental data becomes available, the equations can be solved under appropriate conditions in an attempt to replicate the new observations.
+Validation is an ongoing process; as new experimental data become available, the equations can be solved under appropriate conditions in an attempt to replicate the new observations.
 Verification, however, is a purely mathematical exercise, and has nothing to do with the physical system being modeled.
 It deals only with the agreement between an equation and its numerical solution produced by a particular implementation of an algorithm.
 It involves checking that ordered sources of numerical error (truncation and discretization errors) decrease as expected when additional computations are performed.
@@ -51,8 +51,8 @@ If a set of parameters to the model can be chosen to exercise all terms in the e
 
 Due to lack of sufficient experimental data, rigorous validation of the present radiative transfer code is left as future work.
 However, verification of both the finite difference and numerical asymptotics algorithms is demonstrated here.
-There are two forms of verification.
-The first is \textit{code verification}, where the overall implementation of an algorithm is tested, and the the difference between the numerical and analytical solutions is \textit{explicitly measured} at every point in the numerical solution.
+There are two phases of verification.
+The first is \textit{code verification}, where the overall implementation of an algorithm is tested, and the difference between the numerical and analytical solutions is \textit{explicitly measured} at every point in the numerical solution.
 The same calculation is repeated for several grid sizes, and it is checked that the convergence order as the grid spacing approaches zero matches the theoretical convergence order of the algorithm.
 The explicit measurement of errors requires that the analytical solution be known, which is generally only possible for some unrealistic or uninteresting set of parameters.
 If the analytical solution were available for the real, interesting case, then it would probably not have been necessary to implement a numerical solution in the first place.
@@ -60,7 +60,7 @@ Nevertheless, analyzing a well--chosen unrealistic situation is sufficient to ch
 
 For realistic conditions, however, a second stage of verification is emplyed: \textit{verification of calculations}.
 In this phase, a specific calculation of interest is performed, and the error is \textit{estimated} since it cannot be measured explicitly when the exact solution is not available.
-This is generally done by repeating the calculation for several grid sizes, as above, then using a technique called \textit{Richardson Extrapolation} to estimate the limiting solution as the grid spacing approaches zero.
+This is generally done by repeating the calculation for several grid sizes, as above, then using a technique called Richardson Extrapolation to estimate the limiting solution as the grid spacing approaches zero.
 This estimated limiting solution is then compared to the actual numerical solutions.
 Since the solutions are known on different grids, they cannot be compared pointwise without interpolation.
 Rather, a single scalar calculated from some integral of the solution is often used as a simple measure of the global order of accuracy. %TODO: CITE 2008_Procedure
@@ -191,7 +191,7 @@ For a first order method, only the first term is necessarily zero.
 Of course, in a ``zeroth order'' method, the absolute error is bounded from below by $|g_0|$, and so does not approach zero as the grid is refined.
 ``Zeroth order'' methods are also known as ``incorrect.''
 
-The original techniques involves numerical solutions on two grids with spacings $h_1 < h_2$ (i.e., grid 1 is finer), from which scalars $\phi_1$ and $\phi_2$ are calculated.
+The original technique involves numerical solutions on two grids with spacings $h_1 < h_2$ (i.e., grid 1 is finer), from which scalars $\phi_1$ and $\phi_2$ are calculated.
 The ratio $r = h_2/h_1$ is called the grid refinement ratio.
 Then,
 \begin{align*}
