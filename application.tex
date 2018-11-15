@@ -1,14 +1,26 @@
 \chapter{PRACTICAL CONSIDERATIONS}
 \label{chap:application}
 
+This Chapter deals with the practical application of the present numerical algorithms to simulate the light field for realistic scenarios of kelp growing in ocean waters.
+This involves combining the spatial kelp distribution model of Chapter \Rom{\ref{chap:kelp}} with the radiative transfer model of Chapter \Rom{\ref{chap:light}} according to the numerical details described in Chapter \Rom{\ref{chap:numerical}} and verified in Chapter \Rom{\ref{chap:model_analysis}}.
+
+The computational code must be supplied with appropriate physical parameters to emulate the particular seaweed under consideration and the optical properties of the surrounding aquatic medium.
+Further, the choice of algorithm between numerical asymptotics and finite difference must be made based on the physical situation under consideration, the computational resources available, and the desired level of accuracy in the computed light field.
+Lastly, algorithm--specific parameters must also be tuned according to these considerations.
+
+Guidelines are presented in this Chapter to aid the user in making these decisions, and the performance of the model is discussed.
+Finally, comparison is made to simpler light models, and specific differences are noted.
+With all of this information, a potential user may decide if and how to use the model presented in this thesis.
+
 \section{Parameter Values}
 \label{sec:parameters}
-In this Chapter, model parameters are discussed.
+In this Section, physical model parameters are discussed.
 In the case that this model is run in conjunction with a kelp growth model and ocean model,
 they will provide some of the necessary parameters.
-Other parameters not coming from the kelp or ocean model can be found in the literature,
-summarized in Table \ref{tab:params} and Table \ref{tab:petzold}.
+Other parameters not coming from the kelp or ocean models can be found in the literature,
+as summarized in Table \ref{tab:params} and Table \ref{tab:petzold}.
 Still, some parameters remain which are not well described in the literature.
+In those cases, rough estimates are given or their experimental determination is discussed.
 
 \subsection{Simulation Parameters}
 It is assumed that this model is run together with a kelp growth model such as described in \citep{broch_modelling_2012}, and an ocean model, as in \citep{wassmann_modelling_2006}.
@@ -32,7 +44,7 @@ No data in the literature exist for the frond thickness, so a best estimate is p
 
 \begin{table}
   \centering
-  \caption{Parameter values.}
+  \caption{Physical parameter values.}
   %\begin{tabular}{p{2\textwidth/7} p{\textwidth/7} p{\textwidth/6} p{\textwidth/6} p{2\textwidth/7}}
   \begin{tabular}{lrrr}
     \toprule
