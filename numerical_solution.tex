@@ -1,6 +1,6 @@
 \chapter{NUMERICAL SOLUTION}
 \label{chap:numerical}
-In this chapter, the mathematical details involved in the numerical solution of the equations described in Chapters \ref{chap:kelp} and \ref{chap:light} are presented.
+In this Chapter, the mathematical details involved in the numerical solution of the equations described in Chapters \ref{chap:kelp} and \ref{chap:light} are presented.
 Two solution algorithms are used: finite difference and numerical asymptotics.
 Both algorithms require a discrete spatial-angular grid, described in Section \ref{sec:grid}.
 In the finite difference algorithm, the continuuum differential equation is approximated at every point in the grid.
@@ -12,10 +12,10 @@ The computational cost for this approach is high in terms of CPU usage, and espe
 
 The following is a description of the spatial-angular grid used in the numerical implementation of this model.
 It is assumed that all simulated quantities are constant over the interior of a grid cell.
-Other legitimate choices of grids exists; this one was chosen for its relative simplicity.
+Other legitimate choices of grids exist; this one was chosen for its relative simplicity.
 
 The domain of the radiative transfer equation is embedded in five dimensions: three spatial ($x$, $y$, and $z$) and two angular (azimuthal $\theta$ and polar $\phi$).
-The number of grid cells in each dimension are denoted $n_x$, $n_y$, $n_z$,
+The numbers of grid cells in each dimension are denoted $n_x$, $n_y$, $n_z$,
 $n_\theta$, and $n_\phi$, with uniform spacings $dx$, $dy$, $dz$, $d\theta$, and
 $d\phi$ between adjacent grid points.
 
@@ -56,13 +56,13 @@ Also, note that no grid center is located on the plane $z=0$; the surface radian
 As shown in Figure \ref{fig:angular_grid}, $\phi=0$ and $\phi=\pi$, called
 the north ($+z$) and south ($-z$) poles respectively, are treated separately from other angular grid cells.
 A generic interior angular grid cell centered at $\vec{\omega}_p$ is the Cartesian product of an azimuthal interval of width $d\theta$ and a polar interval of width $d\phi$.
-However, two pole cells are the Cartesian product of a polar interval of width $d\phi/2$ and the full azimuthal domain, $[0, 2\pi)$.
+However, the two pole cells are the Cartesian product of a polar interval of width $d\phi/2$ and the full azimuthal domain, $[0, 2\pi)$.
 
 With this configuration, the total number of angles considered is $\nomega = n_\theta(n_\phi-2)+2$.
 Then, cells are indexed by $p=1,\ldots,n_{\vec{\omega}}$ and are ordered such that
 $p=1$ and $p=n_{\vec{\omega}}$ refer to the north and south poles respectively,
 $p\leq\nomega/2$ refers to the northern hemisphere, and $p>\nomega/2$ refers to the southern hemisphere.
-Further, the symbol $\Omega_p$ is used to refer to the two dimension angular interval centered at $\omega_p$.
+Further, the symbol $\Omega_p$ is used to refer to the two dimension angular interval centered at $\vec{\omega}_p$.
 The solid angle subtended by $\Omega_p$ is denoted $\abs{\Omega_p}$.
 The functions $\hat{p}(l,m)$, $\hat{l}(p)$, and $\hat{m}(p)$ are mappings between the two sets of angular indices.
 Refer to Appendix \ref{chap:grid_details} for a more rigorous discussion of the discrete spatial-angular grid.
@@ -106,7 +106,7 @@ To compute the integral, we symbolically convert the two-dimensional integral to
 \begin{equation}
   \erf(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2}\, dt,
 \end{equation}
-which is a builtin function in most programming languages, including Fortran.
+which is a built--in function in most programming languages, including Fortran.
 So, we evaluate
 \begin{align*}
 	\tilde{P}_k(\theta, s) &= \int_{R_s(\theta,s)}P_{2D}(\theta_f,l)\, d\theta_f\, dl \\
@@ -304,7 +304,7 @@ and the backward difference by
 \end{equation*}
 
 For the upper and lower boundaries, we need an asymmetric finite difference
-method.
+method since the distance between grid centers in the $z$ direction is $dz$, whereas the distance to the surface is $dz/2$.
 In general, the Taylor Series of a function $f$ about $x$ is
 \begin{equation*}
   f(x+\varepsilon) = \sum_{n=1}^\infty \frac{f^{(n)}(x)}{n!} \varepsilon^n. \\
@@ -497,6 +497,8 @@ By multiplying the first column of Table \ref{tab:nonzero} by the second and sum
   &=  n_x n_y \nomega \left[n\omega n_z -\nomega + 6n_z - 6 + \nomega + 5 \right] \\
   &=  n_x n_y \nomega \left[n_z(\nomega+6)-1\right]
 \end{align*}
+For example, a $10 \times 10 \times 10 \times 10 \times 10$ grid involves 7,207,800 matrix elements, while a $20 \times 20 \times 20 \times 20 \times 20$ grid requires 1,065,583,200 numbers to be stored!
+Clearly, the grid must be kept reasonably small in order to be solved by modern computers.
 Also, note that in the absence of an explicit source term $\sigma(\vec{x}, \vec{\omega})$, $\mathbb{B}$ only has nonzero entries for the downwelling surface grid cells, of which there are $n_x n_y \nomega/2$.
 
 \subsection{Iterative Solution}
