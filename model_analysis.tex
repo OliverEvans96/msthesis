@@ -59,10 +59,11 @@ If the analytical solution were available for the real, interesting case, then i
 Nevertheless, analyzing a well--chosen unrealistic situation is sufficient to check that the order of the code's discretization error matches the theoretical order of the algorithm.
 
 For realistic conditions, however, a second stage of verification is emplyed: \textit{verification of calculations}.
-In this phase, a single specific calculation is performed, and the error is \textit{estimated} since it cannot be measured explicitly when the exact solution is not available.
+In this phase, a specific calculation of interest is performed, and the error is \textit{estimated} since it cannot be measured explicitly when the exact solution is not available.
 This is generally done by repeating the calculation for several grid sizes, as above, then using a technique called \textit{Richardson Extrapolation} to estimate the limiting solution as the grid spacing approaches zero.
 This estimated limiting solution is then compared to the actual numerical solutions.
-Error estimation for a specific calculation can be used to calculate error bars to display on a plot to represent discretization error in the solution.
+Since the solutions are known on different grids, they cannot be compared pointwise without interpolation.
+Rather, a single scalar calculated from some integral of the solution is often used as a simple measure of the global order of accuracy. %TODO: CITE 2008_Procedure
 
 \section{Code Verification: Method of Manufactured Solutions}
 
@@ -88,17 +89,28 @@ Normally, $D$, $\sigma$, and $f$ are known, and solving for $u$ involves determi
 The Method of Manufactured Solutions reverses the normal procedure.
 Here, $u$ is hand-picked at the outset to be easy to calculate, all parameters and coefficient functions in $D$ are chosen to be nonzero, and the source term $\sigma$ which produces the desired solution is calculated.
 Similarly, the boundary condition is determined from the chosen solution.
-In essence, rather than solving $u = D^{-1}\sigma$ subject to $u=f$, it suffices to compute $\sigma = Du$ and evaluate $f=u$ at the boundary.
+In essence, rather than solving $u = D^{-1}\sigma$ subject to $u(\Sigma)=f$, it suffices to compute $\sigma = Du$ and evaluate $f=u$ at the boundary.
 Whereas \textit{inverting} a differential operator analytically is impossible for many equations and often requires ingenuity when it is, \textit{applying} one is a plug-and-chug application of algebra and calculus.
 Of course, it is necessary to construct $u$ and any coefficient functions in $D$ from simple, differentiable and integrable functions.
 
 Also, $u$ must satisfy any constraints imposed by the algorithm such as hard-coded boundary conditions or acceptable coefficient ranges.
 Finally, the chosen functions should have small derivatives so that convergence can be achieved for reasonable grid sizes.
-Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) to symbolically compute the source term.
+Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) such as the Python package Sympy to symbolically compute the source term. % TODO: Cite Sympy
+
+\subsection{Discretization Error Analysis}
+Once an exact solution is known, code verification is performed by demonstrating that the discretization error of the code matches the theoretical order of accuracy of the algorithm.
+Numerical calculations are computed on a sequence of discrete grids from coarse to fine, and errors are calculated by evaluating the exact soution pointwise.
+Then, some norm (usually $l_1$, $l_2$, or $l_\infty$) of the discretization error is calculated for each grid.
+To verify an algorithm of order $p$ with grid resolution $h$, it should be shown that the norm of the pointwise error is approximately proportional to $h^p$.
+
+This effect occurs only for small grid resolutions, when the first nonzero term in the error series dominates the others.
+If large grid spacings are used, then order $p$ convergence may not be observed even in a correct implementation since higher order error terms will overpower the order $p$ term.
+The range of small grid spacings for which the lowest order term dominates is known as the \textit{asymptotic range} (a.k.a. ``the sweet spot'').
+If the verification procedure shows that the implementation does not demonstrate the theoretical order of accuracy of the algorithm, this is most likely an indication that either a coding mistake is present or the asymptotic range has not been achieved. % TODO: Cite roache after "most likely"
 
 \subsection{Synthetic Data}
 \label{sec:synthetic_data}
-In order to verify the numerical implementations described in the previous chapters, it is necessary to first choose a manufactured solution $L(\vec{x}, \vec{\omega})$ to the radiative transfer equation, as well as coefficient functions for the absorption coefficient $a(\vec{x})$ and volume scattering function $\beta(\vec{\omega}\cdot\vec{\omega'})$.
+In order to perform code verification for the radiative transfer equation, it is necessary to first choose a manufactured solution $L(\vec{x}, \vec{\omega})$ for radiance, as well as coefficient functions for the absorption coefficient $a(\vec{x})$ and volume scattering function $\beta(\vec{\omega}\cdot\vec{\omega'})$.
 Together, the chosen solution and coefficient functions are referred to as \textit{synthetic data}.
 The code developed for this thesis imposes the following conditions on the manufactured solution:
 \begin{enumerate}
@@ -113,17 +125,9 @@ The actual expressions chosen for the synthetic data are quite unwieldy, and are
 
 % TODO: Revise
 \subsection{Finite Difference Verification}
-
 % TODO: Discuss OAMs (order of accuracy mistakes)
-The only source of error in the finite difference method is discretization error due to the truncation of terms in the Taylor Series during the construction of the finite difference formulas in Section \ref{sec:discretization}.
-Since second order finite difference formulas are used, once the grid spacing is sufficiently small, decreasing it further should result in the discretization error approaching zero quadratically.
-If large grid spacings are used, then quadratic convergence may not be observed even in a correct implementation since higher order error terms will dominate.
-The range of small grid spacings for which the lowest order term dominates is known as the \textit{asymptotic range} (a.k.a. ``the sweet spot'').
-% TODO: Discuss what MMS verifies.
-% TODO: Move to overview section, not FD specifically?
-% TODO: Big Oh notation (1D)
-% TODO: Big Oh doesn't carry over to multiple dimensions
-
+%The only source of error in the finite difference method is discretization error due to the truncation of terms in the Taylor Series during the construction of the finite difference formulas in Section \ref{sec:discretization}.
+Since second order finite difference formulas are used, once the asymptotic range for grid spacing has been achieved, decreasing it further should result in the discretization error approaching zero quadratically.
 The radiative transfer equation involves five discretized variables: $(x,y,x,\theta,\phi)$.
 A five dimensional resolution space is nontrivial to characterize, so we define generic spatial and angular resolutions for the sake of reducing dimensionality,
 Let $n_s = n_x = n_y = n_z$ and $n_a = n_\theta = n_\phi$.
@@ -139,7 +143,7 @@ As shown in Figure \ref{fig:fd_mms}, second order convergence is observed, demon
 % TODO: Discuss multidimensional error further
 % TODO: Discuss log-log plot.
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
   \includegraphics[width=5in]{fd_mms}
   \caption{Code verification for the finite difference solution. Each point represents the same simulation run with a different spatial grid sizes, with the angular grid held constant at $n_a=8$. A slope of $m=2$ on a log-log scale demonstrates second order convergence, as expected, demonstrating the correctness of the code.}
@@ -147,29 +151,36 @@ As shown in Figure \ref{fig:fd_mms}, second order convergence is observed, demon
 \end{figure}
 
 \subsection{Numerical Asymptotics Verification}
+For the numerical asymptotics algorithm, both discretization error and truncation error are present.
+Therefore, the solutions are not expected to converge to the true solution by increasing the grid size.
+Neither is it guaranteed that increasing the number of terms will lead to convergence to the true solution.
+However, while the discretization error is not verifiable in that sense, the truncation error \textit{is}.
+That is, since the $n$--term asymptotic solution is a numerical approximation to the $n$--term Taylor series, the norm of the pointwise error should decrease with order $n+1$ as $b \to 0$.
+As with discretization error, this can only be observed within some asymptotic range of small $b$ values higher order error terms dominate for large values of $b$.
+
 Figure \ref{fig:mms_asym_b_conv} demonstrates the convergence of the asymptotic solution as $b \to 0$.
-Ideally, the $n$--$th$ order approximation should demonstrate $n+1$-th order convergence; the first three approximations are reasonably close, but the $n=3$ approximation converges slower than expected.
-It is unclear whether this is due to a coding mistake, discretization error, or if there is another cause for the sub-optimal convergence.
-\begin{figure}[H]
+The first three approximations are reasonably close, to demonstrating order $n+1$ convergence, but the $n=3$ approximation converges slower than expected.
+It is unclear whether this is due to a coding mistake, the effect of discretization error, or if there is another cause for the sub-optimal convergence.
+\begin{figure}[h]
   \centering
   \includegraphics[width=5in]{mms_asym_b_conv}
-  \caption{Code verification for the numerical asymptotics solution via the Method of Manufactured Solutions. A range of $b$-values are run, using 0 - 3 terms in the asymptotic series. }
+  \caption{Code verification for the numerical asymptotics solution via the Method of Manufactured Solutions. A range of $b$ values are run, using 0 - 3 terms in the asymptotic series. The legend shows the number of terms ($n$) and the observed convergence order ($m$) for each solution.}
   \label{fig:mms_asym_b_conv}
 \end{figure}
 
 \section{Verification of Calculations}
-As mentioned in Section \ref{sec:v2}, numerical error can be estimated for realistic simulations for cases when the exact solution is not known by analyzing the convergence of a scalar functional over several grid sizes.
+As mentioned in Section \ref{sec:v2}, numerical error can be estimated for realistic simulations for cases when the exact solution is not known by analyzing the convergence of a scalar functional of the numerical solution over several grid sizes.
 
 \subsection{Richardson Extrapolation}
-Richardson extrapolation, is a technique for estimating the continuum value of a scalar functional derived from a solution to a differential equation by using values of the scalar obtained from numerical solutions on several different grids.
+Richardson extrapolation is a technique for estimating the continuum value of a scalar functional derived from a solution to a differential equation by using values of the scalar obtained from numerical solutions on several different grids.
 The technique was developed by Richardson in 1912 with an application paper related to a stresses on a dam, and is also known as $h^2$ extrapolation since it was originally applied to a second order method.
+The basic concept is as follows.
 
 Let the scalar of interest be called $\phi$ and the grid spacing $h$.
 Denote the exact solution as
 \begin{equation}
   \phi_e = \lim_{h \to 0} \phi(h),
 \end{equation}
-
 The crux of the technique is to assume that discretization error can be written as a linear combination of powers of $h$, as in a Taylor series.
 That is,
 \begin{equation}
@@ -180,7 +191,7 @@ For a first order method, only the first term is necessarily zero.
 Of course, in a ``zeroth order'' method, the absolute error is bounded from below by $|g_0|$, and so does not approach zero as the grid is refined.
 ``Zeroth order'' methods are also known as ``incorrect.''
 
-The original techniques involves numerical solutions on two grids with spacings $h_1 < h_2$ (i.e., grid 1 is finer), from which scalars $\phi_1$ and $\phi_2$ are calculated respectively.
+The original techniques involves numerical solutions on two grids with spacings $h_1 < h_2$ (i.e., grid 1 is finer), from which scalars $\phi_1$ and $\phi_2$ are calculated.
 The ratio $r = h_2/h_1$ is called the grid refinement ratio.
 Then,
 \begin{align*}
@@ -201,7 +212,7 @@ Hence, the approximate continuum solution is
 \begin{equation*}
   \phi_e = \frac{\phi_2 - \phi_1 r^2}{1 - r^2} + O(h^3).
 \end{equation*}
-In essence, Richardson extrapolation allows for $\phi$ values from two solutions from an order $h^p$ method to be combined to produce an approximation of order $h^{p+1}$ to the continuum value of $\phi$.
+In essence, Richardson extrapolation allows for $\phi$ values from two solutions from an order $h^p$ numerical method to be combined to produce an approximation of order $h^{p+1}$ to the continuum value of $\phi$.
 
 \subsection{Generalized Richardson Extrapolation}
 Of course, the above equations are only approximations.
