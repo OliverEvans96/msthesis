@@ -35,6 +35,7 @@ The loss of accuracy in computations due to the use of floating point numbers is
 
 
 \section{Verification and Validation}
+\label{sec:v2}
 %TODO: Citations
 As Roache explains, there are two aspects to building confidence in numerical codes, specifically those which solve PDEs:
 verification deals with \textit{solving the equations right}, while validation deals with \textit{solving the right equations}.
@@ -92,7 +93,7 @@ Whereas \textit{inverting} a differential operator analytically is impossible fo
 Of course, it is necessary to construct $u$ and any coefficient functions in $D$ from simple, differentiable and integrable functions.
 
 Also, $u$ must satisfy any constraints imposed by the algorithm such as hard-coded boundary conditions or acceptable coefficient ranges.
-Finally, the chosen functions should have small derivatives so that the asymptotic region can be achieved for reasonable grid sizes.
+Finally, the chosen functions should have small derivatives so that convergence can be achieved for reasonable grid sizes.
 Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) to symbolically compute the source term.
 
 \subsection{Synthetic Data}
@@ -111,25 +112,19 @@ The actual expressions chosen for the synthetic data are quite unwieldy, and are
 
 
 % TODO: Revise
-\subsection{Finite Difference}
+\subsection{Finite Difference Verification}
 
 % TODO: Discuss OAMs (order of accuracy mistakes)
 The only source of error in the finite difference method is discretization error due to the truncation of terms in the Taylor Series during the construction of the finite difference formulas in Section \ref{sec:discretization}.
-Each of the derivatives in this implementation are approximated by two terms in the Taylor series: the leading order and first order terms.
-Therefore, the error should be second order in grid spacing.
-That is, when the grid spacing is sufficiently small, decreasing it further should result in the discretization error approaching zero quadratically.
-Of course, if large grid spacings are used, then quadratic convergence may not be observed even in a correct implementation since higher order terms in the Taylor series error will dominate the quadratic term.
-But for small grid spacings, the second order term dominates.
+Since second order finite difference formulas are used, once the grid spacing is sufficiently small, decreasing it further should result in the discretization error approaching zero quadratically.
+If large grid spacings are used, then quadratic convergence may not be observed even in a correct implementation since higher order error terms will dominate.
 The range of small grid spacings for which the lowest order term dominates is known as the \textit{asymptotic range} (a.k.a. ``the sweet spot'').
-% TODO: revise.
-Whenever verification is performed, it is essential that the asymptotic range is achieved, either by using finer grids or using a solution and variable coefficients with smaller derivatives.
 % TODO: Discuss what MMS verifies.
 % TODO: Move to overview section, not FD specifically?
 % TODO: Big Oh notation (1D)
 % TODO: Big Oh doesn't carry over to multiple dimensions
 
-In the particular case of the radiative transfer equation in three spatial dimensions,
-there are five discretized variables $(x,y,x,\theta,\phi)$.
+The radiative transfer equation involves five discretized variables: $(x,y,x,\theta,\phi)$.
 A five dimensional resolution space is nontrivial to characterize, so we define generic spatial and angular resolutions for the sake of reducing dimensionality,
 Let $n_s = n_x = n_y = n_z$ and $n_a = n_\theta = n_\phi$.
 Then, we use the geometric mean to describe the spatial and angular resolution, as
@@ -147,28 +142,24 @@ As shown in Figure \ref{fig:fd_mms}, second order convergence is observed, demon
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{fd_mms}
-  \caption{Code verification for the finite difference solution via the Method of Manufactured Solutions. Each point represents the same simulation run with a different spatial grid sizes, with the angular grid held constant at $n_a=8$. The average absolute difference between the analytical and numerical solutions is shown. A slope of $m=2$ on a log-log scale demonstrates second order convergence, as expected. This demonstrates the correctness of the code.}
+  \caption{Code verification for the finite difference solution. Each point represents the same simulation run with a different spatial grid sizes, with the angular grid held constant at $n_a=8$. A slope of $m=2$ on a log-log scale demonstrates second order convergence, as expected, demonstrating the correctness of the code.}
   \label{fig:fd_mms}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5in]{mms_asym_err_n_contourf}
-  \caption{mms asym n contourf}
-  \label{fig:mms_asym_err_n_contourf}
-\end{figure}
-
-\subsection{Numerical Asymptotics}
-
+\subsection{Numerical Asymptotics Verification}
+Figure \ref{fig:mms_asym_b_conv} demonstrates the convergence of the asymptotic solution as $b \to 0$.
+Ideally, the $n$--$th$ order approximation should demonstrate $n+1$-th order convergence; the first three approximations are reasonably close, but the $n=3$ approximation converges slower than expected.
+It is unclear whether this is due to a coding mistake, discretization error, or if there is another cause for the sub-optimal convergence.
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{mms_asym_b_conv}
-  \caption{Code verification for the numerical asymptotics solution via the Method of Manufactured Solutions. A range of $b$-values are run, using 0 - 3 terms in the asymptotic series. Ideally, the $n$--$th$ order approximation should demonstrate $n+1$-th order convergence as $b \to 0$. The first three approximations are reasonably close, but the $n=3$ approximation converges slower than expected. It is unclear whether this is due to a coding mistake, discretization error, or if there is another cause for the sub-optimal convergence.}
+  \caption{Code verification for the numerical asymptotics solution via the Method of Manufactured Solutions. A range of $b$-values are run, using 0 - 3 terms in the asymptotic series. }
   \label{fig:mms_asym_b_conv}
 \end{figure}
 
 \section{Verification of Calculations}
-% TODO: Intro
+As mentioned in Section \ref{sec:v2}, numerical error can be estimated for realistic simulations for cases when the exact solution is not known by analyzing the convergence of a scalar functional over several grid sizes.
+
 \subsection{Richardson Extrapolation}
 Richardson extrapolation, is a technique for estimating the continuum value of a scalar functional derived from a solution to a differential equation by using values of the scalar obtained from numerical solutions on several different grids.
 The technique was developed by Richardson in 1912 with an application paper related to a stresses on a dam, and is also known as $h^2$ extrapolation since it was originally applied to a second order method.
@@ -191,7 +182,6 @@ Of course, in a ``zeroth order'' method, the absolute error is bounded from belo
 
 The original techniques involves numerical solutions on two grids with spacings $h_1 < h_2$ (i.e., grid 1 is finer), from which scalars $\phi_1$ and $\phi_2$ are calculated respectively.
 The ratio $r = h_2/h_1$ is called the grid refinement ratio.
-
 Then,
 \begin{align*}
   \phi_1 &= \phi_e + g_2 h_1^2 + O(h^3), \\
@@ -205,13 +195,13 @@ so
 \begin{align*}
   \phi_1 &= \phi_e + \frac{h_2^2}{h_1^2}(\phi_1 - \phi_e) + O(h^3) \\
   &=  \phi_e + r^2(\phi_1 - \phi_e) + O(h^3) \\
-  &= \phi_e(1-r^2) + \phi_1 r^2 + O(h^3). \\
+  &= \phi_e(1-r^2) + \phi_1 r^2 + O(h^3).
 \end{align*}
 Hence, the approximate continuum solution is
 \begin{equation*}
   \phi_e = \frac{\phi_2 - \phi_1 r^2}{1 - r^2} + O(h^3).
 \end{equation*}
-In essence, Richardson extrapolation allows for $\phi$ values from two solutions of order $h^p$ to be combined to produce an approximation of order $h^{p+1}$ to the continuum value of $\phi$.
+In essence, Richardson extrapolation allows for $\phi$ values from two solutions from an order $h^p$ method to be combined to produce an approximation of order $h^{p+1}$ to the continuum value of $\phi$.
 
 \subsection{Generalized Richardson Extrapolation}
 Of course, the above equations are only approximations.
