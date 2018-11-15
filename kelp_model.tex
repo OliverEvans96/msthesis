@@ -25,7 +25,7 @@ which may be advantageous for IMTA.
 We consider only the case of a rigid vertical rope which does not sway in the current.
 The mature \textit{Saccharina latissima} plant consists of a single frond (leaf), a stipe (stem) and a holdfast (root structure).
 For the sake of this model, only the kelp frond is considered, and its base is attached directly to the rope.
-The ``gentle undulation approximation'' is employed, whereby it is assumed that fronds are on modeled as perfectly horizontal.
+The ``gentle undulation approximation'' is employed, whereby the fronds are modeled as perfectly horizontal.
 While at any given time they may point up or down due to water current and gravity, we consider the horizontal
 state to be an average configuration.
 This simplification allows for the three-dimensionally distributed population of kelp fronds
@@ -347,10 +347,10 @@ Since the length and orientations are both continuous in the polar coordinates $
 However, they are not necessarily continuous in Cartesian coordinates.
 In the case of no water current, $v_w=0$, the flat von Mises distribution produces a continuous solution at the origin.
 In the more general case, though, there is a high kelp density on one side of the origin in the direction of the current, and a low kelp density immediately on the other side.
-Since rope is assumed to be infinitely thin and have a fixed position, the sharp corners of the kelp fronds eminate from exactly the same point.
+Since the rope is assumed to be infinitely thin and have a fixed position, the sharp corners of the kelp fronds emanate from exactly the same point.
 Hence, there is in general a discontinuity in the kelp distribution at the origin, and therefore its derivatives are unbounded on the domain.
 
-This is not appealing numerically since the algorithms used in this thesis to solve the differential equation describing the light field, are based on interpolation on a discrete Cartesian grid.
+This is not appealing numerically since the algorithms used in this thesis to solve the differential equation describing the light field are based on interpolation on a discrete Cartesian grid.
 According to Taylor's theorem, the error incurred by performing such interpolation is bounded by a constant multiple of the appropriate maximum derivative of the interpolated function over the domain.
 If the derivatives of the absorption coefficient are unbounded, then so too is the discretization error in the final solution.
 That is, the solution is not guaranteed to converge.
@@ -420,7 +420,7 @@ Of course, the distributions must be sufficiently well--defined to capture the c
 Figure \ref{fig:kelp_dist_sharp} shows a sharp kelp distribution with an unrealistically high current velocity, with all fronds identically equal in length, and with no blurring applied.
 Note the kite--shaped distribution, as expected.
 Also note the regions of high derivatives near the origin and inner edges.
-This sharp distribution requires excessively large numerical grids to approximate well, and is therefore undesireable.
+This sharp distribution requires excessively large numerical grids to approximate well, and is therefore undesirable.
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{kelp_dist_sharp}
