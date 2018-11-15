@@ -20,7 +20,7 @@ Memory requirement for LIS solution via GMRES with restart=100 is well-estimated
 
 \begin{sidewaysfigure}
   \centering
-  \caption{Memory to store one copy of the finite difference coefficient matrix}
+  \caption{Memory to store one copy of the finite difference coefficient matrix, with $n_s$ varying over rows and $n_a$ varying over columns.}
   \begin{tabular}{llllllll}
   \toprule
   {} &          8  &          10 &          12 &          14 &          16 &          18 &          20 \\
@@ -42,7 +42,7 @@ Memory requirement for LIS solution via GMRES with restart=100 is well-estimated
   \centering
   \caption{Memory to solve the linear system of equations with GMRES restarted
 every 100 iterations. This seems to require roughly five times the memory required
-to store the matrix.}
+to store the matrix. In the table, $n_s$ varies over rows, while $n_a$ varies over columns}
   \begin{tabular}{llllllll}
   \toprule
   {} &          8  &          10 &          12 &          14 &           16 &          18 &          20 \\
