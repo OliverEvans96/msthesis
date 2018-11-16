@@ -1,39 +1,42 @@
 \chapter{CONCLUSION}
 \label{chap:conclusion}
 
-% We present a probabilistic model for the spatial distribution of kelp, and develop a first--principles model for the light field, considering absorption and scattering due to the water and kelp.
-% A full finite difference solution is presented, and an asymptotic approximation based on discrete scattering events is subsequently developed.
-% The asymptotic approximation is shown to converge to the finite difference solution in cases where the absorption coefficient is the same order
-% of magnitude as the scattering coefficient or larger.
-% Otherwise, the solution diverges.
+This thesis presents a model for the light field in a vertical--rope kelp farming operation, emphasizing the effect of the seaweed itself on the overall light field.
+A three--dimensional model for the spatial distribution of the seaweed is developed, which then informs the absorption field of the combined seaweed--water medium.
+This absorption field is used as a coefficient in the monochromatic radiative transfer equation, which calculates the full light field over all positions and angles in the domain, accounting for both attenuation and scattering in the medium.
 
-% TODO: Include summary of results
+Two numerical solution techniques are presented: finite difference and numerical asymptotics.
+The finite difference approach is applicable to any type of water, although it can be prohibitively expensive in terms of CPU time, and even more so in terms of memory usage.
+On the other hand, the numerical asymptotics algorithm is much computationally cheaper by both measures, though it is only accurate for low--scattering scenarios.
+Within the appropriate range of optical properties of the aquatic medium, the accuracy and computation time of the solution can be tuned by choosing the number of terms to include in the asymptotic series.
+
+When compared to simpler one--dimensional models for the light field, the model presented in this thesis is found to predict lower light levels.
+This is expected, as the full three--dimensional model considers self--shading due to the kelp in greater detail than the others.
+Further, the average irradiance as a function of depth predicted by the three--dimensional model is found to agree fairly well with a simpler model for kelp shading.
+However, the average irradiance considers areas of low shading far from the kelp which are irrelevant to photosynthesis.
+When the light field is examined only in the regions where kelp is actually growing, much less light predicted.
+This indicates that simpler models may be overestimating the amount of light available for photosynthesis, which would, in light--limited situations involving high kelp density or low nutrient concentration, predict unrealistically large overall biomass yields in a time--dependent kelp growth simulation.
+
 \section{Model Summary}
-\subsection{List of Assumptions}
+The following is a summary of the primary assumptions used in the formulation of the model.
+Each of these assumptions are vast simplifications from the real system, and leave room for future improvement.
 \begin{itemize}
-  \item kite fronds
-  \item uniform frond thickness
-  \item horizontal fronds
-  \item vertical, thin rope => blur
-  \item ignore stipe
-  \item normally distributed lengths at each depth
-  \item VM distributed angles at each depth
-  \item Angular dist. sharpness propto current speed
-  \item Independent length/angle dists
-  \item Horizontally uniform $a_w$
-  \item $A_k$ same for all fronds
-  \item $b$ const. everywhere (kelp and water)
-  \item no surface optics, only volumetric
-  \item Monochromatic light
+  \item All fronds in the population are congruent kites of equal thickness.
+  \item Fronds are perfectly flat and horizontal.
+  \item Fronds eminate from an infinitely thin, perfectly vertical rope, with no stipe.
+  \item Population frond lengths are normally distributed in each depth layer.
+  \item Fronds are oriented according to a von Mises distribution whose sharpness is proportional to current velocity and independend of frond length.
+  \item Absorption coefficient of the aquatic medium is constant within a depth layer.
+  \item All fronds have the same absorptance.
+  \item The scattering coefficient is constant everywhere and equal for both kelp and water.
+  \item Only the volumetric optical effects, not surface effects, of the kelp are considered.
+  \item Frequency dependence is neglected.
 \end{itemize}
 
-\subsection{Physical Parameters}
-
-\section{Numerical Algorithms}
-\subsection{Choice of Algorithm}
-\subsection{Computational Expense}
-
-\section{Summary of Results}
+% \section{Numerical Algorithms}
+% \subsection{Choice of Algorithm}
+% \subsection{Computational Expense}
+%\section{Summary of Results}
 
 \section{Future Work}
 Lots of things.
@@ -67,6 +70,7 @@ Lots of things.
   \item population--varying kelp params: $f_t$, $A_k$.
   \item non--uniform thickness within a frond
   \item Frequency dependence, inelastic scattering
+  \item Kelp scattering coefficient.
 \end{itemize}
 
 \subsection{Numerical Improvements}
