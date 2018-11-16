@@ -24,44 +24,6 @@ as summarized in Table \ref{tab:params} and Table \ref{tab:petzold}.
 Still, some parameters remain which are not well described in the literature.
 In such cases, rough estimates are given or their experimental determination is discussed.
 
-\subsection{Simulation Context}
-In the case that the model is called by time--dependent kelp growth and ocean models, certain parameters can be passed as arguments to the light calculation subroutines to inform them of the encompassing context.
-Specifically, the ocean model can current speed and direction over depth, which is used in calculating the kelp distribution.
-The position of the sun and irradiance just below the surface of the water can also be provided by the ocean model, which is used to generate the surface radiance boundary condition.
-The ocean model should also provide an absorption coefficient for each depth layer, which may vary due to nutrient concentrations and biological specimens such as phytoplankton.
-The kelp growth model is expected to provide super-individual data describing the population in each depth layer.
-Then, \eqref{eqn:si_mean} and \eqref{eqn:si_std} are used to calculate length and orientation distributions, as described in Section \ref{sec:si}.
-
-Presumably, the ocean model uses a spatial grid much coarser than the grid required for the light model.
-For example, SINMOD \cite{wassmann_modelling_2006} uses a minimum horizontal spatial resolution of \SI{32}{\m}, whereas the light model is more likely to use a spatial resolution on the order of centimeters.
-While the vertical resolution of the encompassing simulation is probably finer than the horizontal resolution, it may also not be sufficiently fine to use for the light model in order to obtain a sufficiently accurate solution.
-Assuming that this is the case, the depth--dependent quantities provided by the encompassing simulations are to be interpolated and evaluated at the appropriate depths for the light model grid.
-
-While it is reasonable for the ocean model to inform the light model of the surface irradiance and position of the sun, it is unlikely that a full angular radiance distribution is given.
-Therefore, the a simplistic model is used which assigns the highest radiance value to the direction of the sun and lower values to other directions according to the difference in angle, while preserving the total irradiance from the surface.
-Specifically, the surface boundary condition used is
-\begin{equation}
-  f(\vec{\omega}) = I_0\frac{\exp\left( -D_s \cos^{-1}\left(\vec{\omega}_s \cdot \vec{\omega}\right) \right)}{\int_{2\pi}\exp\left( -D_s \cos^{-1}\left(\vec{\omega}_s \cdot \vec{\omega}\right) \right)\, d\vec{\omega}},
-\end{equation} % TODO
-where $\vec{\omega}_s$ is the propagation direction of the sun's rays and $D_s\in[0, \infty)$ (units $\mbox{rad}^{-1}$) varies the sharpness of the angular distribution of surface radiance.
-When $D_s=0$, the distribution is totally flat, while as $D_s \to \infty$, the distribution approaches a delta function.
-This can be considered a very coarse description of the amount of scattering in the atmosphere, since light arrives at Earth nearly all from a single direction.
-
-\subsection{Standalone Context}
-The simulation results shown in the later Sections of this Chapter probe the light model in various ways independent of any encompassing kelp growth or ocean models, and therefore the physical parameters that they would supply must be hand--picked to represent a realistic scenario to which the light model may be applied.
-Therefore, the following parameter choices are made.
-
-The depth--dependent mean kelp frond length is chosen to be
-\begin{equation}
-    \mu_l(z) = l_{\max}\frac{3z^2 \exp(-z) + 1/2}{12\exp(-2) + 1/2},
-\end{equation}
-which has a local maximum of $\mu_l(2)=l_{\max}$.
-The value $l_{\max}=\SI{6}{\m}$ is used for the sake of agreement with \cite{norvik_design_2017}.
-The kelp frond length standard deviations are chosen to be the constant function $\sigma_l(z) = \SI{1}{\m}$.
-Also, the current angles are held constant over depth at $\theta_w(z)=0$, as is the current speed $v_w=\SI{1}{\m\per\s}$ with $\eta=\SI{1}{\s\per\m}$.
-For the light field, $\vec{\omega}_s=\hat{z}$ (sunlight from directly above) and $D_s=1\, \mbox{rad}^{-1}$ are used.
-
-% TODO: Add data from Ole Jacob's student's thesis
 \subsection{Parameters from Literature}
 Given here is a table of parameter values found in the literature which are used in the following sections to test this light model under realistic conditions.
 A few comments are in order.
@@ -153,37 +115,132 @@ After repeating the procedure for several current speeds, $\kappa$ can be plotte
 Then, an optimal value for the frond alignment coefficient $\eta$ can be found by fitting $\kappa = \eta\mu$ to the data.
 It may, of course, turn out that this simple linear relationship does not hold, in which case a more appropriate description can be determined.
 
+
+\subsection{Simulation Context}
+In the case that the model is called by time--dependent kelp growth and ocean models, certain parameters can be passed as arguments to the light calculation subroutines to inform them of the encompassing context.
+Specifically, the ocean model can current speed and direction over depth, which is used in calculating the kelp distribution.
+The position of the sun and irradiance just below the surface of the water can also be provided by the ocean model, which is used to generate the surface radiance boundary condition.
+The ocean model should also provide an absorption coefficient for each depth layer, which may vary due to nutrient concentrations and biological specimens such as phytoplankton.
+The kelp growth model is expected to provide super-individual data describing the population in each depth layer.
+Then, \eqref{eqn:si_mean} and \eqref{eqn:si_std} are used to calculate length and orientation distributions, as described in Section \ref{sec:si}.
+
+Presumably, the ocean model uses a spatial grid much coarser than the grid required for the light model.
+For example, SINMOD \cite{wassmann_modelling_2006} uses a minimum horizontal spatial resolution of \SI{32}{\m}, whereas a grid resolution on the order of centimeters is more appropriate for the light model.
+While the vertical resolution of the encompassing simulation is probably finer than the horizontal resolution, it may also not be sufficiently fine to use for the light model in order to obtain a sufficiently accurate solution.
+Assuming that this is the case, the depth--dependent quantities provided by the encompassing simulations are to be interpolated at the appropriate depths for the light model grid.
+
+While it is reasonable for the ocean model to inform the light model of the surface irradiance and position of the sun, it is unlikely that a full angular radiance distribution is given.
+Therefore, the a simplistic model is used which assigns the highest radiance value to the direction of the sun and lower values to other directions according to the difference in angle, while preserving the total irradiance from the surface.
+Specifically, the surface boundary condition used is
+\begin{equation}
+  f(\vec{\omega}) = I_0\frac{\exp\left( -D_s \cos^{-1}\left(\vec{\omega}_s \cdot \vec{\omega}\right) \right)}{\int_{2\pi}\exp\left( -D_s \cos^{-1}\left(\vec{\omega}_s \cdot \vec{\omega}\right) \right)\, d\vec{\omega}},
+\end{equation} % TODO
+where $\vec{\omega}_s$ is the propagation direction of the sun's rays and $D_s\in[0, \infty)$ (units $\mbox{rad}^{-1}$) varies the sharpness of the angular distribution of surface radiance.
+When $D_s=0$, the distribution is totally flat, while as $D_s \to \infty$, the distribution approaches a delta function.
+This can be considered a very coarse description of the amount of scattering in the atmosphere, since light arrives at Earth nearly all from a single direction.
+
+\subsection{Standalone Context}
+The simulation results shown in the later Sections of this Chapter probe the light model in various ways independent of any encompassing kelp growth or ocean models, and therefore the physical parameters that they would supply must be hand--picked to represent a realistic scenario to which the light model may be applied.
+Therefore, the following parameter choices are made.
+
+The depth--dependent mean kelp frond length is chosen to be
+\begin{equation}
+    \mu_l(z) = l_{\max}\frac{3z^2 \exp(-z) + 1/2}{12\exp(-2) + 1/2},
+\end{equation}
+which has a local maximum of $\mu_l(2)=l_{\max}$.
+The value $l_{\max}=\SI{6}{\m}$ is used for the sake of agreement with \cite{norvik_design_2017}.
+The kelp frond length standard deviations are chosen to be the constant function $\sigma_l(z) = \SI{1}{\m}$.
+Also, the current angles are held constant over depth at $\theta_w(z)=0$, as is the current speed $v_w=\SI{1}{\m\per\s}$ with $\eta=\SI{1}{\s\per\m}$.
+For the light field, $\vec{\omega}_s=\hat{z}$ (sunlight from directly above) and $D_s=1\, \mbox{rad}^{-1}$ are used.
+
+% TODO: Add data from Ole Jacob's student's thesis
 \section{Algorithm Parameters}
+The choice of finite difference or numerical asymptotics and the specific parameters of each has a significant impact on both computation time and solution accuracy.
+The impact of the choice of algorithm and parameters on both factors is explored in this section in order to aid the reader in making these decisions.
 
 \subsection{CPU Time}
+Computation time is a significant consideration, especially when using the light model in the context of a time--dependent kelp growth simulation where it will be called repeatedly.
+The computational demand can be lessend by updating the light model only a few times per day rather than every time step.
+Still, accuracy must be balanced with reasonable resource consumption; if the light model is taking as much time as all of the other aspects combined, any accuracy gained from the light field computation is likely being lost elsewhere in the model.
 
-\begin{figure}[H]
+Also, both algorithms are parallelized using OpenMP, so increasing the parallelism decreases the computation time, though it does not reduce the overall resource consumption. % TODO: Cite OpenMP
+Further, some sections of the code are necessarily serial, which reduces the effective parallelism to some degree.
+For using 8 threads, an average CPU usage of about 5 cores is observed over the course of the computation, while for 32 threads, it is around 22. % TODO: Check actual values.
+This is not intended to discourage parallelism, only to represent it accurately; in reality, the speedup is quite noticable when the thread count is increased.
+
+The choice of algorithm has a significant impact on computation time.
+The finite difference method relies on an iterative method for solving the linear system.
+It runs until an error criteria is satisfied for the matrix equation, and therefore the exact number of computations is not known ahead of time.
+On the other hand, the numerical asymptotics algorithm is a direct method in the sense that it performs a predetermined number of calculations.
+The computation time of the latter is therefore more predictable.
+
+When using the numerical asymptotics algorithm, the number of terms used in the asymptotic series has a definite impact on computation time.
+The leading order term involves fewer calculations than the rest since no scattering integration is performed, though the difference is minor.
+The following terms, however, perform an identical number of calculations.
+Therefore, the $n$--term approximation takes about $n$ times as long as the leading order (no--scattering) approximation.
+Figure \ref{fig:compute_time_violin} shows CPU time for 32 cores for both asymptotics and finite differnce for five spatial grids.
+
+\begin{figure}[h]
   \centering
   \includegraphics[width=5in]{compute_time_violin}
-  \caption{mms asym err time. 32 cores.}
+  \caption{Computation time required for numerical asymptotics and finite difference algorithms over a range of spatial grid sizes using 32 CPUs. Only five grid sizes are shown, with the finite difference and numerical asymptotic algorithm for $n=0,\ldots,3$ terms shown for each grid. The horizontal offset within each grid size is only for visual clarity. TODO: Replace violin plots with box--and--whisker plots.}
   \label{fig:compute_time_violin}
 \end{figure}
 
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5in]{mms_asym_err_time_collapsed}
-  \caption{To give an idea of the trade--off between accuracy and speed; $n_s=64$, $n_a=8$. $\varepsilon t^2 \propto b^n$. 32 cores.}
-  \label{fig:mms_asym_err_time_collapsed}
-\end{figure}
+%Figure \ref{fig:mms_asym_err_time_collapsed} shows the error incurred in the asymptotic approximation versus the computation required for a several values of $b$ and $n$ in order to give a sense of the trade--off between speed and accuracy.
+%All calculations are perfomed on the same $64 \times 8$ spatial--angular grid, and errors are compared pointwise to the finite difference calculation using the same value of $b$ on the same grid.
+%The dashed black line is a linear fit through the computations in $(\ln\left(\varepsilon/b^n\right), \ln t)$ space with slope $m=0.55 \approx 1/2$.
+%This demonstrates the approximate relationship between error, scattering coefficient, and number of terms,
+%\begin{equation}
+%  \varepsilon t^2 \propto b^n.
+%\end{equation}
+%So, for example, for a given value of $b$, the error incurred by the scattering coefficient can be halved (for suitable values of $b$), but at the expense of approximately quadrupling the computation time.
+%\begin{figure}[H]
+%  \centering
+%  \includegraphics[width=5in]{mms_asym_err_time_collapsed}
+%  \caption{To give an idea of the trade--off between accuracy and speed; $n_s=64$, $n_a=8$. . 32 cores.}
+%  \label{fig:mms_asym_err_time_collapsed}
+%\end{figure}
 
 \subsection{Memory Usage}
+Memory usage is perhaps the most important consideration when choosing the algorithm and grid size.
+While the numerical asymptotics algorithm requires only a few multiples of the memory required to store the radiance itself, the finite difference algorithm requires the generation and storeage of a coefficient matrix several orders of magnitude larger than the solution vector.
+These memory requirements are given for a combination of spatial and angular grid sizes in Table \ref{tab:mem_store}.
+It is worth noting that using several terms from the asymptotic series does not increase the memory usage, as the same arrays are reused between iterations.
+
+Furthermore, the actual iterative solution of the matrix equation requires the allocation of several multiples of that amount of memory.
+A good approximation of the memory required to solve the linear system with GMRES (restarted every 100 iterations) is five times the memory required to store the coefficient matrix.
+Even for large grids, the numerical asymptotics has not been observed to use more than five gigabytes of memory, which is well within the memory capacity of a common modern laptop or workstation.
+On the other hand, the finite difference algorithm uses enormous amounts of memory, from tens of gigabytes for small to medium grids, and hundreds of gigabytes for large grids.
+These estimates are plotted in Figure \ref{fig:mem_solve}, and listed numerically in Table \ref{tab:mem_solve}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{memory_solve}
-  \caption{Memory to solve the linear system of equations with GMRES restarted every 100 iterations. This seems to require roughly five times the memory required to store the matrix. See Table \ref{tab:mem_solve} for values.}
-  \label{fig:memory_solve}
+  \caption{Estimated memory required to solve the linear system of equations for the finite difference algorithm using GMRES, restarted every 100 iterations. Table \ref{tab:mem_solve} contains the same data in text form.}
+  \label{fig:mem_solve}
 \end{figure}
 
 %\section{Grid Size and Discretization Error}
 \section{Optical Conditions for Asymptotics}
+Since the asymptotic approximation is based on a Taylor series expansion around the case of no scattering, it is only valid for relatively small scattering coefficients.
+Extremely high--scattering scenarios are out of reach for the asymptotic approximation, and the finite difference approach must be used in those cases.
+Whereas in low--scatering waters, adding terms to the asymptotic series tends to decrease the error in the solution, in high--scatering situations, adding terms causes the error to diverge.
+Therefore, if the finite difference solution is out of the question for cases of high scattering, the leading order approximation is the best option.
+An in--depth analysis of the error incurred by the numerical asymptotics algorithm is presented in this Section.
 
-\subsection{Raw data}
+\subsection{Raw Simulation Results}
+\label{sec:iop_study_raw}
+In all of the following results, the properties of the kelp are held constant while the optical properties of the water are varied.
+Ten values of $a_w$ are taken at equal intervals on a linear scale from \SI{0.1}{\per\m} to \SI{0.5}{\per\m} (inclusive), and ten values of $b$ are taken at even intervals on a log scale from \SI{0.01}{\per\m} to \SI{1.5}{\per\m} (inclusive).
+For each set of optical properties, numerical asympotics is employed with 0, 1, 2, and 3 scattering events, and a finite difference calculation is performed.
+A spatial--angular grid size of $72 \times 10$ is used for all calculations.
+Each asymptotics calculation is compared to the finite difference calculation with the same optical properties, and a pointwise error is calculated.
+Figure \ref{fig:asym_real_kelp_br01} shows this type of comparison for a single value of $a_w$, varying $b$.
+As discussed in Section \ref{sec:num_asym_mms}, the order $n$ approximation converges with roughly order $n+1$.
+However, the Figure shows that this trend does not continue indefinitely as $b$ decreases.
+This is because although the truncation error is decreasing, the discretization error is remaining constant.
+Therefore, no results with this grid size will show errors below about \SI{0.01}{\W\per\m\squared\per\radian}.
+As a result, simulations with errors below this threshold in order to gain insight into trends in truncation error.
 
 \newcommand\rdfigwidth{4.5in}
 
@@ -194,6 +251,12 @@ It may, of course, turn out that this simple linear relationship does not hold, 
   \label{fig:asym_real_kelp_br01}
 \end{figure}
 
+Figure \ref{fig:asym_err_vs_ab} shows a different slice of the simulation results.
+Here, $n=0$ is held constant while $a_w$ and $b$ are plotted on the $x$ and (log) $y$ axes, with average error plotted on the (log) color scale.
+Note that mean error does not depend only on $b$.
+Rather, errors are largest for waters with low absorption and high scattering, and lowest for low scattering, high absorption.
+The clear pattern in the variation of error over the $a_w$--$b$ domain indicates that a third parameter can be calculated sufficiently from $a_w$ and $b$ which is sufficient to determine the accuracy of the approximation.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=\rdfigwidth]{asym_err_vs_ab}
@@ -201,12 +264,30 @@ It may, of course, turn out that this simple linear relationship does not hold, 
   \label{fig:asym_err_vs_ab}
 \end{figure}
 
+Figure \ref{fig:best_n_data_vs_ab} shows a similar view of the simulation results as Figure \ref{asym_err_vs_ab}, except that now, the different approximation orders are considered for each set of optical properties, and the order with the lowest error is found.
+The order of the best approximation is shown for each case, and the error incurred by that approximation is shown on the color axis.
+In the upper left corner, the most difficult cases are shown.
+In this region, the zeroth order approximation is most accurate, showing that additional terms cause the solution to diverge.
+After a brief transition region, the third order approximation is most accurate, in agreement with Figure \ref{fig:asym_real_kelp_br01}.
+
+Note that for low scattering, high absorption waters where the error is lowest, the second order approximation seems to perform better than the third order.
+As mentioned previously, this is because a lower bound on the total error is imposed by the discretization error, as suggested by Figure \ref{fig:asym_real_kelp_br01}.
+In fact, the second and third order approximations are nearly identical; the former is only slightly better, and no conclusions about truncation error should be drawn from this part of the figure.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=\rdfigwidth]{best_n_data_vs_ab}
   \caption{best n data vs ab}
   \label{fig:best_n_data_vs_ab}
 \end{figure}
+
+In actual usage, one is concerned not with finding the best approximation, but rather the cheapest one which meets some error threshold.
+This concept is explored in Figures \ref{fig:min_n_data_vs_ab_eps01}, \ref{fig:min_n_data_vs_ab_eps005}, and \ref{fig:min_n_data_vs_ab_eps001}.
+In each Figure, an average error threshold of $\bar{\varepsilon}=\SI{0.1}{\W\per\m\squared\per\radian}$, $\bar{\varepsilon}=\SI{0.05}{\W\per\m\squared\per\radian}$, and $\bar{\varepsilon}=\SI{0.01}{\W\per\m\squared\per\radian}$, respectively is set, and the lowest order approximation to meet the error threshold is shown.
+The error of that approximation is shown on the color axis.
+In each case, there are some optical properties for which the error threshold cannot be met for any $n$.
+This is represented by an ``X'' in the figure, and the error of the leading order approximation is shown in color.
+Note that as $\bar\varepsilon$ is decreased, the error threshold cannot be satisfied for a larger set of optical properties, and where it is achievable, more scattering terms are required.
 
 \begin{figure}[H]
   \centering
@@ -230,13 +311,38 @@ It may, of course, turn out that this simple linear relationship does not hold, 
 \end{figure}
 
 \subsection{Error Model}
+Figure \ref{fig:asym_err_data_xi_model} consisely represents the simulation results for all optical properties and all approximation orders, with error $\varepsilon$ plotted on the vertical axis and $b$ plotted on the color axis.
+In the left column, $a_w$ is plotted on the horizontal axis.
+On a log--log--log scale, the simplicity of the relationship between these three quantities is striking.
+Holding $b$ constant, a log--log linear relationship is apparent between the error $\varepsilon$ and the absorption coefficient $a_w$.
+Meanwhile, holding $a_w$ constant, log--uniform increases in $b$ cause log--constant increases in $\varepsilon$.
+That is, $\ln\varepsilon$ seems to increase linearly with $\ln b$ and decrease linearly with $\ln a$.
+Restated, it seems that
+\begin{equation}
+  \varepsilon \propto \frac{b^{c_1}}{a_w^{c_2}}.
+\end{equation}
+
+Then, by fitting a plane to the observed values in $(\ln a_w, \ln b, \ln \varepsilon)$ space, a continuous model can be derived for $\varepsilon(a_w, b)$.
+Performing this procedure separately for each $n$ value yields values of $c_1$ and $c_2$ which appear to be independent of $n$.
+To within a few percent, the fit for each order of approximation yields $c_1=3/4$, $c_2=1/2$.
+The black ``x''s in Figure \ref{fig:asym_err_data_xi_model} are the predictions of this model, setting $c_1=3/4$ and $c_2=1/2$ explicitly.
+Notice how remarkably close they are to the observed errors.
+This also suggests the definition of a third parameter, as mentioned in Section \ref{sec:iop_study_raw},
+\begin{equation}
+  \xi = \frac{b^{3/4}}{a_w^{1/2}},
+\end{equation}
+with the unusual units \SI{}{\m^{-1/4}}.
+In the right column of Figure \ref{fig:asym_err_data_xi_model}, $\varepsilon$ is plotted as a function of $\xi$.
+Notice that all of the results collapse onto a single line.
+%This same idea was attempted for several other combinations of $c_1$ and $c_2$, and all others failed to collapse the results onto a single curve.
+
 
 \begin{figure}[H]
   \centering
   %\vspace{-1em}
   \includegraphics[width=5in]{asym_err_data_xi_model}
   %\vspace{-1em}
-  \caption{asym err data xi model}
+  \caption{asym err data $\xi$ model}
   \label{fig:asym_err_data_xi_model}
 \end{figure}
 
