@@ -1,7 +1,7 @@
-\chapter{PRACTICAL CONSIDERATIONS}
+\chapter{PRACTICAL APPLICATION}
 \label{chap:application}
 
-This Chapter deals with the practical application of the present numerical algorithms to simulate the light field for realistic scenarios of kelp growing in ocean waters.
+This Chapter deals with the practical considerations when applying the previously discussed numerical algorithms to simulate the light field for realistic scenarios of kelp growing in ocean waters.
 This involves combining the spatial kelp distribution model of Chapter \Rom{\ref{chap:kelp}} with the radiative transfer model of Chapter \Rom{\ref{chap:light}} according to the numerical details described in Chapter \Rom{\ref{chap:numerical}} and verified in Chapter \Rom{\ref{chap:model_analysis}}.
 
 The computational code must be supplied with appropriate physical parameters to emulate the particular seaweed under consideration and the optical properties of the surrounding aquatic medium.
@@ -15,34 +15,62 @@ With all of this information, a potential user may decide if and how to use the 
 \section{Physical Parameters}
 \label{sec:parameters}
 In this Section, physical model parameters are discussed.
-In the case that this model is run in conjunction with a kelp growth model and ocean model,
-they will provide some of the necessary parameters.
-Other parameters not coming from the kelp or ocean models can be found in the literature,
+The primary use case for the present model is that it is run in conjunction with a kelp growth model and ocean model
+which call it periodically to update the light field.
+In that case, they will provide some of the necessary parameters such as the size of the kelp fronds, optical properties of the aquatic medium, and current speed as functions of depth.
+If the light model is run without kelp growth and ocean models, as is the case for the results in this Chapter, then these parameters must be hand--picked to represent a realistic scenario.
+Other parameters external to the kelp growth and ocean models can be found in the literature,
 as summarized in Table \ref{tab:params} and Table \ref{tab:petzold}.
 Still, some parameters remain which are not well described in the literature.
-In those cases, rough estimates are given or their experimental determination is discussed.
+In such cases, rough estimates are given or their experimental determination is discussed.
 
-\subsection{Simulation Parameters}
-It is assumed that this model is run together with a kelp growth model such as described in \citep{broch_modelling_2012}, and an ocean model, as in \citep{wassmann_modelling_2006}.
-Both models are assumed to use the same spatial grid, with $n_z$ discrete depth layers of thickness $dz_k$ for $k=1,\ldots,n_z$.
-It is assumed that the horizontal spacing for both models is quite large, and the light model therefore uses a much finer horizontal resolution,
-but retains the same vertical resolution as the encompassing calculations.
-The ocean model provides current speed and direction over depth, which is used in calculating the kelp distribution.
-The position of the sun and irradiance just below the surface of the water is also provided by the ocean model, which is used to generate the surface radiance boundary condition.
+\subsection{Simulation Context}
+In the case that the model is called by time--dependent kelp growth and ocean models, certain parameters can be passed as arguments to the light calculation subroutines to inform them of the encompassing context.
+Specifically, the ocean model can current speed and direction over depth, which is used in calculating the kelp distribution.
+The position of the sun and irradiance just below the surface of the water can also be provided by the ocean model, which is used to generate the surface radiance boundary condition.
 The ocean model should also provide an absorption coefficient for each depth layer, which may vary due to nutrient concentrations and biological specimens such as phytoplankton.
-The kelp model is expected to provide super-individual data describing the population in each depth layer.
+The kelp growth model is expected to provide super-individual data describing the population in each depth layer.
 Then, \eqref{eqn:si_mean} and \eqref{eqn:si_std} are used to calculate length and orientation distributions, as described in Section \ref{sec:si}.
+
+Presumably, the ocean model uses a spatial grid much coarser than the grid required for the light model.
+For example, SINMOD \cite{wassmann_modelling_2006} uses a minimum horizontal spatial resolution of \SI{32}{\m}, whereas the light model is more likely to use a spatial resolution on the order of centimeters.
+While the vertical resolution of the encompassing simulation is probably finer than the horizontal resolution, it may also not be sufficiently fine to use for the light model in order to obtain a sufficiently accurate solution.
+Assuming that this is the case, the depth--dependent quantities provided by the encompassing simulations are to be interpolated and evaluated at the appropriate depths for the light model grid.
+
+While it is reasonable for the ocean model to inform the light model of the surface irradiance and position of the sun, it is unlikely that a full angular radiance distribution is given.
+Therefore, the a simplistic model is used which assigns the highest radiance value to the direction of the sun and lower values to other directions according to the difference in angle, while preserving the total irradiance from the surface.
+Specifically, the surface boundary condition used is
+\begin{equation}
+  f(\vec{\omega}) = I_0\frac{\exp\left( -D_s \cos^{-1}\left(\vec{\omega}_s \cdot \vec{\omega}\right) \right)}{\int_{2\pi}\exp\left( -D_s \cos^{-1}\left(\vec{\omega}_s \cdot \vec{\omega}\right) \right)\, d\vec{\omega}},
+\end{equation} % TODO
+where $\vec{\omega}_s$ is the propagation direction of the sun's rays and $D_s\in[0, \infty)$ (units $\mbox{rad}^{-1}$) varies the sharpness of the angular distribution of surface radiance.
+When $D_s=0$, the distribution is totally flat, while as $D_s \to \infty$, the distribution approaches a delta function.
+This can be considered a very coarse description of the amount of scattering in the atmosphere, since light arrives at Earth nearly all from a single direction.
+
+\subsection{Standalone Context}
+The simulation results shown in the later Sections of this Chapter probe the light model in various ways independent of any encompassing kelp growth or ocean models, and therefore the physical parameters that they would supply must be hand--picked to represent a realistic scenario to which the light model may be applied.
+Therefore, the following parameter choices are made.
+
+The depth--dependent mean kelp frond length is chosen to be
+\begin{equation}
+    \mu_l(z) = l_{\max}\frac{3z^2 \exp(-z) + 1/2}{12\exp(-2) + 1/2},
+\end{equation}
+which has a local maximum of $\mu_l(2)=l_{\max}$.
+The value $l_{\max}=\SI{6}{\m}$ is used for the sake of agreement with \cite{norvik_design_2017}.
+The kelp frond length standard deviations are chosen to be the constant function $\sigma_l(z) = \SI{1}{\m}$.
+Also, the current angles are held constant over depth at $\theta_w(z)=0$, as is the current speed $v_w=\SI{1}{\m\per\s}$ with $\eta=\SI{1}{\s\per\m}$.
+For the light field, $\vec{\omega}_s=\hat{z}$ (sunlight from directly above) and $D_s=1\, \mbox{rad}^{-1}$ are used.
 
 % TODO: Add data from Ole Jacob's student's thesis
 \subsection{Parameters from Literature}
-Given here is a table of parameter values found in the literature which are used in Chapter \Rom{\ref{chap:model_analysis}} to test this light model.
+Given here is a table of parameter values found in the literature which are used in the following sections to test this light model under realistic conditions.
 A few comments are in order.
 No values were available for the absorptance of \textit{Saccharina latissima}, but a value for \textit{Macrocystis pyrifera} was found.
 The surface irradiance from \cite{broch_modelling_2012} was given in terms of photons per second,
 and was converted to \SI{}{\W\per\m\squared} according to \eqref{eqn:watts_photons}.
 No data in the literature exist for the frond thickness, so a best estimate is provided.
 
-\begin{table}
+\begin{table}[h]
   \centering
   \caption{Physical parameter values.}
   %\begin{tabular}{p{2\textwidth/7} p{\textwidth/7} p{\textwidth/6} p{\textwidth/6} p{2\textwidth/7}}
@@ -127,8 +155,7 @@ It may, of course, turn out that this simple linear relationship does not hold, 
 
 \section{Algorithm Parameters}
 
-\subsection{Computational Demand}
-\subsubsection{CPU Time}
+\subsection{CPU Time}
 
 \begin{figure}[H]
   \centering
