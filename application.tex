@@ -101,7 +101,7 @@ To emulate the holdfast, the string should be tied tightly around the vertical r
 giving the frond a preferred orientation from which it has to bend.
 The preferred directions should be more or less evenly distributed.
 A camera should be mounted directly over the vertical rope, pointed straight down.
-If possible, a flourescent dye could be applied to the tip of the each frond to make their orientation more easily discernable in the recording.
+If possible, a fluorescent dye could be applied to the tip of the each frond to make their orientation more easily discernible in the recording.
 Turn on the flume to several current speeds, recording a video or many snapshots for each.
 If the fluorescent dye is applied, then a simple peak-finding image processing algorithm can be applied to locate the frond tips.
 By preprocessing the image to a gray scale such that the color of the dye has the highest intensity,
@@ -161,13 +161,13 @@ The impact of the choice of algorithm and parameters on both factors is explored
 
 \subsection{CPU Time}
 Computation time is a significant consideration, especially when using the light model in the context of a time--dependent kelp growth simulation where it will be called repeatedly.
-The computational demand can be lessend by updating the light model only a few times per day rather than every time step.
+The computational demand can be lessened by updating the light model only a few times per day rather than every time step.
 Still, accuracy must be balanced with reasonable resource consumption; if the light model is taking as much time as all of the other aspects combined, any accuracy gained from the light field computation is likely being lost elsewhere in the model.
 
 Also, both algorithms are parallelized using OpenMP, so increasing the parallelism decreases the computation time, though it does not reduce the overall resource consumption. % TODO: Cite OpenMP
 Further, some sections of the code are necessarily serial, which reduces the effective parallelism to some degree.
 For using 8 threads, an average CPU usage of about 5 cores is observed over the course of the computation, while for 32 threads, it is around 22. % TODO: Check actual values.
-This is not intended to discourage parallelism, only to represent it accurately; in reality, the speedup is quite noticable when the thread count is increased.
+This is not intended to discourage parallelism, only to represent it accurately; in reality, the speedup is quite noticeable when the thread count is increased.
 
 The choice of algorithm has a significant impact on computation time.
 The finite difference method relies on an iterative method for solving the linear system.
@@ -179,7 +179,7 @@ When using the numerical asymptotics algorithm, the number of terms used in the 
 The leading order term involves fewer calculations than the rest since no scattering integration is performed, though the difference is minor.
 The following terms, however, perform an identical number of calculations.
 Therefore, the $n$--term approximation takes about $n$ times as long as the leading order (no--scattering) approximation.
-Figure \ref{fig:compute_time_violin} shows CPU time for 32 cores for both asymptotics and finite differnce for five spatial grids.
+Figure \ref{fig:compute_time_violin} shows CPU time for 32 cores for both asymptotics and finite difference for five spatial grids.
 
 \begin{figure}[h]
   \centering
@@ -205,7 +205,7 @@ Figure \ref{fig:compute_time_violin} shows CPU time for 32 cores for both asympt
 
 \subsection{Memory Usage}
 Memory usage is perhaps the most important consideration when choosing the algorithm and grid size.
-While the numerical asymptotics algorithm requires only a few multiples of the memory required to store the radiance itself, the finite difference algorithm requires the generation and storeage of a coefficient matrix several orders of magnitude larger than the solution vector.
+While the numerical asymptotics algorithm requires only a few multiples of the memory required to store the radiance itself, the finite difference algorithm requires the generation and storage of a coefficient matrix several orders of magnitude larger than the solution vector.
 These memory requirements are given for a combination of spatial and angular grid sizes in Table \ref{tab:mem_store}.
 It is worth noting that using several terms from the asymptotic series does not increase the memory usage, as the same arrays are reused between iterations.
 
@@ -225,7 +225,7 @@ These estimates are plotted in Figure \ref{fig:mem_solve}, and listed numericall
 \section{Optical Conditions for Asymptotics}
 Since the asymptotic approximation is based on a Taylor series expansion around the case of no scattering, it is only valid for relatively small scattering coefficients.
 Extremely high--scattering scenarios are out of reach for the asymptotic approximation, and the finite difference approach must be used in those cases.
-Whereas in low--scatering waters, adding terms to the asymptotic series tends to decrease the error in the solution, in high--scatering situations, adding terms causes the error to diverge.
+Whereas in low--scattering waters, adding terms to the asymptotic series tends to decrease the error in the solution, in high--scattering situations, adding terms causes the error to diverge.
 Therefore, if the finite difference solution is out of the question for cases of high scattering, the leading order approximation is the best option.
 An in--depth analysis of the error incurred by the numerical asymptotics algorithm is presented in this Section.
 
@@ -233,7 +233,7 @@ An in--depth analysis of the error incurred by the numerical asymptotics algorit
 \label{sec:iop_study_raw}
 In all of the following results, the properties of the kelp are held constant while the optical properties of the water are varied.
 Ten values of $a_w$ are taken at equal intervals on a linear scale from \SI{0.1}{\per\m} to \SI{0.5}{\per\m} (inclusive), and ten values of $b$ are taken at even intervals on a log scale from \SI{0.01}{\per\m} to \SI{1.5}{\per\m} (inclusive).
-For each set of optical properties, numerical asympotics is employed with 0, 1, 2, and 3 scattering events, and a finite difference calculation is performed.
+For each set of optical properties, numerical asymptotics is employed with 0, 1, 2, and 3 scattering events, and a finite difference calculation is performed.
 A spatial--angular grid size of $72 \times 10$ is used for all calculations.
 Each asymptotics calculation is compared to the finite difference calculation with the same optical properties, and a pointwise error is calculated.
 Figure \ref{fig:asym_real_kelp_br01} shows this type of comparison for a single value of $a_w$, varying $b$.
@@ -312,7 +312,7 @@ Note that as $\bar\varepsilon$ is decreased, the error threshold cannot be satis
 \end{figure}
 
 \subsection{Error Model}
-Figure \ref{fig:asym_err_data_xi_model} consisely represents the simulation results for all optical properties and all approximation orders, with error $\varepsilon$ plotted on the vertical axis and $b$ plotted on the color axis.
+Figure \ref{fig:asym_err_data_xi_model} concisely represents the simulation results for all optical properties and all approximation orders, with error $\varepsilon$ plotted on the vertical axis and $b$ plotted on the color axis.
 In the left column, $a_w$ is plotted on the horizontal axis.
 On a log--log--log scale, the simplicity of the relationship between these three quantities is striking.
 Holding $b$ constant, a log--log linear relationship is apparent between the error $\varepsilon$ and the absorption coefficient $a_w$.
@@ -434,7 +434,7 @@ Finally, in any of the easier regions defined by $\bar{n} \leq 3$, the optimal t
 
 Now that recommendations have been given for the choice of solution method, with the computational cost and accuracy of each having been discussed, all that remains is to compare the solutions obtained from the model presented in this thesis to other available models for the light field.
 Two very simple models are used; in both cases, the number of calculations can be counted on two hands, whereas the model of this thesis involves many millions of calculations.
-Whether the insight gained from the more complex model is worth the computational expense depends on the purpose of the calculation, and is the decision for the reader to make according to their best judgement for the situation.
+Whether the insight gained from the more complex model is worth the computational expense depends on the purpose of the calculation, and is the decision for the reader to make according to their best judgment for the situation.
 
 \subsection{Simpler Models}
 The first model is the simplest conceivable light model --- exponential attenuation with a constant absorption coefficient $a=a_w$.
@@ -473,8 +473,8 @@ The solution is therefore the analogous simplification of Equation \ref{eqn:asym
 In Figures \ref{fig:compare_models_n1}, \ref{fig:compare_models_n2}, and \ref{fig:compare_models_n3}, the light model of this thesis is compared to simpler models under the conditions described in Section \ref{sec:standalone_context}.
 In the figures, the first model described in this Chapter, which ignores the kelp entirely, is plotted with a black dashed line.
 The second model, which uses an additional term in the absorption coefficient to describe the kelp, is plotted with a dashed blue line.
-The no--scatering numerical asymptotics solution is plotted in solid red.
-Since the above two models do not consider scattering, both the finite difference and asymptotic solutions are plotted for a range of $b$ values, with the finite difference $b$ described by the left colorbar, and the asymptotic $b$ described by the right colorbar, so as to distinguish between the two sets of curves.
+The no--scattering numerical asymptotics solution is plotted in solid red.
+Since the above two models do not consider scattering, both the finite difference and asymptotic solutions are plotted for a range of $b$ values, with the finite difference $b$ described by the left color bar, and the asymptotic $b$ described by the right color bar, so as to distinguish between the two sets of curves.
 
 In each of the three Figures, a different value of $n$ is used for the asymptotic approximations for $b>0$: $n=1$, $n=2$, and $n=3$ for Figures \ref{fig:compare_models_n1}, \ref{fig:compare_models_n2}, and \ref{fig:compare_models_n3} respectively. 
 In the left column of each figure, the average irradiance is plotted as a function of depth for each of the calculations from the light model of this thesis, calculated over the entire horizontal domain.
@@ -483,19 +483,19 @@ In the right column, the perceived irradiance, as described in Section \ref{sec:
 First, note that the no--kelp model predicts the highest light levels throughout the domain, as should be expected since it ignores a significant aspect of the light reduction.
 The simple kelp model agrees with the no--kelp model at the surface, but then reduces more quickly once the kelp, which is largest at $z=2$, is introduced.
 At the bottom of the domain where there is little kelp remaining, the two curves are seen to be parallel in the log--linear scale, showing that the absorption coefficients are equal as at the surface.
-Looking at the left column, the average irradiance from no--scatering solution to the 3D model appears to agree quite well with the simple kelp model, especially near the surface and bottom, where both models are approximately reduced to the first model.
+Looking at the left column, the average irradiance from no--scattering solution to the 3D model appears to agree quite well with the simple kelp model, especially near the surface and bottom, where both models are approximately reduced to the first model.
 In the $z=2$ region where the most kelp is present, the 3D model predicts higher absorption than the simpler 1D model.
 However, between $z=3$ and $z=4$, the 3D kelp model decreases more slowly than the 1D model, perhaps because light is able to penetrate the water in regions where the kelp is not present, and the multitude of angles in which the light travels allow some of the rays to reach even the lower depths without being absorbed by the kelp.
 
 As for the right column, the perceived irradiance is clearly much lower than the average irradiance and the other models.
-This makes sense, as the light is dimmest in the regions of highest kelp density, and the perceived irradiance weights these regions the highest, practically ignoring the edges of the domain where light is absorbed only by the water; these regions skew the average irradiance upward although they are not actually representative the light field where photosynthesis is occuring.
+This makes sense, as the light is dimmest in the regions of highest kelp density, and the perceived irradiance weights these regions the highest, practically ignoring the edges of the domain where light is absorbed only by the water; these regions skew the average irradiance upward although they are not actually representative the light field where photosynthesis is occurring.
 From this point of view, it seems that the other two light models significantly overestimate the amount of light available where it actually matters.
 
 Considering the finite difference solution, the most visible effect of increasing scattering is to decrease the light field towards the bottom of the domain.
 Of course, scattering does not cause that light to be lost entirely.
 Rather, it tends to reflect it towards the surface, where increases in scattering lead to higher light levels.
 This is noteworthy since the light available very close to the surface is significantly higher than it is a few meters below.
-This tendency for scattering to insulate the upper region of the water may prove to be important in understanding how photosynthessi near the ocean's surface differs from photosynthesis at greater depths.
+This tendency for scattering to insulate the upper region of the water may prove to be important in understanding how photosynthesis near the ocean's surface differs from photosynthesis at greater depths.
 
 
 \begin{figure}[H]
