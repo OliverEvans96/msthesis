@@ -324,9 +324,9 @@ Restated, it seems that
 
 Then, by fitting a plane to the observed values in $(\ln a_w, \ln b, \ln \varepsilon)$ space, a continuous model can be derived for $\varepsilon(a_w, b)$.
 Performing this procedure separately for each $n$ value yields values of $c_1$ and $c_2$ which appear to be independent of $n$.
-To within a few percent, the fit for each order of approximation yields $c_1=3/4$, $c_2=1/2$.
+Remarkably, the fit for each order of approximation yields $c_1=3/4$, $c_2=1/2$ to within a few percent variation.
 The black ``x''s in Figure \ref{fig:asym_err_data_xi_model} are the predictions of this model, setting $c_1=3/4$ and $c_2=1/2$ explicitly.
-Notice how remarkably close they are to the observed errors.
+Notice how accurately the observed errors are predicted by the model.
 This also suggests the definition of a third parameter, as mentioned in Section \ref{sec:iop_study_raw},
 \begin{equation}
   \xi = \frac{b^{3/4}}{a_w^{1/2}},
@@ -334,17 +334,47 @@ This also suggests the definition of a third parameter, as mentioned in Section 
 with the unusual units \SI{}{\m^{-1/4}}.
 In the right column of Figure \ref{fig:asym_err_data_xi_model}, $\varepsilon$ is plotted as a function of $\xi$.
 Notice that all of the results collapse onto a single line.
-%This same idea was attempted for several other combinations of $c_1$ and $c_2$, and all others failed to collapse the results onto a single curve.
-
+Thus, for the sake of understanding the usefulness of the asymptotic series in approximating the true light field, $\xi$ can be used as a single variable to characterize all waters.
 
 \begin{figure}[H]
   \centering
   %\vspace{-1em}
-  \includegraphics[width=5in]{asym_err_data_xi_model}
+  \includegraphics[width=6in]{asym_err_data_xi_model}
   %\vspace{-1em}
   \caption{asym err data $\xi$ model}
   \label{fig:asym_err_data_xi_model}
 \end{figure}
+
+In Figure \ref{fig:asym_err_vs_xi_all_n_fit_all}, $\varepsilon$ is plotted as a function of $\xi$ for all combinations of $a_w$, $b$, and $n$, effectively combining the right column of Figure \ref{fig:asym_err_data_xi_model} on a single plot.
+For each $n$, the log--log plot displays a clear linear relationship, similar to the pattern seen previously in Figures \ref{fig:asym_real_kelp_br01} and \ref{fig:mms_asym_b_conv}.
+However, this figure abstracts that pattern over both $a_w$ and $b$, whereas previously it was seem only for $b$.
+Note that the convergence curves for all lines appear to roughly intersect at a characteristic point.
+That point, denoted $(\xi^*, \varepsilon^*)$, is significant because it represents a bifurcation in the convergence behavior of the numerical asymptotics algorithm.
+For waters with $\xi < \xi^*$, adding terms to the series increases the accuracy of the approximation, whereas for waters with $\xi$ above the threshold value $\xi^*$, adding terms decreases the accuracy.
+
+In order to systematically determine $(\xi^*, \varepsilon^*)$, the log--log convergence curve of order $n+1$ is assumed to have slope $n+1$, which is approximately true, at least for $\xi<\xi^*$.
+Further, it is assumed that there is a single point where all of these curves intersect.
+This point fully specifies the convergence curves, all other free parameters having been eliminated by the previous assumptions.
+Thus, the error for the order $n$ approximation satisfies
+\begin{equation}
+  \label{eqn:ln_eps_n}
+  \ln\varepsilon_n(\xi) - \ln\varepsilon^* = (n+1)\left(\ln\xi - \ln\xi^*\right),
+\end{equation}
+or equivalently,
+\begin{equation}
+  \label{eqn:eps_n}
+  \varepsilon_n(\xi) = \varepsilon^* \left(\frac{\xi}{\xi^*}\right)^{n+1}.
+\end{equation}
+
+Then, a residual function is constructed which accumulates squared differences between the fit functions and their corresponding data points, weighting all squared errors by $1/\varepsilon$ in order to deem the runs with lower errors more important since errors diverge for large $\xi$ values and do not fit the linear function quite as well.
+A numerical optimization algorithm is then used to search the two dimensional parameter space for the minimizers of the residual, which produces the point $(\xi^*, \varepsilon^*)$.
+This procedure yields the result
+\begin{align}
+  \xi^* &= 1.63, \\
+  \varepsilon^* &= 0.11,
+\end{align}
+shown in Figure \ref{fig:asym_err_vs_xi_all_n_fit_all}.
+Thus, waters characterized below this threshold are worth considering for solution via numerical asymptotics, whereas others are better suited for a finite difference solution.
 
 \begin{figure}[H]
   \centering
@@ -353,12 +383,43 @@ Notice that all of the results collapse onto a single line.
   \label{fig:asym_err_vs_xi_all_n_fit_all}
 \end{figure}
 
+The determination of $\xi^*$ and $\varepsilon^*$ marks the construction of a simple analytical model given by Equation \ref{eqn:eps_n} which predicts the errors for any set of aquatic optical properties.
+Figure \ref{fig:asym_err_model_vs_ab_all_k} shows the predictions of this model for several values of $a_w$, $b$, and $n$, with $\varepsilon$ plotted on the color axis.
+Note that $\xi^*$ is a contour in $(a_w, b)$ space, and is marked on the figure with a dashed white line.
+$\xi<\xi^*$ is the region to the lower right of the threshold, and $\xi>\xi^*$ is the region to the upper left.
+Also keep in mind that this model and its predictions deal only with truncation error, and that discretization error distorts the actual solution accuracy, as seen in Figures \ref{fig:asym_real_kelp_br01} and \ref{fig:best_n_data_vs_ab}.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{asym_err_model_vs_ab_all_k}
   \caption{asym err model vs ab all k}
   \label{fig:asym_err_model_vs_ab_all_k}
 \end{figure}
+
+This model can now be used to produce general guidelines for the choice of $n$ given a desired error.
+Assuming that a maximum error $\varepsilon=\bar\varepsilon$ is permissible, the minimum order of $n$ which produces $\varepsilon$ is desired.
+This order, denoted $\bar{n}$, can determined by solving Equation \ref{eqn:ln_eps_n} for $n$ when $\varepsilon=\bar{\varepsilon}$ and rounding up to the nearest integer.
+That is,
+\begin{equation*}
+  \bar{n} = \ceil\left(\frac{\ln\bar{\varepsilon} - \ln\varepsilon^*}{\ln\xi - \ln\xi^*} - 1 \right),
+\end{equation*}
+which is equivalent almost everywhere to
+\begin{equation}
+  \label{eqn:n_bar}
+  \bar{n} = \floor\left(\frac{\ln\bar{\varepsilon} - \ln\varepsilon^*}{\ln\xi - \ln\xi^*}\right).
+\end{equation}
+
+Figure \ref{fig:nbar_model_vs_ab_3eps} shows $\bar{n}$ up to $\bar{n}=3$ for $\bar{\varepsilon}=0.1$, $\bar{\varepsilon}=0.05$, and $\bar{\varepsilon}=0.01$.
+The $\xi^*$ contour is plotted.
+Assuming that $\bar{\varepsilon}<\varepsilon^*$, if higher contours of $\bar{n}$ were plotted, they would approach the $\xi^*$ contour as $\bar{n} \to \infty$ since no accuracy better than $\varepsilon^*$ is achievable by any order approximation when $\xi > \xi^*$.
+
+To summarize this analysis, once an error threshold $\bar{\varepsilon}$ is chosen, the optical properties $a_w$ and $b$ determine the optimal numerical approach according to Figure \ref{fig:nbar_model_vs_ab_3eps} and Equation \ref{eqn:n_bar}.
+If $\xi^*(a_w, b) > \xi^*$, then the finite difference algorithm should be used if possible.
+If memory or computation time requires the numerical asymptotics algorithm to be used, then the $n=0$ approximation should be used, effectively ignoring scattering.
+
+If $\bar{n}>3$ (i.e., the gray region between $\xi^*$ and $\bar{n}=3$), it is theoretically possible to achieve the desired accuracy in this region by continuing to add terms, however, this is not recommended since the closer $\xi$ is to $\xi^*$, the more likely it is that higher order terms will cause the solution to diverge due to some unexpected deviation in the actual performance of the algorithm from the theoretical error model presented here.
+As a compromise, $n=2$ or $n=3$ could be used in this region to balance the severity of divergence in the case of failure with the improved accuracy of the solution in the case of successful convergence.
+Finally, in any of the easier regions defined by $\bar{n} \leq 3$, the optimal trade--off between accuracy and computation time is achieved by using $n=\bar{n}(a_w, b)$.
 
 \begin{figure}[H]
   \centering
