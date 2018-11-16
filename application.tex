@@ -15,7 +15,7 @@ With all of this information, a potential user may decide if and how to use the 
 \section{Physical Parameters}
 \label{sec:parameters}
 In this Section, physical model parameters are discussed.
-The primary use case for the present model is that it is run in conjunction with a kelp growth model and ocean model
+The primary use--case for the present model is that it is run in conjunction with a kelp growth model and ocean model
 which call it periodically to update the light field.
 In that case, they will provide some of the necessary parameters such as the size of the kelp fronds, optical properties of the aquatic medium, and current speed as functions of depth.
 If the light model is run without kelp growth and ocean models, as is the case for the results in this Chapter, then these parameters must be hand--picked to represent a realistic scenario.
@@ -43,7 +43,7 @@ No data in the literature exist for the frond thickness, so a best estimate is p
     Kelp absorptance & $A_k$ & 0.8 & \cite{colombo-pallotta_photosynthetic_2006} \\% & Actually for \textit{Macrocystis Pyrifera}\\
     Water absorption coefficient & $a_w$ & See Table \ref{tab:petzold} & \cite{petzold_volume_1972} \\%  & ? \\
     Scattering coefficient & $b$  & See Table \ref{tab:petzold} & \cite{petzold_volume_1972} \\%  & ? \\
-    Volume scattering function & $\beta$ & tabulated & \cite{petzold_volume_1972,sokolov_parameterization_2010}, \\% & Currently using Petzold \\
+    Volume scattering function & $\beta$ & tabulated & \cite{petzold_volume_1972,sokolov_parameterization_2010} \\% & Currently using Petzold \\
     Frond thickness & $t$ & \SI{0.4}{\mm} & estimated \\
     Surface solar irradiance & $I_0$ & \SI{50}{\W\per\m\squared} & \cite{broch_modelling_2012}  \\% & Irradiance for maximal photosynthesis, converted from photons \\
     \bottomrule
@@ -51,11 +51,11 @@ No data in the literature exist for the frond thickness, so a best estimate is p
   \label{tab:params}
 \end{table}
 
-In \citep{petzold_volume_1972}, very detailed measurements of optical properties in various ocean waters are presented.
+In \citep{petzold_volume_1972}, detailed measurements of optical properties in various ocean waters are presented.
 A few of those measurements are reproduced here, using the same site names as in the original report.
 There are three categories of water provided: AUTEC is from Tongue of the Ocean, Bahama Islands,
-and represents very clear, pure water; HAOCE is from offshore southern California, and represents a more average coastal region,
-likely the most similar to water where kelp cultivation would occur; NUC data is from the San Diego Harbor, and represents very turbid water,
+and represents clear, pure water; HAOCE is from offshore southern California, and represents a more average coastal region,
+likely the most similar to water where kelp cultivation would occur; NUC data is from the San Diego Harbor, and represents turbid water,
 likely more so than one would expect to find in a seaweed farm.
 
 \begin{table}
@@ -118,7 +118,7 @@ It may, of course, turn out that this simple linear relationship does not hold, 
 \subsection{Simulation Context}
 \label{sec:simulation_context}
 In the case that the model is called by time--dependent kelp growth and ocean models, certain parameters can be passed as arguments to the light calculation subroutines to inform them of the encompassing context.
-Specifically, the ocean model can current speed and direction over depth, which is used in calculating the kelp distribution.
+Specifically, the ocean model can provide current speed and direction over depth, which is used in calculating the kelp distribution.
 The position of the sun and irradiance just below the surface of the water can also be provided by the ocean model, which is used to generate the surface radiance boundary condition.
 The ocean model should also provide an absorption coefficient for each depth layer, which may vary due to nutrient concentrations and biological specimens such as phytoplankton.
 The kelp growth model is expected to provide super-individual data describing the population in each depth layer.
@@ -130,14 +130,14 @@ While the vertical resolution of the encompassing simulation is probably finer t
 Assuming that this is the case, the depth--dependent quantities provided by the encompassing simulations are to be interpolated at the appropriate depths for the light model grid.
 
 While it is reasonable for the ocean model to inform the light model of the surface irradiance and position of the sun, it is unlikely that a full angular radiance distribution is given.
-Therefore, the a simplistic model is used which assigns the highest radiance value to the direction of the sun and lower values to other directions according to the difference in angle, while preserving the total irradiance from the surface.
+Therefore, a simplistic model is used which assigns the highest radiance value to the direction of the sun and lower values to other directions according to the difference in angle, while preserving the total irradiance from the surface.
 Specifically, the surface boundary condition used is
 \begin{equation}
   f(\vec{\omega}) = I_0\frac{\exp\left( -D_s \cos^{-1}\left(\vec{\omega}_s \cdot \vec{\omega}\right) \right)}{\int_{2\pi}\exp\left( -D_s \cos^{-1}\left(\vec{\omega}_s \cdot \vec{\omega}\right) \right)\, d\vec{\omega}},
 \end{equation} % TODO
 where $\vec{\omega}_s$ is the propagation direction of the sun's rays and $D_s\in[0, \infty)$ (units $\mbox{rad}^{-1}$) varies the sharpness of the angular distribution of surface radiance.
 When $D_s=0$, the distribution is totally flat, while as $D_s \to \infty$, the distribution approaches a delta function.
-This can be considered a very coarse description of the amount of scattering in the atmosphere, since light arrives at Earth nearly all from a single direction.
+This can be considered a coarse description of the amount of scattering in the atmosphere, since light arrives at Earth nearly all from a single direction.
 
 \subsection{Standalone Context}
 \label{sec:standalone_context}
@@ -171,8 +171,8 @@ This is not intended to discourage parallelism, only to represent it accurately;
 
 The choice of algorithm has a significant impact on computation time.
 The finite difference method relies on an iterative method for solving the linear system.
-It runs until an error criteria is satisfied for the matrix equation, and therefore the exact number of computations is not known ahead of time.
-On the other hand, the numerical asymptotics algorithm is a direct method in the sense that it performs a predetermined number of calculations.
+It runs until an error criterion is satisfied for the matrix equation, and therefore the exact number of computations is not known ahead of time.
+On the other hand, the numerical asymptotics algorithm is a direct method that performs a predetermined number of calculations.
 The computation time of the latter is therefore more predictable.
 
 When using the numerical asymptotics algorithm, the number of terms used in the asymptotic series has a definite impact on computation time.
@@ -211,8 +211,8 @@ It is worth noting that using several terms from the asymptotic series does not 
 
 Furthermore, the actual iterative solution of the matrix equation requires the allocation of several multiples of that amount of memory.
 A good approximation of the memory required to solve the linear system with GMRES (restarted every 100 iterations) is five times the memory required to store the coefficient matrix.
-Even for large grids, the numerical asymptotics has not been observed to use more than five gigabytes of memory, which is well within the memory capacity of a common modern laptop or workstation.
-On the other hand, the finite difference algorithm uses enormous amounts of memory, from tens of gigabytes for small to medium grids, and hundreds of gigabytes for large grids.
+Even for large grids, the numerical asymptotics approach has not been observed to use more than five gigabytes of memory, which is well within the memory capacity of a common modern laptop or workstation.
+On the other hand, the finite difference algorithm uses enormous amounts of memory, from tens of gigabytes for small to medium grids to hundreds of gigabytes for large grids.
 These estimates are plotted in Figure \ref{fig:mem_solve}, and listed numerically in Table \ref{tab:mem_solve}.
 \begin{figure}[H]
   \centering
@@ -239,9 +239,9 @@ Each asymptotics calculation is compared to the finite difference calculation wi
 Figure \ref{fig:asym_real_kelp_br01} shows this type of comparison for a single value of $a_w$, varying $b$.
 As discussed in Section \ref{sec:num_asym_mms}, the order $n$ approximation converges with roughly order $n+1$.
 However, the Figure shows that this trend does not continue indefinitely as $b$ decreases.
-This is because although the truncation error is decreasing, the discretization error is remaining constant.
+This is because although the truncation error is decreasing, the discretization error remains constant.
 Therefore, no results with this grid size will show errors below about \SI{0.01}{\W\per\m\squared\per\radian}.
-As a result, simulations with errors below this threshold in order to gain insight into trends in truncation error.
+As a result, simulations with errors below this threshold are discarded in order to gain insight into trends in truncation error.
 
 \newcommand\rdfigwidth{4.5in}
 
@@ -265,7 +265,7 @@ The clear pattern in the variation of error over the $a_w$--$b$ domain indicates
   \label{fig:asym_err_vs_ab}
 \end{figure}
 
-Figure \ref{fig:best_n_data_vs_ab} shows a similar view of the simulation results as Figure \ref{asym_err_vs_ab}, except that now, the different approximation orders are considered for each set of optical properties, and the order with the lowest error is found.
+Figure \ref{fig:best_n_data_vs_ab} shows a similar view of the simulation results as Figure \ref{fig:asym_err_vs_ab}, except that now, the different approximation orders are considered for each set of optical properties, and the order with the lowest error is found.
 The order of the best approximation is shown for each case, and the error incurred by that approximation is shown on the color axis.
 In the upper left corner, the most difficult cases are shown.
 In this region, the zeroth order approximation is most accurate, showing that additional terms cause the solution to diverge.
@@ -314,7 +314,7 @@ Note that as $\bar\varepsilon$ is decreased, the error threshold cannot be satis
 \subsection{Error Model}
 Figure \ref{fig:asym_err_data_xi_model} concisely represents the simulation results for all optical properties and all approximation orders, with error $\varepsilon$ plotted on the vertical axis and $b$ plotted on the color axis.
 In the left column, $a_w$ is plotted on the horizontal axis.
-On a log--log--log scale, the simplicity of the relationship between these three quantities is striking.
+On a log--log--log scale, the simplicity of the relationship among these three quantities is striking.
 Holding $b$ constant, a log--log linear relationship is apparent between the error $\varepsilon$ and the absorption coefficient $a_w$.
 Meanwhile, holding $a_w$ constant, log--uniform increases in $b$ cause log--constant increases in $\varepsilon$.
 That is, $\ln\varepsilon$ seems to increase linearly with $\ln b$ and decrease linearly with $\ln a$.
@@ -384,7 +384,7 @@ Thus, waters characterized below this threshold are worth considering for soluti
   \label{fig:asym_err_vs_xi_all_n_fit_all}
 \end{figure}
 
-The determination of $\xi^*$ and $\varepsilon^*$ marks the construction of a simple analytical model given by Equation \ref{eqn:eps_n} which predicts the errors for any set of aquatic optical properties.
+The determination of $\xi^*$ and $\varepsilon^*$ marks the construction of a simple analytical model given by Equation \eqref{eqn:eps_n} which predicts the errors for any set of aquatic optical properties.
 Figure \ref{fig:asym_err_model_vs_ab_all_k} shows the predictions of this model for several values of $a_w$, $b$, and $n$, with $\varepsilon$ plotted on the color axis.
 Note that $\xi^*$ is a contour in $(a_w, b)$ space, and is marked on the figure with a dashed white line.
 $\xi<\xi^*$ is the region to the lower right of the threshold, and $\xi>\xi^*$ is the region to the upper left.
@@ -399,7 +399,7 @@ Also keep in mind that this model and its predictions deal only with truncation 
 
 This model can now be used to produce general guidelines for the choice of $n$ given a desired error.
 Assuming that a maximum error $\varepsilon=\bar\varepsilon$ is permissible, the minimum order of $n$ which produces $\varepsilon$ is desired.
-This order, denoted $\bar{n}$, can determined by solving Equation \ref{eqn:ln_eps_n} for $n$ when $\varepsilon=\bar{\varepsilon}$ and rounding up to the nearest integer.
+This order, denoted $\bar{n}$, can determined by solving Equation \eqref{eqn:ln_eps_n} for $n$ when $\varepsilon=\bar{\varepsilon}$ and rounding up to the nearest integer.
 That is,
 \begin{equation*}
   \bar{n} = \ceil\left(\frac{\ln\bar{\varepsilon} - \ln\varepsilon^*}{\ln\xi - \ln\xi^*} - 1 \right),
@@ -414,7 +414,7 @@ Figure \ref{fig:nbar_model_vs_ab_3eps} shows $\bar{n}$ up to $\bar{n}=3$ for $\b
 The $\xi^*$ contour is plotted.
 Assuming that $\bar{\varepsilon}<\varepsilon^*$, if higher contours of $\bar{n}$ were plotted, they would approach the $\xi^*$ contour as $\bar{n} \to \infty$ since no accuracy better than $\varepsilon^*$ is achievable by any order approximation when $\xi > \xi^*$.
 
-To summarize this analysis, once an error threshold $\bar{\varepsilon}$ is chosen, the optical properties $a_w$ and $b$ determine the optimal numerical approach according to Figure \ref{fig:nbar_model_vs_ab_3eps} and Equation \ref{eqn:n_bar}.
+To summarize this analysis, once an error threshold $\bar{\varepsilon}$ is chosen, the optical properties $a_w$ and $b$ determine the optimal numerical approach according to Figure \ref{fig:nbar_model_vs_ab_3eps} and Equation \eqref{eqn:n_bar}.
 If $\xi^*(a_w, b) > \xi^*$, then the finite difference algorithm should be used if possible.
 If memory or computation time requires the numerical asymptotics algorithm to be used, then the $n=0$ approximation should be used, effectively ignoring scattering.
 
@@ -433,8 +433,8 @@ Finally, in any of the easier regions defined by $\bar{n} \leq 3$, the optimal t
 \section{Comparison to Other Light Models}
 
 Now that recommendations have been given for the choice of solution method, with the computational cost and accuracy of each having been discussed, all that remains is to compare the solutions obtained from the model presented in this thesis to other available models for the light field.
-Two very simple models are used; in both cases, the number of calculations can be counted on two hands, whereas the model of this thesis involves many millions of calculations.
-Whether the insight gained from the more complex model is worth the computational expense depends on the purpose of the calculation, and is the decision for the reader to make according to their best judgment for the situation.
+Two simple models are used; in both cases, the number of calculations can be counted on two hands, whereas the model of this thesis involves many millions of calculations.
+Whether the insight gained from the more complex model is worth the computational expense depends on the purpose of the calculation, and is a decision for the reader to make according to their best judgment for the situation.
 
 \subsection{Simpler Models}
 The first model is the simplest conceivable light model --- exponential attenuation with a constant absorption coefficient $a=a_w$.
@@ -458,13 +458,13 @@ Then,
 \begin{equation}
   D = \frac{1}{\left(\xmax-\xmin\right) \left(\ymax-\ymin\right)},
 \end{equation}
-and the mean frond $A$ is calculated from the mean frond length according to Equation \ref{eqn:area-from-length} as 
+and the mean frond $A$ is calculated from the mean frond length according to Equation \eqref{eqn:area-from-length} as 
 \begin{equation}
   A = \frac{{\mu_l}^2}{2f_r}.
 \end{equation}
 
-Once $k_{\mbox{kelp}}(z)$ is calculated according to Equation \ref{eqn:exp_kelp_k}, then the solution of Equation \ref{eqn:exp_kelp_dIdz} is a simplified version of Equation \ref{eqn:asymptotics_ode_0} with $\tilde{a}(z)=a_w+k_{\mbox{kelp}}(z)$ and $\tilde{\sigma}_0=0$.
-The solution is therefore the analogous simplification of Equation \ref{eqn:asymptotics_soln_0}, namely
+Once $k_{\mbox{kelp}}(z)$ is calculated according to Equation \eqref{eqn:exp_kelp_k}, then the solution of Equation \eqref{eqn:exp_kelp_dIdz} is a simplified version of Equation \eqref{eqn:asymptotics_ode_0} with $\tilde{a}(z)=a_w+k_{\mbox{kelp}}(z)$ and $\tilde{\sigma}_0=0$.
+The solution is therefore the analogous simplification of Equation \eqref{eqn:asymptotics_soln_0}, namely
 \begin{equation}
   I(z) = I_0 \exp\left(-a_wz - \int_0^z k_{\mbox{kelp}}(z')\, dz' \right).
 \end{equation}
@@ -488,7 +488,7 @@ In the $z=2$ region where the most kelp is present, the 3D model predicts higher
 However, between $z=3$ and $z=4$, the 3D kelp model decreases more slowly than the 1D model, perhaps because light is able to penetrate the water in regions where the kelp is not present, and the multitude of angles in which the light travels allow some of the rays to reach even the lower depths without being absorbed by the kelp.
 
 As for the right column, the perceived irradiance is clearly much lower than the average irradiance and the other models.
-This makes sense, as the light is dimmest in the regions of highest kelp density, and the perceived irradiance weights these regions the highest, practically ignoring the edges of the domain where light is absorbed only by the water; these regions skew the average irradiance upward although they are not actually representative the light field where photosynthesis is occurring.
+This makes sense, as the light is dimmest in the regions of highest kelp density, and the perceived irradiance weights these regions the highest, practically ignoring the edges of the domain where light is absorbed only by the water; these regions skew the average irradiance upward although they are not actually representative of the light field where photosynthesis is occurring.
 From this point of view, it seems that the other two light models significantly overestimate the amount of light available where it actually matters.
 
 Considering the finite difference solution, the most visible effect of increasing scattering is to decrease the light field towards the bottom of the domain.
