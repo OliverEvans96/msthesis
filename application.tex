@@ -115,8 +115,8 @@ After repeating the procedure for several current speeds, $\kappa$ can be plotte
 Then, an optimal value for the frond alignment coefficient $\eta$ can be found by fitting $\kappa = \eta\mu$ to the data.
 It may, of course, turn out that this simple linear relationship does not hold, in which case a more appropriate description can be determined.
 
-
 \subsection{Simulation Context}
+\label{sec:simulation_context}
 In the case that the model is called by time--dependent kelp growth and ocean models, certain parameters can be passed as arguments to the light calculation subroutines to inform them of the encompassing context.
 Specifically, the ocean model can current speed and direction over depth, which is used in calculating the kelp distribution.
 The position of the sun and irradiance just below the surface of the water can also be provided by the ocean model, which is used to generate the surface radiance boundary condition.
@@ -140,6 +140,7 @@ When $D_s=0$, the distribution is totally flat, while as $D_s \to \infty$, the d
 This can be considered a very coarse description of the amount of scattering in the atmosphere, since light arrives at Earth nearly all from a single direction.
 
 \subsection{Standalone Context}
+\label{sec:standalone_context}
 The simulation results shown in the later Sections of this Chapter probe the light model in various ways independent of any encompassing kelp growth or ocean models, and therefore the physical parameters that they would supply must be hand--picked to represent a realistic scenario to which the light model may be applied.
 Therefore, the following parameter choices are made.
 
@@ -431,7 +432,72 @@ Finally, in any of the easier regions defined by $\bar{n} \leq 3$, the optimal t
 
 \section{Comparison to Other Light Models}
 
-\subsection{Full 10m}
+Now that recommendations have been given for the choice of solution method, with the computational cost and accuracy of each having been discussed, all that remains is to compare the solutions obtained from the model presented in this thesis to other available models for the light field.
+Two very simple models are used; in both cases, the number of calculations can be counted on two hands, whereas the model of this thesis involves many millions of calculations.
+Whether the insight gained from the more complex model is worth the computational expense depends on the purpose of the calculation, and is the decision for the reader to make according to their best judgement for the situation.
+
+\subsection{Simpler Models}
+The first model is the simplest conceivable light model --- exponential attenuation with a constant absorption coefficient $a=a_w$.
+That is, the simplest solution is to ignore the kelp entirely.
+Of course, a depth--dependent absorption coefficient is likely to be used in a real simulation, but for the sake of the comparison, a constant $a_w$ is used.
+The irradiance in this case is simply
+\begin{equation}
+  I(z) = \exp\left(-a_w z \right).
+\end{equation}
+
+The second light model, presented in \citep{broch_modelling_2012}, accounts for the kelp by adding a depth--dependent term to the absorption coefficient related to the area and spatial density of the seaweed.
+The model is described by
+\begin{align}
+  \frac{dI}{dz} &= -\left(a_w + k_{\mbox{kelp}}(z)\right),
+  \label{eqn:exp_kelp_dIdz}\\
+  k_{\mbox{kelp}}(z) &= -\ln(1-A_k(1-(1-AD)^{\rho_n(z)})),
+  \label{eqn:exp_kelp_k}
+\end{align}
+where $A_k$ is the kelp absorptance, $D$ is the number of vertical kelp ropes per horizontal \SI{}{\m\squared}, $A(z)$ is the average area of the kelp fronds per meter vertical rope, and $\rho_n$ is the number of kelp fronds per vertical meter of rope.
+Then,
+\begin{equation}
+  D = \frac{1}{\left(\xmax-\xmin\right) \left(\ymax-\ymin\right)},
+\end{equation}
+and the mean frond $A$ is calculated from the mean frond length according to Equation \ref{eqn:area-from-length} as 
+\begin{equation}
+  A = \frac{{\mu_l}^2}{2f_r}.
+\end{equation}
+
+Once $k_{\mbox{kelp}}(z)$ is calculated according to Equation \ref{eqn:exp_kelp_k}, then the solution of Equation \ref{eqn:exp_kelp_dIdz} is a simplified version of Equation \ref{eqn:asymptotics_ode_0} with $\tilde{a}(z)=a_w+k_{\mbox{kelp}}(z)$ and $\tilde{\sigma}_0=0$.
+The solution is therefore the analogous simplification of Equation \ref{eqn:asymptotics_soln_0}, namely
+\begin{equation}
+  I(z) = I_0 \exp\left(-a_wz - \int_0^z k_{\mbox{kelp}}(z')\, dz' \right).
+\end{equation}
+
+\subsection{Comparison Results}
+In Figures \ref{fig:compare_models_n1}, \ref{fig:compare_models_n2}, and \ref{fig:compare_models_n3}, the light model of this thesis is compared to simpler models under the conditions described in Section \ref{sec:standalone_context}.
+In the figures, the first model described in this Chapter, which ignores the kelp entirely, is plotted with a black dashed line.
+The second model, which uses an additional term in the absorption coefficient to describe the kelp, is plotted with a dashed blue line.
+The no--scatering numerical asymptotics solution is plotted in solid red.
+Since the above two models do not consider scattering, both the finite difference and asymptotic solutions are plotted for a range of $b$ values, with the finite difference $b$ described by the left colorbar, and the asymptotic $b$ described by the right colorbar, so as to distinguish between the two sets of curves.
+
+In each of the three Figures, a different value of $n$ is used for the asymptotic approximations for $b>0$: $n=1$, $n=2$, and $n=3$ for Figures \ref{fig:compare_models_n1}, \ref{fig:compare_models_n2}, and \ref{fig:compare_models_n3} respectively. 
+In the left column of each figure, the average irradiance is plotted as a function of depth for each of the calculations from the light model of this thesis, calculated over the entire horizontal domain.
+In the right column, the perceived irradiance, as described in Section \ref{sec:perceived_irrad}, is shown for the asymptotics and finite difference calculations.
+
+First, note that the no--kelp model predicts the highest light levels throughout the domain, as should be expected since it ignores a significant aspect of the light reduction.
+The simple kelp model agrees with the no--kelp model at the surface, but then reduces more quickly once the kelp, which is largest at $z=2$, is introduced.
+At the bottom of the domain where there is little kelp remaining, the two curves are seen to be parallel in the log--linear scale, showing that the absorption coefficients are equal as at the surface.
+Looking at the left column, the average irradiance from no--scatering solution to the 3D model appears to agree quite well with the simple kelp model, especially near the surface and bottom, where both models are approximately reduced to the first model.
+In the $z=2$ region where the most kelp is present, the 3D model predicts higher absorption than the simpler 1D model.
+However, between $z=3$ and $z=4$, the 3D kelp model decreases more slowly than the 1D model, perhaps because light is able to penetrate the water in regions where the kelp is not present, and the multitude of angles in which the light travels allow some of the rays to reach even the lower depths without being absorbed by the kelp.
+
+As for the right column, the perceived irradiance is clearly much lower than the average irradiance and the other models.
+This makes sense, as the light is dimmest in the regions of highest kelp density, and the perceived irradiance weights these regions the highest, practically ignoring the edges of the domain where light is absorbed only by the water; these regions skew the average irradiance upward although they are not actually representative the light field where photosynthesis is occuring.
+From this point of view, it seems that the other two light models significantly overestimate the amount of light available where it actually matters.
+
+Considering the finite difference solution, the most visible effect of increasing scattering is to decrease the light field towards the bottom of the domain.
+Of course, scattering does not cause that light to be lost entirely.
+Rather, it tends to reflect it towards the surface, where increases in scattering lead to higher light levels.
+This is noteworthy since the light available very close to the surface is significantly higher than it is a few meters below.
+This tendency for scattering to insulate the upper region of the water may prove to be important in understanding how photosynthessi near the ocean's surface differs from photosynthesis at greater depths.
+
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=6in]{compare_models_n1}
