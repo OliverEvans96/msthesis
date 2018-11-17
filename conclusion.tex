@@ -69,7 +69,7 @@ This poses an additional challenge for the numerical asymptotics solution, as th
 Perhaps the maximum value $\bar{b}$ of the scattering field $b(\vec{x}, \bar{b})$ could be used, which of course would require that $b$ be expanded in terms of $\bar{b}$ as is currently done with $L$ and $\sigma$ in Equations \eqref{eqn:Lasym} and \eqref{eqn:sigasym} respectively.
 
 Finally, photosynthesis is a frequency--dependent process, and a frequency--dependent light model may therefore significantly improve seasonal growth predictions.
-This suggests that inelastic (a.k.a. Raman) scattering \citep{raman} also be considered, whereby light changes not only direction but also frequency during a scattering event.
+This suggests that inelastic (a.k.a. Raman) scattering also be considered, whereby light changes not only direction but also frequency during a scattering event.
 Of course, frequency--dependence adds another dimension to the already five--dimensional simulation, which may push a numerical solution beyond the capability of modern computers.
 
 \subsection{Numerical Improvements}
@@ -92,8 +92,8 @@ Therefore, unless a high--speed fiber--optic network is used, the MPI environmen
 None of this has yet been explored in the context of this project, and is ripe for exploration in future work.
 
 Another potential improvement, though not likely to have as significant of an impact as the two above, is to restructure the angular grid to use a more accurate quadrature, which would reduce the necessary number of angular grid points to achieve a particular level of accuracy, and therefore reduce the required computation time and memory allocation.
-Possible options are the Lebedev grid and ``spherical t--design'' described in \citep{bentjes}.
-In fact, many other numerical algorithms altogether are available for solving the radiative transfer equation, including finite element methods \citep{FEM} and Monte Carlo methods \citep{mc}, among others \citep{other,rte,methods}.
+Among the possible options are the Lebedev grid and ``spherical t--design''\cite{beentjes_quadrature_nodate,an_numerical_2016,beckmann_local_2014}.
+In fact, many other numerical algorithms altogether are available for solving the radiative transfer equation, including finite element methods and Monte Carlo methods among others. % \citep{FEM} \citep{MC} \citep{other,rte,methods}.
 
 \subsection{Seaweed Cultivation Simulations}
 The final and perhaps most interesting and useful avenue for future work is the application of the 3D light model developed in this thesis to answer real questions about seaweed cultivation.

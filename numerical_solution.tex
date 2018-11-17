@@ -552,8 +552,8 @@ Direct methods such as Gaussian elimination, QR factorization, and singular valu
 We therefore turn to iterative solvers.
 Many such solvers are available, including GMRES \cite{saad_gmres:_1985}, LGMRES \cite{baker_technique_2005}, IDR \cite{sonneveld_idrs:_2008}, and BI-CGSTAB \cite{van_der_vorst_bi-cgstab:_1992}.
 
-For the code in this thesis, a parallel implementation of GMRES provided by a Fortran package called LIS (Library of Iterative Solvers) \cite{nishida_lis} is employed.
-LIS provides several execution environments: multithreading, multiprocessing, and MPI (Message Passing Interface) \cite{mpi}.
+For the code in this thesis, a parallel implementation of GMRES provided by a Fortran package called LIS (Library of Iterative Solvers) \cite{nishida_experience_2010} is employed.
+LIS provides several execution environments: multithreading, multiprocessing, and MPI (Message Passing Interface) \cite{message_passing_interface_forum_mpi:_1993}.
 At present, the multithreading environment is used.
 While this is the simplest to set up since threads within a process share memory and all communication between workers is hidden from the user, it requires that a single process on a single machine be able to allocate enough space for the entire coefficient matrix, which can easily reach tens or hundreds of gigabytes for large grids.
 
