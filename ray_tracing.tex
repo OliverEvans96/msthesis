@@ -76,11 +76,11 @@ For full implementation details, see the \texttt{traverse\_ray} subroutine in \t
 % \begin{enumerate}
 %   \item Let $i,j,k$ be fixed (denoting the starting grid cell).
 %   \item Set $s=0$.
-%   \item 
-% \begin{align}  
+%   \item
+% \begin{align}
 %   d = \mbox{argmin}_{x,y,z} \left\{ s_i^x-s, s_j^y-s, s_k^z \right\}
 % \end{align}
-% 
+%
 % \begin{align}
 %   \begin{cases}
 %     i = i+\delta_x, & \mbox{if } d=x \\
@@ -88,9 +88,9 @@ For full implementation details, see the \texttt{traverse\_ray} subroutine in \t
 %     z = k+\delta_z, & \mbox{if } d=z
 %   \end{cases}
 % \end{align}
-% 
+%
 % and
-% 
+%
 % \begin{align}
 %   \begin{cases}
 %     i^e = i^e+\delta_x, & \mbox{if } d=x \\
@@ -98,19 +98,19 @@ For full implementation details, see the \texttt{traverse\_ray} subroutine in \t
 %     z^e = k^e+\delta_z, & \mbox{if } d=z
 %   \end{cases}
 % \end{align}
-% 
-% 
+%
+%
 % Then, move to the adjacent grid cell in the dimension which requires the shortest
 % step to reach an edge. Save $ds$ of the path through this cell. Also save abs.
 % coef. and source.
 % % TODO: Improve
-
-As the ray traverses the spatial grids, it crosses $N-2$ spatial grid edges.
-Let the nondecreasing path lengths at which these crossings occur be denoted by
-$\left\{s_\nu\right\}_{\nu=1}^{N}$, with the convention $s_1=0$ and $s_{N}=\tilde{s}$.
-This implies that edge $\nu$ preceeds cell $\nu$.
-$\{s_\nu\}$ is not strictly increasing if the ray directly intersects a grid corner,
-which means that multiple edges are traversed at the same path length.
-Hence, the path lengths through the grid cells, indexed by $\nu=1,\ldots,N-1$, are
-
-* TODO *
+%
+% As the ray traverses the spatial grids, it crosses $N-2$ spatial grid edges.
+% Let the nondecreasing path lengths at which these crossings occur be denoted by
+% $\left\{s_\nu\right\}_{\nu=1}^{N}$, with the convention $s_1=0$ and $s_{N}=\tilde{s}$.
+% This implies that edge $\nu$ preceeds cell $\nu$.
+% $\{s_\nu\}$ is not strictly increasing if the ray directly intersects a grid corner,
+% which means that multiple edges are traversed at the same path length.
+% Hence, the path lengths through the grid cells, indexed by $\nu=1,\ldots,N-1$, are
+%
+% * TODO *
