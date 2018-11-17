@@ -44,7 +44,7 @@ No data in the literature exist for the frond thickness, so a best estimate is p
     Water absorption coefficient & $a_w$ & See Table \ref{tab:petzold} & \cite{petzold_volume_1972} \\%  & ? \\
     Scattering coefficient & $b$  & See Table \ref{tab:petzold} & \cite{petzold_volume_1972} \\%  & ? \\
     Volume scattering function & $\beta$ & tabulated & \cite{petzold_volume_1972,sokolov_parameterization_2010} \\% & Currently using Petzold \\
-    Frond thickness & $t$ & \SI{0.4}{\mm} & estimated \\
+    Frond thickness & $f_t$ & \SI{0.4}{\mm} & estimated \\
     Surface solar irradiance & $I_0$ & \SI{50}{\W\per\m\squared} & \cite{broch_modelling_2012}  \\% & Irradiance for maximal photosynthesis, converted from photons \\
     \bottomrule
   \end{tabular}
@@ -450,10 +450,10 @@ The model is described by
 \begin{align}
   \frac{dI}{dz} &= -\left(a_w + k_{\mbox{kelp}}(z)\right),
   \label{eqn:exp_kelp_dIdz}\\
-  k_{\mbox{kelp}}(z) &= -\ln(1-A_k(1-(1-AD)^{\rho_n(z)})),
+  k_{\mbox{kelp}}(z) &= -\ln(1-A_k(1-(1-AD)^{\rho_f(z)})),
   \label{eqn:exp_kelp_k}
 \end{align}
-where $A_k$ is the kelp absorptance, $D$ is the number of vertical kelp ropes per horizontal \SI{}{\m\squared}, $A(z)$ is the average area of the kelp fronds per meter vertical rope, and $\rho_n$ is the number of kelp fronds per vertical meter of rope.
+where $A_k$ is the kelp absorptance, $D$ is the number of vertical kelp ropes per horizontal \SI{}{\m\squared}, $A(z)$ is the average area of the kelp fronds per meter vertical rope, and $\rho_f$ is the number of kelp fronds per vertical meter of rope.
 Then,
 \begin{equation}
   D = \frac{1}{\left(\xmax-\xmin\right) \left(\ymax-\ymin\right)},

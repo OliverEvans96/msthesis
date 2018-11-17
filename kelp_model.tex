@@ -318,16 +318,16 @@ Integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ as depicted in Figure \ref
 								\,dl\,d\theta_f.
 \end{align*}
 
-Assuming that the depth layer has thickness $dz$ and contains $n$ fronds of thickness $t$,
+Assuming that the depth layer has thickness $dz$ and contains $n_f$ fronds of thickness $f_t$,
 the proportion of the vertical length of the discrete depth layer occupied by kelp at any position $(x,y,z)$ is given by
-\begin{equation*}
-  P_k(x, y) = \frac{nt}{dz}\tilde{P}_k(x, y).
-\end{equation*}
+\begin{equation}
+  P_k(x, y) = \frac{n_ff_t}{dz}\tilde{P}_k(x, y).
+\end{equation}
 In the continuum limit as the number of discrete depth depth layers approaches infinity, $P_k(x,y,z)$ can be interpreted as the probability of the point $(x,y,z)$ being occupied by kelp.
-In a three dimensional context, the number of fronds is more likely to be specified by a number density $\rho_n=n/dz$ over the vertical length of the rope with units \SI{}{\per\m}, in which case
-\begin{equation*}
-  P_k(x, y, z) = t \rho_n(z) \tilde{P}_k(x, y, z).
-\end{equation*}
+In a three dimensional context, the number of fronds is more likely to be specified by a number density $\rho_f=n_f/dz$ over the vertical length of the rope with units \SI{}{\per\m}, in which case
+\begin{equation}
+  P_k(x, y, z) = f_t \rho_f(z) \tilde{P}_k(x, y, z).
+\end{equation}
 Then, since the point $\vec{x}$ has a probability $P_k(\vec{x})$ of being occupied by kelp and a probability $(1-P_k(\vec{x}))$ of being occupied by the surrounding aquatic medium,
 the effective absorption coefficient can be calculated as
 \begin{equation*}
