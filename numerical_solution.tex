@@ -502,20 +502,16 @@ Clearly, the grid must be kept reasonably small in order to be solved by modern 
 Also, note that in the absence of an explicit source term $\sigma(\vec{x}, \vec{\omega})$, $\mathbb{B}$ only has nonzero entries for the downwelling surface grid cells, of which there are $n_x n_y \nomega/2$.
 
 \subsection{Iterative Solution}
+\label{sec:iterative_solution}
 Because of the large number of dimensions (three spatial, two angular), the matrix can easily have upwards of millions of nonzero elements,
 even for modest grid sizes.
 Direct methods such as Gaussian elimination, QR factorization, and singular value decomposition are therefore infeasible due to memory requirements.
 We therefore turn to iterative solvers.
 Many such solvers are available, including GMRES \cite{saad_gmres:_1985}, LGMRES \cite{baker_technique_2005}, IDR \cite{sonneveld_idrs:_2008}, and BI-CGSTAB \cite{van_der_vorst_bi-cgstab:_1992}.
 
-For the code in this thesis, a parallel implementation of GMRES provided by a Fortran package called LIS (Library of Iterative Solvers) is employed.
-LIS provides several execution environments: multithreading, multiprocessing, and MPI (Message Passing Interface).
+For the code in this thesis, a parallel implementation of GMRES provided by a Fortran package called LIS (Library of Iterative Solvers) \cite{nishida_lis} is employed.
+LIS provides several execution environments: multithreading, multiprocessing, and MPI (Message Passing Interface) \cite{mpi}.
 At present, the multithreading environment is used.
 While this is the simplest to set up since threads within a process share memory and all communication between workers is hidden from the user, it requires that a single process on a single machine be able to allocate enough space for the entire coefficient matrix, which can easily reach tens or hundreds of gigabytes for large grids.
 
-On the other hand, MPI is a protocol which facilitates work-sharing between processes either on the same machine or over a network.
-Therefore, using the MPI environment permits the coefficient matrix to be divided and stored in a distributed fashion on several nodes within a cluster, which, depending on the computational resources available, is likely to drastically increase the grid sizes available for computation.
-However, network communication is often significantly slower than inter-thread communication.
-Therefore, unless a high--speed fiber--optic network is used, the MPI environment is likely to require a sacrifice in terms of computation time for the sake of the increased memory capacity.
-None of this has yet been explored in the context of this project, and is ripe for exploration in future work.
 

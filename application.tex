@@ -164,7 +164,7 @@ Computation time is a significant consideration, especially when using the light
 The computational demand can be lessened by updating the light model only a few times per day rather than every time step.
 Still, accuracy must be balanced with reasonable resource consumption; if the light model is taking as much time as all of the other aspects combined, any accuracy gained from the light field computation is likely being lost elsewhere in the model.
 
-Also, both algorithms are parallelized using OpenMP, so increasing the parallelism decreases the computation time, though it does not reduce the overall resource consumption. % TODO: Cite OpenMP
+Also, both algorithms are parallelized using OpenMP \cite{openmp}, so increasing the parallelism decreases the computation time, though it does not reduce the overall resource consumption. % TODO: Cite OpenMP
 Further, some sections of the code are necessarily serial, which reduces the effective parallelism to some degree.
 For using 8 threads, an average CPU usage of about 5 cores is observed over the course of the computation, while for 32 threads, it is around 22. % TODO: Check actual values.
 This is not intended to discourage parallelism, only to represent it accurately; in reality, the speedup is quite noticeable when the thread count is increased.
