@@ -308,7 +308,7 @@ This is found by integrating $P_{2D}(\theta_f, l)$ from \eqref{eqn:p2d} over $R_
 \end{figure}
 
 Integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ as depicted in Figure \ref{fig:cart_shade} yields the proportion of the population in the depth layer occupying the point $(\theta,s)$,
-\begin{align*}
+\begin{align}
 		\tilde{P}_k(\theta,s,z)	&= \iint_{R_s(\theta,s)}
 								P_{2D}(\theta_f,l)
 								\,dl\,d\theta_f \nonumber \\
@@ -316,12 +316,14 @@ Integrating $P_{2D}(\theta_f,l)$ over $R_s(\theta,s)$ as depicted in Figure \ref
 								\int_{l_{\min}(\theta_f)}^\infty
 								P_{2D}(\theta_f,l)
 								\,dl\,d\theta_f.
-\end{align*}
+                \label{eqn:integrate_p2d}
+\end{align}
 
 Assuming that the depth layer has thickness $dz$ and contains $n_f$ fronds of thickness $f_t$,
 the proportion of the vertical length of the discrete depth layer occupied by kelp at any position $(x,y,z)$ is given by
 \begin{equation}
   P_k(x, y) = \frac{n_ff_t}{dz}\tilde{P}_k(x, y).
+  \label{eqn:kelp_pk}
 \end{equation}
 In the continuum limit as the number of discrete depth depth layers approaches infinity, $P_k(x,y,z)$ can be interpreted as the probability of the point $(x,y,z)$ being occupied by kelp.
 In a three dimensional context, the number of fronds is more likely to be specified by a number density $\rho_f=n_f/dz$ over the vertical length of the rope with units \SI{}{\per\m}, in which case
@@ -399,18 +401,22 @@ Applying a Gaussian blur of radius $\sigma_b$ to a function with a maximum disco
 \end{equation*}
 The same logic applies to directional derivatives of multidimensional scalar functions.
 
-\subsection{Multidimensional Gaussian blur}
-In light of the above arguments, the derivatives of the absorption coefficient are bounded by applying a two--dimensional Gaussian blur in $xy$--plane to $P_k$ using the kernel
+\subsection{Multidimensional Gaussian Blur}
+\label{sec:gaussian_blur}
+In light of the above arguments, the derivatives of the absorption coefficient are bounded by applying a Gaussian blur to $P_k$ before the calculation of $a(\vec{x})$.
+This is done by convolving slices of $P_k$ in the $xy$--plane with the two--dimensional normalized Gaussian kernel
 \begin{equation}
-  k(x, y; \sigma_b) = \frac{1}{\sqrt{2\pi\sigma_b^2}} \exp\left(\frac{x^2 + y^2}{2\sigma_b^2}\right).
+  \label{eqn:gaussian_kernel}
+  K(x, y; \sigma_b) = \frac{1}{\sqrt{2\pi\sigma_b^2}} \exp\left(\frac{x^2 + y^2}{2\sigma_b^2}\right).
 \end{equation}
-Hence, the blurred solution is
+Hence, the blurred solution is 
 \begin{equation}
-  P_k^b(x, y, z) = \int_{-\infty}^\infty \int_{-\infty}^\infty k(x-x', y-y', z; \sigma_b) P_k(x', y', z)\, dx'\, dy'.
+  \label{eqn:gaussian_blur}
+  P_k^b(x, y, z) = \int_{-\infty}^\infty \int_{-\infty}^\infty K(x', y', z; \sigma_b) P_k(x-x', y-y', z)\, dx'\, dy'.
 \end{equation}
 
 A physical interpretation of this Gaussian blurring is that $P_k^b$ is the time--averaged kelp distribution, assuming that the rope is allowed to move horizontally, and $k(x, y; \sigma)$ is the PDF of the rope's location distribution.
-This interpretation is a bit incongruous with the rest of the model since there is no other explicit mention of time--averaging; while the frond length and position distributions can be thought of as continuous approximations to the population distribution at a single point in time, this idea does not apply to the rope's position, since there is only one.
+This interpretation is a bit incongruous with the rest of the model since there is no other explicit mention of time--averaging; while the frond length and position distributions can be thought of as continuous approximations to the population distribution at a single point in time, this idea does not apply to the rope's position, since there is only one rope.
 
 \subsection{Absorption coefficient plots}
 % TODO: Clean up figures

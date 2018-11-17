@@ -89,7 +89,7 @@ We then assume that frond lengths are normally distributed in each depth layer
 with mean $\mu_k$ and standard deviation $\sigma_k$.
 
 \subsection{Integration of Distributions}
-The computational crux of calculating the kelp distribution is to integrate $P_{2D}(\theta_f, l)$ from \eqref{eqn:p2d} over the occupancy region $R_s(\theta, s)$, defined by \eqref{eqn:rs_th} and \eqref{eqn:rs_l}, for every point $(\theta,s)$ in the $xy$--domain.
+The computational crux of calculating the kelp distribution is to evaluate \eqref{eqn:integrate_p2d} by integrating $P_{2D}(\theta_f, l)$ from \eqref{eqn:p2d} over the occupancy region $R_s(\theta, s)$, defined by \eqref{eqn:rs_th} and \eqref{eqn:rs_l}, for every point $(\theta,s)$ in the $xy$--domain.
 To recap, the population distribution is
 \begin{align*}
 	P_{2D}(\theta_f,l) &= P_{\theta_f}(\theta_f) \cdot P_l(l), \\
@@ -146,7 +146,50 @@ If the quadrature degree is chosen too low (e.g. 5), the resulting distribution 
 Since the kelp calculation is orders of magnitude faster than the light field calculation, there is no issue with choosing a high quadrature degree.
 
 \subsection{Gaussian Convolution}
-*TODO: numerical blurring details
+In order to blur the kelp distribution as described in Section \ref{sec:gaussian_blur}, $P_k(x, y, z)$ is first calculated without blurring according to Equations \eqref{eqn:integrate_p2d} and \eqref{eqn:kelp_pk} at every point $(x_i, y_j)$ in each depth layer, which yields a matrix $P_{ij}^k = P_k(x_i, y_j, z)$.
+Then, the discrete convolution of $P_{ij}^k$ with the Gaussian $K(x, y; \sigma_b)$ from Equation \eqref{eqn:gaussian_kernel} is numerically computed by the same process used to post--process pixelated image with a Gaussian blur.
+
+Notice first that the integral from Equation \eqref{eqn:gaussian_blur} has infinite extent.
+For numerical computation, a discrete grid with finite bounds must be chosen.
+Specifically, an array of uniformly spaced quadrature points ($x'_{i'}, y'_{j'}$) is chosen for the integration variables $x'$ and $y'$ with spacings $dx$ and $dy$ to match the existing grid.
+In order to capture the large majority of the Gaussian distribution, the number of quadrature points is each dimension is chosen to be
+\begin{equation}
+  n_K = 2r_K+1,
+\end{equation}
+where
+\begin{equation}
+  r_K = \ceil\left(\max\left(\frac{2\sigma_b}{dx}, \frac{2\sigma_b}{dy}\right)\right).
+\end{equation}
+Then, the quadrature points are
+\begin{align*}
+  x'_{i'} = (i'-r_K)dx, \quad i'=1,\ldots,n_k,
+  y'_{j'} = (j'-r_K)dy, \quad j'=1,\ldots,n_k.
+\end{align*}
+The kernel is then evaluated at the quadrature points to form the matrix
+\begin{equation*}
+  K_{i'j'} = K\left(x'_{i'}, y'_{j'}; \sigma_b\right).
+\end{equation*}
+Note that the continuous $K(x, y; \sigma_b)$ is normalized only on the infinite plane;
+the discrete $K_{ij}$ must therefore be re--normalized on the finite grid as
+\begin{equation*}
+  K_{i'j'} = \frac{K_{i'j'}}{\sum_{i',j'} K_{i'j'}}.
+\end{equation*}
+Then, letting
+\begin{align*}
+  \delta_x(i, i') = i - r_K + i'\mbox{ mod1 }n_x, \\
+  \delta_y(j, j') = j - r_K + j'\mbox{ mod1 }n_y,
+\end{align*}
+the convolved kelp distribution $P_{ij}^{kb}$ is evaluated as
+\begin{align*}
+  P_{ij}^{kb} &= P_k^b(x_i, y_j, z; \sigma_b) \\
+  &= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} K(x', y', z; \sigma_b) P_k(x_i-x', y_j-y', z)\, dx'\, dy' \\
+  &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K\left(x'_{i'}, y'_{j'}, z; \sigma_b\right) P_k\left(x_i-x'_{i'}, y_j-y'_{j'}, z\right) \\
+  &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K\left(x'_{i'}, y'_{j'}, z; \sigma_b\right) P_k\left(x_{\delta_x(i,i')}, y_{\delta_y(j,j')}, z\right) \\
+  &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K\left(x'_{i'}, y'_{j'}, z; \sigma_b\right) P_{\delta_x(i,i'), \delta_y(j,j')}^k.
+\end{align*}
+That is, at each grid point $(x_i, y_j)$, a weighted sum of periodic--adjacent values is taken according to the Gaussian kernel in order to perform the blur.
+
+
 
 \section{Quadrature Rules}
 As a prerequisite to algorithm development, a few key integrals are calculated here.
