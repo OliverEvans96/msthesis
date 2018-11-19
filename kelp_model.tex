@@ -28,8 +28,8 @@ For the sake of this model, only the kelp frond is considered, and its base is a
 The ``gentle undulation approximation'' is employed, whereby the fronds are modeled as perfectly horizontal.
 While at any given time they may point up or down due to water current and gravity, we consider the horizontal
 state to be an average configuration.
-This simplification allows for the three-dimensionally distributed population of kelp fronds
-to be considered a collection of independent populations in two-dimensional depth layers.
+This simplification allows for the three--dimensionally distributed population of kelp fronds
+to be considered a collection of independent populations in two--dimensional depth layers.
 A computer rendering of this scenario is shown in Figure \ref{fig:kelp_array}.
 
 \begin{figure}[H]
@@ -47,6 +47,9 @@ Consider the rectangular domain
   \zmin &\leq z \leq \zmax.
 \end{align*}
 For all three dimensional analysis, we use the absolute coordinate system defined in Figure \ref{fig:3dcoords}.
+The vectors $\vec{x}=(x,y,z)$ and $\vec{\omega}=(\sin\phi\cos\theta, \sin\phi\sin\theta, \cos\phi)$ are also used throughout.
+Also, the notation $\hat{x}$, $\hat{y}$, $\hat{z}$ is used for the Cartesian unit vectors.
+
 In the following sections, it is necessary to convert between Cartesian and spherical coordinates, which we do using the relations
 \begin{equation}
   \left\{
@@ -76,12 +79,12 @@ Then, calculating derivatives from \eqref{eqn:coords} yields
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=3in]{3d_coords}
-	\caption{Downward-facing right-handed coordinate system with radial distance $r$ from the origin, distance $s$ from the $z$ axis, zenith angle $\phi$ and azimuthal angle $\theta$.}
+	\caption{Downward--facing right--handed coordinate system with radial distance $r$ from the origin, distance $s$ from the $z$ axis, zenith angle $\phi$ and azimuthal angle $\theta$.}
 	\label{fig:3dcoords}
 \end{figure}
 
 \section{Population Distributions}
-In order to construct a spatial distribution of kelp fronds, a simple kite-shaped geometry is introduced,
+In order to construct a spatial distribution of kelp fronds, a simple kite--shaped geometry is introduced,
 and frond lengths and azimuthal orientations are assumed to be distributed predictably.
 Since it is assumed that fronds extend perfectly horizontally, no angular elevation distribution is required.
 
@@ -94,11 +97,11 @@ Since it is assumed that fronds extend perfectly horizontally, no angular elevat
   %TODO: Cite this?
   \qquad
 	\includegraphics[width=2in]{frond}
-	\captionof{figure}{Simplified kite-shaped frond. Reproduced with permission from \cite{broch_modelling_2013}.}
+	\captionof{figure}{Simplified kite--shaped frond. Reproduced with permission from \cite{broch_modelling_2013}.}
 	\label{fig:frond}
 \end{figure}
 
-The frond is assumed to be kite-shaped with length $l$ from base to tip, and width $w$ from left to right.
+The frond is assumed to be kite--shaped with length $l$ from base to tip, and width $w$ from left to right.
 In Figure \ref{fig:frond}, the base is shown at the bottom and the tip is shown at the top.
 The proximal length is the shortest distance from the base to the diagonal connecting the left and right corners, and is notated as $f_a$.
 Likewise, the distal length, notated $f_b$, is the shortest distance from that diagonal to the tip.
@@ -154,7 +157,7 @@ Then, the PDF for the von Mises frond angle distribution is
 	P_{\theta_f}(\theta_f) = \frac{\exp\left(\eta v_w\cos(\theta_f-\theta_w)\right)}{2\pi I_0(\eta v_w)},
 \end{equation*}
 where $I_0(x)$ is the modified Bessel function of the first kind of order 0.
-Notice that unlike the normal distribution, the von Mises distribution approaches a \textit{non-zero} uniform distribution as $\kappa$ approaches 0, so
+Notice that unlike the normal distribution, the von Mises distribution approaches a \textit{non--zero} uniform distribution as $\kappa$ approaches 0, so
 \begin{equation*}
 	\displaystyle \lim_{v_w \to 0}P_{\theta_f}(\theta_f) = \frac{1}{2\pi} \;\forall\, \theta_f \in [-\pi,\pi].
 \end{equation*}
@@ -166,7 +169,7 @@ Notice that unlike the normal distribution, the von Mises distribution approache
 	\label{fig:vonmises}
 \end{figure}
 
-\subsection{Joint Length-Orientation Distribution}
+\subsection{Joint Length--Orientation Distribution}
 \label{sec:dist_2d}
 The previous two distributions can reasonably be assumed to be independent of one another. That is, the angle of the frond does not depend on the length, or vice versa.
 Therefore, the probability of a frond simultaneously having a given frond length and angle is the product of their individual probabilities.
@@ -196,7 +199,7 @@ which is currently not taken into consideration in this model.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=4.5in]{prob_2d}
-	\captionof{figure}{2D length-angle probability distribution with $\theta_w=7\pi/4$, $v_w=1$, $\mu_l=3$, $\sigma_l=1$.}
+	\captionof{figure}{2D length--angle probability distribution with $\theta_w=7\pi/4$, $v_w=1$, $\mu_l=3$, $\sigma_l=1$.}
 	\label{fig:dist_2d}
 \end{figure}
 
@@ -209,7 +212,7 @@ which is currently not taken into consideration in this model.
 
 \section{Spatial Distribution}
 In this section, the population length and angle distributions from the previous section are used to construct a spatial distribution of kelp.
-This is made possible by the simple kite-shape fronds, and would be considerably more difficult with more general frond shapes.
+This is made possible by the simple kite--shape fronds, and would be considerably more difficult with more general frond shapes.
 \subsection{Rotated Coordinate System}
 \label{sec:rot_coords}
 To determine under what conditions a frond will occupy a given point, we begin by
@@ -291,7 +294,7 @@ Any frond longer than these at the same angle will also occupy the point.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=4.5in]{shade_area}
-	\captionof{figure}{Outlines of minimum-length fronds for a variety of angles to occupy the point $(\theta,s)=(3\pi/4,3/2)$.}
+	\captionof{figure}{Outlines of minimum--length fronds for a variety of angles to occupy the point $(\theta,s)=(3\pi/4,3/2)$.}
 	\label{fig:shade_area}
 \end{figure}
 
@@ -359,7 +362,7 @@ According to Taylor's theorem, the error incurred by performing such interpolati
 If the derivatives of the absorption coefficient are unbounded, then so too is the discretization error in the final solution.
 That is, the solution is not guaranteed to converge.
 
-Luckily, there is a straightforward solution, which is to post-process the spatial kelp distribution with a Gaussian blur in the $x$ and $y$ dimensions.
+Luckily, there is a straightforward solution, which is to post--process the spatial kelp distribution with a Gaussian blur in the $x$ and $y$ dimensions.
 This is achieved via convolution of the solution with a 2D Gaussian kernel centered at the origin.
 Any blur whatsoever is sufficient to bound the derivatives, and the larger the blur radius, the smaller they become.
 Obviously, as the blur radius is increased, the kelp distribution tends toward a constant and no longer captures any information about the $xy$ distribution of the kelp.
@@ -419,7 +422,6 @@ A physical interpretation of this Gaussian blurring is that $P_k^b$ is the time-
 This interpretation is a bit incongruous with the rest of the model since there is no other explicit mention of time--averaging; while the frond length and position distributions can be thought of as continuous approximations to the population distribution at a single point in time, this idea does not apply to the rope's position, since there is only one rope.
 
 \subsection{Absorption Coefficient Plots}
-% TODO: Clean up figures
 A variety of numerically calculated absorption coefficient fields are shown here in order to demonstrate some key features of the kelp distribution.
 In each figure, the absorption coefficient is plotted on the color axis, while the norm of its gradient is shown with contours, with brighter contour lines indicating regions of large derivatives.
 As mentioned above, large derivatives generate large discretization error, and are therefore undesirable.

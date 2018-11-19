@@ -27,7 +27,7 @@ One of the most fundamental quantities in optics is radiant flux $\Phi$, which h
 Considering an element of surface area $A$, the energy \textit{density} moving through the surface is called irradiance, denoted $I$, and has units energy per time.
 Note that the angle $\vartheta$ of the surface relative to the light source should also be considered for full detail. Assuming the surface to be flat and the light source to be distant (parallel rays), the flux through the surface is $\Phi=IA\cos\vartheta$.
 Further, the angular dependence of the light field must be considered.
-The radiance $L$, expresses this dependence, and is defined as the radiant flux per steradian per projected surface area perpendicular to the direction of propagation of the beam.
+The radiance $L$, expresses this dependence, and is defined as the radiant flux per steradian per projected surface area perpendicular to the direction of propagation of the beam \cite{chandrasekhar_radiative_1960}.
 That is,
 \begin{equation*}
 	L = \frac{d^2\Phi}{dA d\vec{\omega}},
@@ -37,7 +37,7 @@ Once the radiance $L$ is calculated everywhere, the irradiance is
 \begin{equation*}
   I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\vec{\omega},
 \end{equation*}
-This quantity is also called \textit{scalar irradiance} since it does not consider light through particular surface, but rather weights radiance from all directions equally.
+This quantity is also called \textit{scalar irradiance} since it does not consider light through particular surface, but rather weights radiance from all directions equally \cite{kirk_light_1994}.
 For brevity, this quantity will be simply called irradiance here.
 
 Irradiance can be approximately converted to PAR units of moles of photons (a mole of photons is also called an Einstein) per second, with the conversion \cite{mobley_light_1994} given by
@@ -79,7 +79,7 @@ of radiance per unit length due to scattering, and is assumed to be constant ove
 Scattered light is not lost from the light field, it simply changes direction.
 
 The volume scattering function (VSF) $\beta(\Delta): [-1, 1] \to \RR^+$ (units sr$^{-1}$) defines the probability of light scattering at any given angle from its source, where $\Delta=\cos\vartheta$ is the cosine of the angle between the initial and final directions.
-Formally, given two directions $\vec{\omega}$ and $\vec{\omega}'$, $\beta(\vec{\omega} \cdot \vec{\omega}')$ is the probability density of light scattering from $\vec{\omega}$ into $\vec{\omega}'$ (or vice-versa).
+Formally, given two directions $\vec{\omega}$ and $\vec{\omega}'$, $\beta(\vec{\omega} \cdot \vec{\omega}')$ is the probability density of light scattering from $\vec{\omega}$ into $\vec{\omega}'$ (or vice--versa).
 Now, since a single direction subtends no solid angle, the probability of scattering occurring exactly from $\vec{\omega}$ to $\vec{\omega}'$ is 0.
 Rather, we say that the probability of radiance being scattered from a direction $\omega$ into an element of solid angle $\Omega$ is $\int_\Omega \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'$.
 
@@ -310,7 +310,7 @@ Hence,
     &+ \int_0^s \exp\left(-\int_{s'}^s \tilde{a}(s'')\, ds''\right) \tilde\sigma_0(s')\, ds'
   \label{eqn:asymptotics_soln_0}
 \end{align}
-Then, we convert back from path length $s$ to the spatial coordinate $\vec{x}$ by evaluating the one-dimensional solution at the end of the ray path.
+Then, we convert back from path length $s$ to the spatial coordinate $\vec{x}$ by evaluating the one--dimensional solution at the end of the ray path.
 That is,
 \begin{equation*}
   L_0(\vec{x}, \vec{\omega}) = u_0(\tilde{s}).

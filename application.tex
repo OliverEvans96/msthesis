@@ -1,24 +1,24 @@
 \chapter{PRACTICAL APPLICATION}
 \label{chap:application}
 
-This Chapter deals with the practical considerations when applying the previously discussed numerical algorithms to simulate the light field for realistic scenarios of kelp growing in ocean waters.
-This involves combining the spatial kelp distribution model of Chapter \Rom{\ref{chap:kelp}} with the radiative transfer model of Chapter \Rom{\ref{chap:light}} according to the numerical details described in Chapter \Rom{\ref{chap:numerical}} and verified in Chapter \Rom{\ref{chap:model_analysis}}.
+This chapter deals with the practical considerations when applying the previously discussed numerical algorithms to simulate the light field for realistic scenarios of kelp growing in ocean waters.
+This is chapter is the culmination of this thesis: the spatial kelp distribution model of Chapter \Rom{\ref{chap:kelp}} and the radiative transfer model of Chapter \Rom{\ref{chap:light}} are combined using the numerical algorithms described in Chapter \Rom{\ref{chap:numerical}} and verified in Chapter \Rom{\ref{chap:model_analysis}} and applied to a realistic scenario
 
 The computational code must be supplied with appropriate physical parameters to emulate the particular seaweed under consideration and the optical properties of the surrounding aquatic medium.
 Further, the choice of algorithm between numerical asymptotics and finite difference must be made based on the physical situation under consideration, the computational resources available, and the desired level of accuracy in the computed light field.
 Lastly, algorithm--specific parameters must also be tuned according to these considerations.
 
-Guidelines are presented in this Chapter to aid the user in making these decisions, and the performance of the model is discussed.
+Guidelines are presented in this chapter to aid the user in making these decisions, and the performance of the model is discussed.
 Finally, comparison is made to simpler light models, and specific differences are noted.
-With all of this information, a potential user may decide if and how to use the model presented in this thesis.
+With all of this information, a potential user may decide if and how to use the three--dimensional light model presented in this thesis.
 
 \section{Physical Parameters}
 \label{sec:parameters}
-In this Section, physical model parameters are discussed.
+In this section, physical model parameters are discussed.
 The primary use--case for the present model is that it is run in conjunction with a kelp growth model and ocean model
 which call it periodically to update the light field.
-In that case, they will provide some of the necessary parameters such as the size of the kelp fronds, optical properties of the aquatic medium, and current speed as functions of depth.
-If the light model is run without kelp growth and ocean models, as is the case for the results in this Chapter, then these parameters must be hand--picked to represent a realistic scenario.
+In that case, those models will provide some of the necessary parameters such as the size of the kelp fronds, optical properties of the aquatic medium, and current speed as functions of depth.
+If the light model is run without kelp growth and ocean models, as is the case for the results in this chapter, then these parameters must be hand--picked to represent a realistic situation of interest.
 Other parameters external to the kelp growth and ocean models can be found in the literature,
 as summarized in Table \ref{tab:params} and Table \ref{tab:petzold}.
 Still, some parameters remain which are not well described in the literature.
@@ -30,7 +30,6 @@ A few comments are in order.
 No values were available for the absorptance of \textit{Saccharina latissima}, but a value for \textit{Macrocystis pyrifera} was found.
 The surface irradiance from \cite{broch_modelling_2012} was given in terms of photons per second,
 and was converted to \SI{}{\W\per\m\squared} according to \eqref{eqn:watts_photons}.
-No data in the literature exist for the frond thickness, so a best estimate is provided.
 
 \begin{table}[h]
   \centering
@@ -44,7 +43,9 @@ No data in the literature exist for the frond thickness, so a best estimate is p
     Water absorption coefficient & $a_w$ & See Table \ref{tab:petzold} & \cite{petzold_volume_1972} \\%  & ? \\
     Scattering coefficient & $b$  & See Table \ref{tab:petzold} & \cite{petzold_volume_1972} \\%  & ? \\
     Volume scattering function & $\beta$ & tabulated & \cite{petzold_volume_1972,sokolov_parameterization_2010} \\% & Currently using Petzold \\
-    Frond thickness & $f_t$ & \SI{0.4}{\mm} & estimated \\
+    Frond thickness & $f_t$ & \SI{0.4}{\mm} & \cite{foldal_morphological_2018} \\
+    Frond aspect ratio & $f_r$ & 5.0 & \cite{foldal_morphological_2018} \\
+    Frond shape parameter & $f_s$ & 0.5 & estimated \\
     Surface solar irradiance & $I_0$ & \SI{50}{\W\per\m\squared} & \cite{broch_modelling_2012}  \\% & Irradiance for maximal photosynthesis, converted from photons \\
     \bottomrule
   \end{tabular}
@@ -57,8 +58,11 @@ There are three categories of water provided: AUTEC is from Tongue of the Ocean,
 and represents clear, pure water; HAOCE is from offshore southern California, and represents a more average coastal region,
 likely the most similar to water where kelp cultivation would occur; NUC data is from the San Diego Harbor, and represents turbid water,
 likely more so than one would expect to find in a seaweed farm.
+These values give a sense for the range of absorption and scattering coefficients that the model should be tested against.
+Aside from absorption and scattering coefficients, detailed tabulations of volume scattering functions are also given in \citep{petzold_volume_1972}.
+While a simpler linear model is used for the simulations in this thesis, it is recommended that future simulations interpolate the tabulated VSF from \cite{petzold_volume_1972}.
 
-\begin{table}
+\begin{table}[h]
   \centering
   \caption{Field measurement data of optical properties in the ocean \cite{petzold_volume_1972}.
     The site names used in the original paper are used: AUTEC -- Bahamas, HAOCE -- Coastal southern California, NUC -- San Diego Harbor.
@@ -103,7 +107,7 @@ The preferred directions should be more or less evenly distributed.
 A camera should be mounted directly over the vertical rope, pointed straight down.
 If possible, a fluorescent dye could be applied to the tip of the each frond to make their orientation more easily discernible in the recording.
 Turn on the flume to several current speeds, recording a video or many snapshots for each.
-If the fluorescent dye is applied, then a simple peak-finding image processing algorithm can be applied to locate the frond tips.
+If the fluorescent dye is applied, then a simple peak--finding image processing algorithm can be applied to locate the frond tips.
 By preprocessing the image to a gray scale such that the color of the dye has the highest intensity,
 the tip locations are located at local maxima.
 
@@ -121,12 +125,12 @@ In the case that the model is called by time--dependent kelp growth and ocean mo
 Specifically, the ocean model can provide current speed and direction over depth, which is used in calculating the kelp distribution.
 The position of the sun and irradiance just below the surface of the water can also be provided by the ocean model, which is used to generate the surface radiance boundary condition.
 The ocean model should also provide an absorption coefficient for each depth layer, which may vary due to nutrient concentrations and biological specimens such as phytoplankton.
-The kelp growth model is expected to provide super-individual data describing the population in each depth layer.
+The kelp growth model is expected to provide super--individual data describing the population in each depth layer.
 Then, \eqref{eqn:si_mean} and \eqref{eqn:si_std} are used to calculate length and orientation distributions, as described in Section \ref{sec:si}.
 
 Presumably, the ocean model uses a spatial grid much coarser than the grid required for the light model.
 For example, SINMOD \cite{wassmann_modelling_2006} uses a minimum horizontal spatial resolution of \SI{32}{\m}, whereas a grid resolution on the order of centimeters is more appropriate for the light model.
-While the vertical resolution of the encompassing simulation is probably finer than the horizontal resolution, it may also not be sufficiently fine to use for the light model in order to obtain a sufficiently accurate solution.
+While the vertical resolution of the encompassing simulation is probably finer than the horizontal resolution, it may also not be sufficiently fine to use for light field calculations.
 Assuming that this is the case, the depth--dependent quantities provided by the encompassing simulations are to be interpolated at the appropriate depths for the light model grid.
 
 While it is reasonable for the ocean model to inform the light model of the surface irradiance and position of the sun, it is unlikely that a full angular radiance distribution is given.
@@ -134,14 +138,16 @@ Therefore, a simplistic model is used which assigns the highest radiance value t
 Specifically, the surface boundary condition used is
 \begin{equation}
   f(\vec{\omega}) = I_0\frac{\exp\left( -D_s \cos^{-1}\left(\vec{\omega}_s \cdot \vec{\omega}\right) \right)}{\int_{2\pi}\exp\left( -D_s \cos^{-1}\left(\vec{\omega}_s \cdot \vec{\omega}\right) \right)\, d\vec{\omega}},
-\end{equation} % TODO
+\end{equation}
 where $\vec{\omega}_s$ is the propagation direction of the sun's rays and $D_s\in[0, \infty)$ (units $\mbox{rad}^{-1}$) varies the sharpness of the angular distribution of surface radiance.
 When $D_s=0$, the distribution is totally flat, while as $D_s \to \infty$, the distribution approaches a delta function.
 This can be considered a coarse description of the amount of scattering in the atmosphere, since light arrives at Earth nearly all from a single direction.
+A value of $D_s=\SI{1}{\per\radian}$ is used for the simulations in this chapter.
+
 
 \subsection{Standalone Context}
 \label{sec:standalone_context}
-The simulation results shown in the later Sections of this Chapter probe the light model in various ways independent of any encompassing kelp growth or ocean models, and therefore the physical parameters that they would supply must be hand--picked to represent a realistic scenario to which the light model may be applied.
+The simulation results shown in the later sections of this chapter probe the light model in various ways independent of any encompassing kelp growth or ocean models, and therefore the physical parameters that they would supply must be hand--picked to represent a realistic scenario to which the light model may be applied.
 Therefore, the following parameter choices are made.
 
 The depth--dependent mean kelp frond length is chosen to be
@@ -154,7 +160,6 @@ The kelp frond length standard deviations are chosen to be the constant function
 Also, the current angles are held constant over depth at $\theta_w(z)=0$, as is the current speed $v_w=\SI{1}{\m\per\s}$ with $\eta=\SI{1}{\s\per\m}$.
 For the light field, $\vec{\omega}_s=\hat{z}$ (sunlight from directly above) and $D_s=1\, \mbox{rad}^{-1}$ are used.
 
-% TODO: Add data from Ole Jacob's student's thesis
 \section{Computational Expense}
 The choice of finite difference or numerical asymptotics and the specific parameters of each has a significant impact on both computation time and solution accuracy.
 The impact of the choice of algorithm and parameters on both factors is explored in this section in order to aid the reader in making these decisions.
@@ -164,9 +169,10 @@ Computation time is a significant consideration, especially when using the light
 The computational demand can be lessened by updating the light model only a few times per day rather than every time step.
 Still, accuracy must be balanced with reasonable resource consumption; if the light model is taking as much time as all of the other aspects combined, any accuracy gained from the light field computation is likely being lost elsewhere in the model.
 
-Also, both algorithms are parallelized using OpenMP \cite{message_passing_interface_forum_mpi:_1993}, so increasing the parallelism decreases the computation time, though it does not reduce the overall resource consumption. % TODO: Cite OpenMP
+Also, both algorithms are parallelized using OpenMP \cite{message_passing_interface_forum_mpi:_1993}, so increasing the parallelism decreases the computation time, though it does not reduce the overall resource consumption.
 Further, some sections of the code are necessarily serial, which reduces the effective parallelism to some degree.
-For using 8 threads, an average CPU usage of about 5 cores is observed over the course of the computation, while for 32 threads, it is around 22. % TODO: Check actual values.
+When using 8 threads, an average CPU usage of about 7 cores is observed over the course of the entire computation, while for 32 threads, it is around 22. 
+The parallel efficiency decreases as thread count increases because the serial sections bias the average parallelism downward.
 This is not intended to discourage parallelism, only to represent it accurately; in reality, the speedup is quite noticeable when the thread count is increased.
 
 The choice of algorithm has a significant impact on computation time.
@@ -184,7 +190,7 @@ Figure \ref{fig:compute_time_violin} shows CPU time for 32 cores for both asympt
 \begin{figure}[h]
   \centering
   \includegraphics[width=5in]{compute_time_violin}
-  \caption{Computation time required for numerical asymptotics and finite difference algorithms over a range of spatial grid sizes using 32 CPUs. Only five grid sizes are shown, with the finite difference and numerical asymptotic algorithm for $n=0,\ldots,3$ terms shown for each grid. The horizontal offset within each grid size is only for visual clarity. TODO: Replace violin plots with box--and--whisker plots.}
+  \caption{Computation time required for numerical asymptotics and finite difference algorithms over a range of spatial grid sizes using 32 CPUs. Only five grid sizes are shown, with the finite difference and numerical asymptotic algorithm for $n=0,\ldots,3$ terms shown for each grid. The horizontal offset within each grid size is only for visual clarity.}
   \label{fig:compute_time_violin}
 \end{figure}
 
@@ -238,7 +244,7 @@ All parameters aside from grid resolution are held constant, so discretization e
 \begin{figure}[H]
   \centering
   \includegraphics[width=6in]{gs_avg_irrad_contourf}
-  \caption{Average irradiance plotted against squared resolution for a variety of grid sizes for finite difference and numerical asymptotics. The linear contours demonstrate that both methods are second order in both resolution parameters.}
+  \caption{Average irradiance plotted against squared resolution for a variety of grid sizes for finite difference and numerical asymptotics with $n=0$. The linear contours demonstrate that both methods are second order in both resolution parameters.}
   \label{fig:gs_avg_irrad_contourf}
 \end{figure}
 
@@ -287,6 +293,8 @@ By visual inspection of Figure \ref{fig:gs_predicted_err}, this seems to suggest
 
 It is important to note that the error analysis in this section has been performed only for a single set of optical properties (HAOCE11).
 Optical properties are sure to have some effect on grid convergence, as they affect the derivatives of the absorption field the solution, thereby impacting the accuracy of quadrature on a particular grid.
+Furthermore, only $n=0$ was tested for the asymptotics algorithm.
+Discretization may compound for higher--order approximations.
 Also, keep in mind that $n_a$ ($n_\phi$ in particular) must be an even number, as mentioned in Section \ref{sec:grid}.
 
 \section{Optical Conditions for Asymptotics}
@@ -294,7 +302,7 @@ Since the asymptotic approximation is based on a Taylor series expansion around 
 Extremely high--scattering scenarios are out of reach for the asymptotic approximation, and the finite difference approach must be used in those cases.
 Whereas in low--scattering waters, adding terms to the asymptotic series tends to decrease the error in the solution, in high--scattering situations, adding terms causes the error to diverge.
 Therefore, if the finite difference solution is out of the question for cases of high scattering, the leading order approximation is the best option.
-An in--depth analysis of the error incurred by the numerical asymptotics algorithm is presented in this Section.
+An in--depth analysis of the error incurred by the numerical asymptotics algorithm is presented in this section.
 
 \subsection{Raw Simulation Results}
 \label{sec:iop_study_raw}
@@ -350,11 +358,8 @@ In fact, the second and third order approximations are nearly identical; the for
 \end{figure}
 
 In actual usage, one is concerned not with finding the best approximation, but rather the cheapest one which meets some error threshold.
-This concept is explored in Figure \ref{fig:min_n_data_vs_ab}.
-TODO: Fix these
-In each Figure, an average error threshold of $\bar{\varepsilon}=\SI{0.1}{\W\per\m\squared\per\radian}$, $\bar{\varepsilon}=\SI{0.05}{\W\per\m\squared\per\radian}$, and $\bar{\varepsilon}=\SI{0.01}{\W\per\m\squared\per\radian}$, respectively is set, and the lowest order approximation to meet the error threshold is shown.
-The error of that approximation is shown on the color axis.
-In each case, there are some optical properties for which the error threshold cannot be met for any $n$.
+Figure \ref{fig:min_n_data_vs_ab} shows the smallest value of $n$ observed to meet discretization error targets of at most $\bar{\varepsilon}=\SI{1.0}{\W\per\m\squared}$ and $\bar{\varepsilon}=\SI{0.1}{\W\per\m\squared}$ in the left and right columns with the actual average error incurred shown on the color axis.
+In both cases, there are some optical properties for which the error threshold cannot be met for any $n$.
 This is represented by an ``X'' in the figure, and the error of the leading order approximation is shown in color.
 Note that as $\bar\varepsilon$ is decreased, the error threshold cannot be satisfied for a larger set of optical properties, and where it is achievable, more scattering terms are required.
 
@@ -469,7 +474,7 @@ Assuming that $\bar{\varepsilon}<\varepsilon^*$, if higher contours of $\bar{n}$
 
 To summarize this analysis, once an error threshold $\bar{\varepsilon}$ is chosen, the optical properties $a_w$ and $b$ determine the optimal numerical approach according to Figure \ref{fig:nbar_model_vs_ab_3eps} and Equation \eqref{eqn:n_bar}.
 If $\xi^*(a_w, b) > \xi^*$, then the finite difference algorithm should be used if possible.
-If memory or computation time requires the numerical asymptotics algorithm to be used, then the $n=0$ approximation should be used, effectively ignoring scattering.
+If memory or computation time requires the numerical asymptotics algorithm to be used, then the $n=0$ approximation should be used, effectively ignoring scattering in order to avoid a diverging solution.
 
 If $\bar{n}>3$ (i.e., the gray region between $\xi^*$ and $\bar{n}=3$), it is theoretically possible to achieve the desired accuracy in this region by continuing to add terms, however, this is not recommended since the closer $\xi$ is to $\xi^*$, the more likely it is that higher order terms will cause the solution to diverge due to some unexpected deviation in the actual performance of the algorithm from the theoretical error model presented here.
 As a compromise, $n=2$ or $n=3$ could be used in this region to balance the severity of divergence in the case of failure with the improved accuracy of the solution in the case of successful convergence.
@@ -522,45 +527,58 @@ The solution is therefore the analogous simplification of Equation \eqref{eqn:as
   I(z) = I_0 \exp\left(-a_wz - \int_0^z k_{\mbox{kelp}}(z')\, dz' \right).
 \end{equation}
 
-\subsection{Comparison Results}
-In Figure \ref{fig:compare_models_haoce11_both}, the light model of this thesis is compared to simpler models under the conditions described in Section \ref{sec:standalone_context}.
-In the figures, the first model described in this Chapter, which ignores the kelp entirely, is plotted with a black dashed line.
-The second model, which uses an additional term in the absorption coefficient to describe the kelp, is plotted with a dashed blue line.
-The no--scattering numerical asymptotics solution is plotted in solid red.
-Since the above two models do not consider scattering, both the finite difference and asymptotic solutions are plotted for a range of $b$ values, with the finite difference $b$ described by the left color bar, and the asymptotic $b$ described by the right color bar, so as to distinguish between the two sets of curves.
+\subsection{Description of Comparison}
+In Figure \ref{fig:compare_models_haoce11_both}, the light model of this thesis is compared to simpler models under the conditions described in Section \ref{sec:standalone_context} with the optical properties of coastal California (HAOCE11 from Table \ref{tab:petzold}).
+In the figure, the first model described in this chapter, which ignores the kelp entirely, is labeled ``No Kelp.''
+The second model, which uses an additional term in the absorption coefficient to describe the kelp, is labeled ``Simple Kelp.''
+From the 3D model of this thesis, the average irradiance and perceived irradiance calculated from a finite difference solution on a $72\times10$ grid are plotted.
+As described in Section \ref{sec:perceived_irrad}, the perceived irradiance is a weighted average of the irradiance over the kelp distribution, whereas the average irradiance is weighted evenly over the entire horizontal domain.
 
-In each of the three Figures, a different value of $n$ is used for the asymptotic approximations for $b>0$: $n=1$, $n=2$, and $n=3$ for Figure \ref{fig:compare_models_haoce11_both}.
-In the left column of each figure, the average irradiance is plotted as a function of depth for each of the calculations from the light model of this thesis, calculated over the entire horizontal domain.
-In the right column, the perceived irradiance, as described in Section \ref{sec:perceived_irrad}, is shown for the asymptotics and finite difference calculations.
+Both quantities are plotted with error bands calculated via Richardson extrapolation.
+The calculation was performed for all combinations of $n_s=32,48,64,72$ and $n_a=6,8,10$, and the average and perceived irradiances calculated from those solutions were cubically interpolated at many $z$ values.
+Then, the standard 2D Richardson extrapolation procedure was applied independently for each $z$, using the interpolated irradiance value at that $z$ as the scalar to extrapolate, as described in Section \ref{sec:generalized_re}.
+The plotted curves are the irradiances from the $72\times 10$ grid.
+The error bands are three times the estimated error in order to make the estimate conservative, as recommended by \cite{roache_perspective_1994}.
+For a detailed procedure for error reporting in numerical simulations, see \cite{noauthor_procedure_2008}
 
-First, note that the no--kelp model predicts the highest light levels throughout the domain, as should be expected since it ignores a significant aspect of the light reduction.
-The simple kelp model agrees with the no--kelp model at the surface, but then reduces more quickly once the kelp, which is largest at $z=2$, is introduced.
-At the bottom of the domain where there is little kelp remaining, the two curves are seen to be parallel in the log--linear scale, showing that the absorption coefficients are equal as at the surface.
-Looking at the left column, the average irradiance from no--scattering solution to the 3D model appears to agree quite well with the simple kelp model, especially near the surface and bottom, where both models are approximately reduced to the first model.
-In the $z=2$ region where the most kelp is present, the 3D model predicts higher absorption than the simpler 1D model.
-However, between $z=3$ and $z=4$, the 3D kelp model decreases more slowly than the 1D model, perhaps because light is able to penetrate the water in regions where the kelp is not present, and the multitude of angles in which the light travels allow some of the rays to reach even the lower depths without being absorbed by the kelp.
+\subsection{Comparison: Irradiance Curves}
+First, note that the no--kelp model predicts the highest light levels throughout the domain, as should be expected since it ignores the dominant source of attenuation.
+The simple kelp model agrees with the no--kelp model at the surface, but then reduces quickly once the kelp, which has a maximum frond length at $z=2$, becomes sufficiently dense.
+At the bottom of the domain where there is little kelp remaining, the two curves are seen to be parallel in the log--linear scale, showing that the absorption coefficients are roughly equal, as at the surface.
+The average irradiance 3D model appears to agree quite well with the simple kelp model, especially near the surface and bottom, where both models are approximately reduced to the first model.
+In the $z=2$ region where the most kelp is present, though, the 3D model predicts higher absorption than the simpler 1D model.
+However, between $z=3$ and $z=4$, the light in the 3D kelp model attenuates more slowly than the 1D model, perhaps because light is able to penetrate the water in regions where the kelp is not present, and the multitude of angles in which the light travels allow some of the rays to reach even the lower depths without being absorbed by the kelp.
 
-As for the right column, the perceived irradiance is clearly much lower than the average irradiance and the other models.
-This makes sense, as the light is dimmest in the regions of highest kelp density, and the perceived irradiance weights these regions the highest, practically ignoring the edges of the domain where light is absorbed only by the water; these regions skew the average irradiance upward although they are not actually representative of the light field where photosynthesis is occurring.
-From this point of view, it seems that the other two light models significantly overestimate the amount of light available where it actually matters.
+The perceived irradiance is clearly much lower than the average irradiance and the other models.
+This makes sense, as the light is dimmest in the regions of highest kelp density, and the perceived irradiance weights these regions the highest, practically ignoring the edges of the domain where light is absorbed only by the water; these regions skew the average irradiance upward; they are not actually representative of the light field where photosynthesis is occurring.
+From this point of view, it seems that the other two light models significantly overestimate the amount of light available where it actually of interest.
 
-Considering the finite difference solution, the most visible effect of increasing scattering is to decrease the light field towards the bottom of the domain.
-Of course, scattering does not cause that light to be lost entirely.
-Rather, it tends to reflect it towards the surface, where increases in scattering lead to higher light levels.
-This is noteworthy since the light available very close to the surface is significantly higher than it is a few meters below.
+Note that the 3D model does not predict the lowest light fields everywhere; the average irradiance is observed to be larger than the no--kelp irradiance in the second plot in Figure \ref{fig:compare_models_haoce11_both}.
+This is due to the effect of scattering shifting light from lower in the domain closer to the surface.
 This tendency for scattering to insulate the upper region of the water may prove to be important in understanding how photosynthesis near the ocean's surface differs from photosynthesis at greater depths.
+
+\subsection{Comparison: Total Radiant Flux}
+Figure \ref{fig:compare_models_haoce11_flux} shows the total radiant flux in Watts predicted by each model, calculated by integrating each depth--dependent light field over the vertical domain, \textit{weighted by the frond area density} (frond area per vertical meter).
+While not exactly analogous, total radiant flux can be regarded as a rough proxy for the amount of photosynthesis occurring in the entire kelp population at all depths.
+Reducing the entire light field to an interpretable scalar is quite useful, as it summarizes magnitude of the difference between the four light models.
+
+The radiant flux predicted by the 3D average irradiance is just 13\% of the flux disregarding kelp, and 57\% of the simple kelp flux.
+Meanwhile, the perceived irradiance predicts only 3\% the flux of the no--kelp model and 11\% the flux of the simple kelp model.
+Even among the 3D models, using the perceived irradiance predicts 19\% the flux of the average irradiance.
+Calculating the perceived irradiance is possible only because the full spatial kelp distribution is known.
+The large degree of these differences in model predictions highlight the importance of considering this spatial distribution.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=6in]{compare_models_haoce11_both}
-  \caption{Average irradiance and perceived irradiance from finite difference compared to simpler light models for the case of coastal California water (HAOCE11) with realistic kelp growth. Frond lengths over depth are shown on the right--hand axis. Discretization error is shown by error bands for perc. irrad. and avg. irrad.}
+  \includegraphics[width=5.75in]{compare_models_haoce11_both}
+  \caption{Average irradiance and perceived irradiance from finite difference compared to simpler light models for the case of coastal California water (HAOCE11) with realistic kelp growth. Frond lengths over depth are shown on the right--hand axis. Discretization error is shown by error bands for perc. irrad. and avg. irrad. Note the different scales in the two plots.}
   \label{fig:compare_models_haoce11_both}
 \end{figure}
-
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=6in]{compare_models_haoce11_flux}
-  \caption{Total radiant flux in Watts through kelp predicted by each model.}
+  \caption{Total radiant flux in Watts through kelp predicted by each model. The magnitude of the differences highlight the importance of considering the three--dimensional spatial kelp distribution.}
   \label{fig:compare_models_haoce11_flux}
 \end{figure}
+
