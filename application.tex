@@ -265,7 +265,18 @@ This demonstrates that the average irradiance is planar over the whole two--dime
 \subsection{Error Prediction}
 The continuum value for the average irradiance is estimated via Richardson extrapolation by fitting a plane through the scalar irradiances in squared--resolution space, as described in Section \ref{sec:generalized_re}.
 Values from this plane are shown in Figure \ref{fig:gs_avg_irrad_lines} as ``x''s plotted under the observed errors, shown with circles.
-The excellent agreement between the prediction and observation is a testament to the validity of the generalized Richardson eextrapolation method in this circumstance.
+The excellent agreement between the prediction and observation is a testament to the validity of the generalized Richardson extrapolation method in this circumstance.
+
+Specifically, the discretization error for each algorithm is found to be
+\begin{align}
+  \varepsilon_{\mbox{FD}}(ds, da) &= c_{11} ds^2 + c_{12} da^2, \\
+  \varepsilon_{\mbox{asym}}(ds, da) &= c_{21} ds^2 + c_{22} da^2,
+\end{align}
+where
+\begin{align}
+  c_{11} &= 0.180, & C_{12} &= 0.183, \\
+  c_{21} &= -0.851, & C_{22} &= 0.247.
+\end{align}
 
 By evaluating this plane at $ds=0$, $da=0$, the extrapolated continuum value of average irradiance is found.
 The generalized Richardson extrapolation plane is shifted down by the continuum value to construct a model for predict discretization error as a function of grid resolution.

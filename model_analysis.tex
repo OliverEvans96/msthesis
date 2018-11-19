@@ -94,7 +94,7 @@ Of course, it is necessary to construct $u$ and any coefficient functions in $D$
 
 Also, $u$ must satisfy any constraints imposed by the algorithm such as hard--coded boundary conditions or acceptable coefficient ranges.
 Finally, the chosen functions should have small derivatives so that convergence can be achieved for reasonable grid sizes.
-Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) such as the Python package Sympy to symbolically compute the source term. % TODO: Cite Sympy
+Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) such as the Python package Sympy \ref{meurer_sympy:_2017} to symbolically compute the source term.
 
 \subsection{Discretization Error Analysis}
 Once an exact solution is known, code verification is performed by demonstrating that the discretization error of the code matches the theoretical order of accuracy of the algorithm.
@@ -105,7 +105,7 @@ To verify an algorithm of order $p$ with grid resolution $h$, it should be shown
 This effect occurs only for small grid resolutions, when the first nonzero term in the error series dominates the others.
 If large grid spacings are used, then order $p$ convergence may not be observed even in a correct implementation since higher order error terms will overpower the order $p$ term.
 The range of small grid spacings for which the lowest order term dominates is known as the \textit{asymptotic range} (a.k.a. ``the sweet spot'').
-If the verification procedure shows that the implementation does not demonstrate the theoretical order of accuracy of the algorithm, this is most likely an indication that either a coding mistake is present or the asymptotic range has not been achieved. % TODO: Cite roache after "most likely"
+If the verification procedure shows that the implementation does not demonstrate the theoretical order of accuracy of the algorithm, this is most likely \cite{roache_verification_1998-1} an indication that either a coding mistake is present or the asymptotic range has not been achieved.
 
 \subsection{Synthetic Data}
 \label{sec:synthetic_data}

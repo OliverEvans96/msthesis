@@ -1,26 +1,19 @@
 \chapter{MEMORY USAGE}
 \label{chap:memory_usage}
-
-The matrix size in memory in bytes is calculated as follows.
-\begin{lstlisting}[language=Python]
-def calc_size(ns, na):
-    nx = ns
-    ny = ns
-    nz = ns
-    ntheta = na
-    nphi = na
-    nomega = ntheta * (nphi-2) + 2
-
-    nnz = nx * ny * nomega * ( nz * (6 + nomega) - 1)
-
-    return 8*nnz
-\end{lstlisting}
-
 \savebox{\memtablebox}{\begin{tabular}{@{}r@{}l@{\!}}
 &\,\,$n_a$\\[-1em] $n_s$
 \end{tabular}}
 
-Memory requirement for LIS solution via GMRES with restart=100 is well--estimated by multiplying the above by 5.
+The number of elements in the finite difference coefficient matrix is given by Equation \eqref{eqn:nnz}.
+Assuming that double precision floating point numbers are used, the number of bytes required to store the matrix values is found by multiplying the result of \eqref{eqn:nnz} by 8 bytes per number.
+These values are listed in Table \ref{tab:mem_store}.
+
+Since the matrix is sparse, the indices of the elements must also be stored.
+Due to the large number of elements involved, long integers must be used as indices, which also require 8 bytes to store.
+The exact amount of memory required depends on the storage scheme, which in this case is the Compressed Sparse Row (CSR) format provided by LIS \cite{nishida_experience_2010}.
+Furthermore, the iterative method required to calculate a solution to the matrix equation.
+From personal experience, the memory requirement for LIS solution via GMRES, restarted every 100 iterations, is well--estimated by multiplying the values in Table \ref{tab:mem_store} by 5.
+These solution memory estimates are listed in Table \ref{tab:mem_solve}.
 
 \begin{sidewaystable}
   \centering

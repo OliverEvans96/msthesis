@@ -36,31 +36,24 @@ which requires
 \begin{equation*}
   d\theta = \frac{2\pi}{n_\theta}.
 \end{equation*}
-
 For the polar angle, we similarly let
 \begin{equation*}
   \phi_m = (m-1)d\phi.
 \end{equation*}
-
 Since the polar azimuthal is not periodic, we also store the endpoint, so
 \begin{align*}
   \phi_1 &= 0, \\
   \phi_{n_\phi} &= \pi.
 \end{align*}
-
 This gives us
 \begin{align*}
   d\phi &= \frac{\pi}{n_\phi-1}.
 \end{align*}
-
 It is also useful to define the edges between angular grid cells as
 \begin{alignat}{3}
   \theta_l^e &= (l-1/2) d\theta, &\quad l&=1,\ldots,n_\theta \\
   \phi_m^e &= (m-1/2) d\phi, &\quad m&=1,\ldots,n_\phi-1.
 \end{alignat}
-
-Note that while $\theta$ has its final edge following its final center, this is
-not the case for $\phi$, as seen in Figure \ref{fig:angular_grid_plots}.
 
 \begin{figure}[h]
   \centering
@@ -69,6 +62,8 @@ not the case for $\phi$, as seen in Figure \ref{fig:angular_grid_plots}.
   \label{fig:angular_grid_plots}
 \end{figure}
 
+Note that while $\theta$ has its final edge following its final center, this is
+not the case for $\phi$, as seen in Figure \ref{fig:angular_grid_plots}.
 Because angles are indexed by a single integer $p$, there is a one--to--one relationship between
 an integer $p$ and a pair $(l,m)$.
 The relationships are as follows:

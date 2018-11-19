@@ -532,15 +532,16 @@ Table \ref{tab:nonzero} shows a breakdown of the number of distinct radiance val
 \end{table}
 
 By multiplying the first column of Table \ref{tab:nonzero} by the second and summing over the rows, the total number of nonzero matrix elements is calculated to be
-\begin{align*}
-  N_\mathbb{A} &= (\nomega+6) \cdot n_xn_y(n_z-2)\nomega \\
+\begin{align}
+  N_\mathbb{A} &= (\nomega+6) \cdot n_xn_y(n_z-2)\nomega \nonumber\\
     &+   (\nomega+5) \cdot n_xn_y\nomega
-    +   (\nomega+6) \cdot n_xn_y\nomega \\
-  &= n_x n_y \nomega \left[(\nomega+6)(n_z-2+1)+\nomega+5 \right] \\
-  &= n_x n_y \nomega \left[(\nomega+6)(n_z-1)+\nomega+5 \right] \\
-  &=  n_x n_y \nomega \left[n\omega n_z -\nomega + 6n_z - 6 + \nomega + 5 \right] \\
-  &=  n_x n_y \nomega \left[n_z(\nomega+6)-1\right]
-\end{align*}
+    +   (\nomega+6) \cdot n_xn_y\nomega \nonumber\\
+  &= n_x n_y \nomega \left[(\nomega+6)(n_z-2+1)+\nomega+5 \right] \nonumber\\
+  &= n_x n_y \nomega \left[(\nomega+6)(n_z-1)+\nomega+5 \right] \nonumber\\
+  &=  n_x n_y \nomega \left[n\omega n_z -\nomega + 6n_z - 6 + \nomega + 5 \right] \nonumber\\
+    &=  n_x n_y \nomega \left[n_z(\nomega+6)-1\right]
+    \label{eqn:nnz}
+\end{align}
 For example, a $10 \times 10 \times 10 \times 10 \times 10$ grid involves 7,207,800 matrix elements, while a $20 \times 20 \times 20 \times 20 \times 20$ grid requires 1,065,583,200 numbers to be stored!
 Clearly, the grid must be kept reasonably small in order to be solved by modern computers.
 Also, note that in the absence of an explicit source term $\sigma(\vec{x}, \vec{\omega})$, $\mathbb{B}$ only has nonzero entries for the downwelling surface grid cells, of which there are $n_x n_y \nomega/2$.

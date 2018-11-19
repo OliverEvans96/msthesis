@@ -33,16 +33,17 @@ or decreases in the dimension. Let
 For convenience, we also store a closely related quantity, $\sigma$ with a value 1 for
 increasing rays and 0 for decreasing rays in each dimension
 \begin{align}
-  \sigma_x = (\delta_x+1)/2 \\
-  \sigma_y = (\delta_y+1)/2 \\
-  \sigma_z = (\delta_z+1)/2
+  \sigma_x = (\delta_x+1)/2, \\
+  \sigma_y = (\delta_y+1)/2, \\
+  \sigma_z = (\delta_z+1)/2,
 \end{align}
+simply to keep track of the ray direction.
 
 For this algorithm, we keep two sets of indices. $(i,j,k)$ indexes the grid
-cell, and will be used for extracting physical quantities from each cell along
+cell, and is used for extracting physical quantities from each cell along
 the path.
-Meanwhile, $(i^e,j^e,k^e)$ will index the edges between grid cells, beginning
-after the first cell. i.e., $i^e=1$ refers not to the plane $x=\xmin$, but to $x=\xmin+dx$.
+Meanwhile, $(i^e,j^e,k^e)$ indexes the edges between grid cells, beginning
+after the first cell. That is, $i^e=1$ refers not to the plane $x=\xmin$, but to $x=\xmin+dx$.
 
 Let $(i_0, j_0, k_0)$ be the indices of the grid cell containing $\vec{p_0}$.
 That is,
