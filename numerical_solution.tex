@@ -69,10 +69,11 @@ The functions $\hat{p}(l,m)$, $\hat{l}(p)$, and $\hat{m}(p)$ are mappings betwee
 Refer to Appendix \ref{chap:grid_details} for a more rigorous discussion of the discrete spatial--angular grid.
 
 \section{Kelp Distribution}
+In order to determine the appropriate spatial dependence for the absorption coefficient to use in the radiative transfer equation, the spatial kelp distribution, described by \eqref{eqn:kelp_pk} and its tributaries, is calculated at every poin t in space.
+Several computational details related to the kelp distribution are worth mentioning, from the determination of input parameters to algorithmic instructions for the required numerical integration.
 
 \subsection{Super--Individuals}
 \label{sec:si}
-
 Rather than model each kelp frond, subsets of the population, called super--individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
 Specifically, at each depth $k$, there are $S_k$ super--individuals, indexed by $q$.
 Super--individual $q$ has a frond area $A_{kq}$ and represents $S_{kq}$ individual fronds.

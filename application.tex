@@ -187,10 +187,10 @@ The following terms, however, perform an identical number of calculations.
 Therefore, the $n$--term approximation takes about $n$ times as long as the leading order (no--scattering) approximation.
 Figure \ref{fig:compute_time_violin} shows CPU time for 32 cores for both asymptotics and finite difference for five spatial grids.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=5in]{compute_time_violin}
-  \caption{Computation time required for numerical asymptotics and finite difference algorithms over a range of spatial grid sizes using 32 CPUs. Only five grid sizes are shown, with the finite difference and numerical asymptotic algorithm for $n=0,\ldots,3$ terms shown for each grid. The horizontal offset within each grid size is only for visual clarity.}
+  \caption{Computation time required for numerical asymptotics and finite difference algorithms over a range of spatial grid sizes using 32 CPUs. Only five grid sizes are shown, with the finite difference and numerical asymptotic algorithm for $n=0,\ldots,3$ terms shown for each grid. The horizontal offset within each grid size is only for visual clarity. Note the large range in compute times --- small simulations take fractions of a second while large grids take upwards of a half--hour.}
   \label{fig:compute_time_violin}
 \end{figure}
 
@@ -222,7 +222,7 @@ On the other hand, the finite difference algorithm uses enormous amounts of memo
 These estimates are plotted in Figure \ref{fig:mem_solve}, and listed numerically in Table \ref{tab:mem_solve}.
 \begin{figure}[H]
   \centering
-  \includegraphics[width=5in]{memory_solve}
+  \includegraphics[width=6in]{memory_solve}
   \caption{Estimated memory required to solve the linear system of equations for the finite difference algorithm using GMRES, restarted every 100 iterations. Table \ref{tab:mem_solve} contains the same data in text form.}
   \label{fig:mem_solve}
 \end{figure}
@@ -238,7 +238,7 @@ These error estimates allow the spatial and angular components of discretization
 A set of simulations is run for a range of spatial and angular grid sizes with optical properties from Petzold's coastal California waters (HAOCE11), listed in Table \ref{tab:petzold}.
 Grid sizes of $n_s=32,48,64,72$ and $n_a=4,8,10,12$ are considered; one simulation is run for every combination of these values.
 The average irradiance over the whole domain is calculated for each simulation, which is used as the scalar metric for comparing solutions on disparate grids.
-The average irradiances for each simulation are plotted in Figures \ref{fig:gs_avg_irrad_contourf} and \ref{fig:gs_avg_irrad_lines} as functions of the squared grid spacings $ds$ and $da$, given by Equations \eqref{eqn:ds} and \eqref{eqn:da} with $\xmax-\xmin = \ymax-\ymin = \SI{10}{\m}$.
+The average irradiances for each simulation are plotted in Figures \ref{fig:gs_avg_irrad_contourf} and \ref{fig:gs_avg_irrad_lines} as functions of the squared grid spacings $ds^2$ and $da^2$, given by Equations \eqref{eqn:ds} and \eqref{eqn:da} with $\xmax-\xmin = \ymax-\ymin = \SI{10}{\m}$.
 All parameters aside from grid resolution are held constant, so discretization error is the only source of variation within each plot.
 
 \begin{figure}[H]
@@ -382,23 +382,19 @@ Note that as $\bar\varepsilon$ is decreased, the error threshold cannot be satis
 \end{figure}
 
 \subsection{Truncation Error Model}
-Figure \ref{fig:asym_err_data_xi_model} concisely represents the simulation results for all optical properties and all approximation orders, with error $\varepsilon$ plotted on the vertical axis and $b$ plotted on the color axis.
+Figure \ref{fig:asym_err_data_xi_model} concisely represents the simulation results for all optical properties and approximation orders, with error $\varepsilon$ plotted on the vertical axis and $b$ plotted on the color axis.
 In the left column, $a_w$ is plotted on the horizontal axis.
 On a log--log--log scale, the simplicity of the relationship among these three quantities is striking.
 Holding $b$ constant, a log--log linear relationship is apparent between the error $\varepsilon$ and the absorption coefficient $a_w$.
 Meanwhile, holding $a_w$ constant, log--uniform increases in $b$ cause log--uniform increases in $\varepsilon$.
 That is, $\ln\varepsilon$ seems to increase linearly with $\ln b$ and decrease linearly with $\ln a$.
-Restated, it seems that
-\begin{equation}
-  \varepsilon \propto \frac{b^{c_1}}{a_w^{c_2}}.
-\end{equation}
+Restated, it seems that $\varepsilon \propto \left({b^{c_1}}\right/\left({a_w^{c_2}}\right)$.
 
 Then, by fitting a plane to the observed values in $(\ln a_w, \ln b, \ln \varepsilon)$ space, a continuous model can be derived for $\varepsilon(a_w, b)$.
 Performing this procedure separately for each $n$ value yields values of $c_1$ and $c_2$ which appear to be independent of $n$.
 Remarkably, the fit for each order of approximation yields $c_1=3/4$, $c_2=1/2$ to within a few percent variation.
 The black ``x''s in Figure \ref{fig:asym_err_data_xi_model} are the predictions of this model, setting $c_1=3/4$ and $c_2=1/2$ explicitly.
-Notice how accurately the observed errors are predicted by the model.
-This also suggests the definition of a third parameter, as mentioned in Section \ref{sec:iop_study_raw},
+The accuracy of the prediction suggests the definition of a third parameter, as mentioned in Section \ref{sec:iop_study_raw},
 \begin{equation}
   \label{eqn:xi}
   \xi = \frac{b^{3/4}}{a_w^{1/2}},
@@ -419,8 +415,8 @@ In Figure \ref{fig:asym_err_vs_xi_all_n_fit_all}, $\varepsilon$ is plotted as a 
 For each $n$, the log--log plot displays a clear linear relationship, similar to the pattern seen previously in Figures \ref{fig:asym_err_vs_b_a01} and \ref{fig:mms_asym_b_conv}.
 However, this figure abstracts that pattern over both $a_w$ and $b$, whereas previously it was seem only for $b$.
 Note that the convergence curves for all lines appear to roughly intersect at a characteristic point.
-That point, denoted $(\xi^*, \varepsilon^*)$, is significant because it represents a bifurcation in the convergence behavior of the numerical asymptotics algorithm.
-For waters with $\xi < \xi^*$, adding terms to the series increases the accuracy of the approximation, whereas for waters with $\xi$ above the threshold value $\xi^*$, adding terms decreases the accuracy.
+That point, denoted $(\xi^*, \varepsilon^*)$, represents a bifurcation in the convergence behavior of the numerical asymptotics algorithm.
+For waters with $\xi < \xi^*$, accuracy improves with additional terms, whereas for with $\xi > \xi^*$, additional terms decrease accuracy.
 
 In order to systematically determine $(\xi^*, \varepsilon^*)$, the log--log convergence curve of order $n+1$ is assumed to have slope $n+1$, which is approximately true, at least for $\xi<\xi^*$.
 Further, it is assumed that there is a single point where all of these curves intersect.
@@ -448,7 +444,7 @@ Thus, waters characterized below this threshold are worth considering for soluti
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=6in]{asym_err_vs_xi_all_n_fit_all}
+  \includegraphics[width=5.5in]{asym_err_vs_xi_all_n_fit_all}
   \caption{All data from the right column of \ref{fig:asym_err_data_xi_model} on a single plot demonstrates a characteristic $\xi=\xi^*$ above which the asymptotic series diverges. This observation permits a simple model for predicting truncation error.}
   \label{fig:asym_err_vs_xi_all_n_fit_all}
 \end{figure}
@@ -459,12 +455,6 @@ Note that $\xi^*$ is a contour in $(a_w, b)$ space, and is marked on the figure 
 $\xi<\xi^*$ is the region to the lower right of the threshold, and $\xi>\xi^*$ is the region to the upper left.
 Also keep in mind that this model and its predictions deal only with truncation error, and that discretization error distorts the actual solution accuracy, as seen in Figures \ref{fig:asym_err_vs_b_a01} and \ref{fig:best_n_data_vs_ab}.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5.75in]{asym_err_model_vs_ab_all_n}
-  \caption{Predicted truncation error for a range of $a_w$ and $b$ values. $n$ varies over plot rows. Linear--linear scale on the left, log--log scale on the right. The asymptotic series converges only for $(a_w,b)$ values to the right of the $\xi^*$ contour.}
-  \label{fig:asym_err_model_vs_ab_all_n}
-\end{figure}
 
 This model can now be used to produce general guidelines for the choice of $n$ given a desired error.
 Assuming that a maximum error $\varepsilon=\bar\varepsilon$ is permissible, the minimum order of $n$ which produces $\varepsilon$ is desired.
@@ -478,6 +468,14 @@ which is equivalent almost everywhere to
   \label{eqn:n_bar}
   \bar{n} = \floor\left(\frac{\ln\bar{\varepsilon} - \ln\varepsilon^*}{\ln\xi - \ln\xi^*}\right).
 \end{equation}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5.75in]{asym_err_model_vs_ab_all_n}
+  \caption{Predicted truncation error for a range of $a_w$ and $b$ values. $n$ varies over plot rows. Linear--linear scale on the left, log--log scale on the right. The asymptotic series converges only for $(a_w,b)$ values to the right of the $\xi^*$ contour.}
+  \label{fig:asym_err_model_vs_ab_all_n}
+\end{figure}
+
 
 Figure \ref{fig:nbar_model_vs_ab_3eps} shows $\bar{n}$ up to $\bar{n}=3$ for $\bar{\varepsilon}=0.1$, $\bar{\varepsilon}=0.05$, and $\bar{\varepsilon}=0.01$.
 The $\xi^*$ contour is plotted.
