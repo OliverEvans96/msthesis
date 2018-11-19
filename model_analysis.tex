@@ -13,8 +13,8 @@ The following is an overview of the errors incurred throughout the process of cr
 Some of these errors are \textit{ordered}, meaning that they can be decreased predictably by performing additional computations, while others are not.
 
 First, any mathematical model is based on simplifying assumptions compared to the real system.
-Any assumptions which do not hold precisely for the real system contribute to differences between model outputs and the real behavior.
-Such differences can be termed \textit{conceptual modelling errors}, and are a present in the exact solutions to the mathematical equations comprising the model.
+Any assumptions which do not hold precisely for the real system contribute to differences between solutions to the model equations and the behavior of the real system.
+Such differences can be termed \textit{modeling errors}, and are a present in the exact solutions to the mathematical equations comprising the model.
 Once a model is formulated, it contains free parameters which can be varied to emulate different physical scenarios.
 To evaluate the model, specific parameters must be used which reflect the scenario of interest.
 The values of these parameters often are obtained experimentally, and may not be known with exact precision.
@@ -41,7 +41,7 @@ As Roache explains, there are two aspects to building confidence in numerical co
 verification deals with \textit{solving the equations right}, while validation deals with \textit{solving the right equations}.
 Validation involves comparison with experimental evidence in order to determine that governing equations
 accurately describe physical phenomenon, and that their solutions match observation.
-That is, it is the process of checking that conceptual modelling errors are sufficiently small to model the system as accurately as necessary.
+That is, it is the process of checking that modeling errors are sufficiently small to model the system as accurately as necessary.
 Validation is an ongoing process; as new experimental data become available, the equations can be solved under appropriate conditions in an attempt to replicate the new observations.
 Verification, however, is a purely mathematical exercise, and has nothing to do with the physical system being modeled.
 It deals only with the agreement between an equation and its numerical solution produced by a particular implementation of an algorithm.
@@ -133,8 +133,9 @@ A five dimensional resolution space is nontrivial to characterize, so we define 
 Let $n_s = n_x = n_y = n_z$ and $n_a = n_\theta = n_\phi$.
 Then, we use the geometric mean to describe the spatial and angular resolution, as
 \begin{align}
-  ds &= (dx\, dy\, dz)^{1/3}, \\
+  ds &= (dx\, dy\, dz)^{1/3}, \label{eqn:ds}\\
   da &= (d\theta\, d\phi)^{1/2}.
+  \label{eqn:da}
 \end{align}
 
 This reduces the dimenionality of the resolution space to two, but it would be preferrable to deal only with a single variable.
@@ -216,6 +217,7 @@ Hence, the approximate continuum solution is
 In essence, Richardson extrapolation allows for $\phi$ values from two solutions from an order $h^p$ numerical method to be combined to produce an approximation of order $h^{p+1}$ to the continuum value of $\phi$.
 
 \subsection{Generalized Richardson Extrapolation}
+\label{sec:generalized_re}
 Of course, the above equations are only approximations.
 In reality, higher order terms introduce noise which may distort the extrapolated value
 when only two grid sizes are used.

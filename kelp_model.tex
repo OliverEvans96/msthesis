@@ -94,7 +94,7 @@ Since it is assumed that fronds extend perfectly horizontally, no angular elevat
   %TODO: Cite this?
   \qquad
 	\includegraphics[width=2in]{frond}
-	\captionof{figure}{Simplified kite-shaped frond.}
+	\captionof{figure}{Simplified kite-shaped frond. Reproduced with permission from \cite{broch_modelling_2013}.}
 	\label{fig:frond}
 \end{figure}
 
@@ -345,7 +345,7 @@ where $a_k$ is the absorption coefficient of the kelp alone, and $a_w$ is the ab
 	\label{fig:prob_shade}
 \end{figure}
 
-\section{Discontinuity at the rope}
+\section{Discontinuity at the Rope}
 While the above model of the kelp distribution is straightforward to evaluate, it does have a significant numerical difficulty in its application.
 Since the length and orientations are both continuous in the polar coordinates $s>0$ and $\theta$, the resulting kelp density and effective absorption coefficient are as well.
 However, they are not necessarily continuous in Cartesian coordinates.
@@ -365,7 +365,7 @@ Any blur whatsoever is sufficient to bound the derivatives, and the larger the b
 Obviously, as the blur radius is increased, the kelp distribution tends toward a constant and no longer captures any information about the $xy$ distribution of the kelp.
 Therefore, a small blur radius should be used.
 
-\subsection{One dimensional Gaussian blur}
+\subsection{One dimensional Gaussian Blur}
 As a one dimensional analogy, consider the Heaviside step function,
 \begin{equation*}
   H(x) = \begin{cases}
@@ -418,54 +418,33 @@ Hence, the blurred solution is
 A physical interpretation of this Gaussian blurring is that $P_k^b$ is the time--averaged kelp distribution, assuming that the rope is allowed to move horizontally, and $k(x, y; \sigma)$ is the PDF of the rope's location distribution.
 This interpretation is a bit incongruous with the rest of the model since there is no other explicit mention of time--averaging; while the frond length and position distributions can be thought of as continuous approximations to the population distribution at a single point in time, this idea does not apply to the rope's position, since there is only one rope.
 
-\subsection{Absorption coefficient plots}
+\subsection{Absorption Coefficient Plots}
 % TODO: Clean up figures
 A variety of numerically calculated absorption coefficient fields are shown here in order to demonstrate some key features of the kelp distribution.
-In each figure, the absorption coefficient is plotted on the color axis, while the norm of its gradient is shown with contours, with brighter contour lines representing regions of large derivatives.
+In each figure, the absorption coefficient is plotted on the color axis, while the norm of its gradient is shown with contours, with brighter contour lines indicating regions of large derivatives.
 As mentioned above, large derivatives generate large discretization error, and are therefore undesirable.
 Of course, the distributions must be sufficiently well--defined to capture the characteristics of the kelp.
+Note that all of the kelp distributions are periodic in order to easily represent multiple vertical lines grown in close proximity.
 
-Figure \ref{fig:kelp_dist_sharp} shows a sharp kelp distribution with an unrealistically high current velocity, with all fronds identically equal in length, and with no blurring applied.
+Figure \ref{fig:abs_coefs_combined}(a) shows a sharp kelp distribution with an unrealistically high current velocity, with all fronds identically equal in length, and with no blurring applied.
 Note the kite--shaped distribution, as expected.
 Also note the regions of high derivatives near the origin and inner edges.
 This sharp distribution requires excessively large numerical grids to approximate well, and is therefore undesirable.
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5in]{kelp_dist_sharp}
-  \caption{Absorption coefficient profile in the limiting case of $v_w>>1$, $\sigma_l=0$ and $\sigma_b=0$ demonstrates the kite--shaped fronds. Note the high gradient near the inner edge of the frond.}
-  \label{fig:kelp_dist_sharp}
-\end{figure}
 
-In Figure \ref{fig:kelp_dist_smooth}, the current velocity has been reduced, and a nonzero standard deviation has been given to the frond distribution.
+In Figure \ref{fig:abs_coefs_combined}(b), the current velocity has been reduced, and a nonzero standard deviation has been given to the frond distribution.
 With a variety of frond lengths, the edges are no longer as clearly defined, although the general character of the distribution is sensible --- the kelp is most dense near the rope in the direction of the current.
 However, note that there remains a small neighborhood of sharp derivatives encompassing the origin.
-Such a distribution would still cause numerical difficulties for the numerical algorithm.
+Such a distribution may still cause numerical difficulties for the numerical algorithm.
 
-\begin{figure}[H]
-  \centering
-  \vspace{-3em}
-  \includegraphics[width=5in]{kelp_dist_smooth}
-  \caption{Absorption coefficient profile for realistic values of $v_w$ and $\sigma_l$, but with $\sigma_b=0$. Note the large gradient at the origin. By continuing to increase the plotting resolution, the gradient would be found to be unbounded.}
-  \label{fig:kelp_dist_smooth}
-\end{figure}
-
-Figure \ref{fig:kelp_dist_smooth_smallblur} is similar to Figure \ref{fig:kelp_dist_smooth}, except it has been post--processed with a small Gaussian blur of radius \SI{10}{cm}, not so large that it significantly distorts the shape of the distribution, but sufficient to remove the discontinuity in the origin.
+Figure \ref{fig:abs_coefs_combined}(c) is similar to Figure \ref{fig:abs_coefs_combined}(b), except it has been post--processed with a moderate Gaussian blur of radius \SI{40}{cm}, not so large that it significantly distorts the shape of the distribution, but sufficient to remove the discontinuity in the origin.
 Such a kelp distribution is ideal, as it balances accuracy with ease of numerical approximation.
-\begin{figure}[H]
-  \centering
-  \vspace{-3em}
-  \includegraphics[width=5in]{kelp_dist_smooth_smallblur}
-  \caption{A small blur radius of $\sigma_b=\SI{0.1}{\m}$ eliminates the derivative singularity at the origin.}
-  \label{fig:kelp_dist_smooth_smallblur}
-\end{figure}
 
-In Figure \ref{fig:kelp_dist_smooth_blur}, too large of a blur has been applied; the character of the Gaussian kernel has overwhelmed that of the kelp distribution.
-While this may still provide a better spatial description of the kelp than a fully horizontally uniform distribution, and unnecessary amount of information has been sacrificed for marginal gains in smoothness over Figure \ref{fig:kelp_dist_smooth_smallblur}.
-Such a large blur is unlikely to reduce the discretization error, since other factors are contributing to it more significantly.
+In Figure \ref{fig:abs_coefs_combined}(d), too large of a blur has been applied; the character of the Gaussian kernel has overwhelmed that of the kelp distribution.
+While this may still provide a better spatial description of the kelp than a fully horizontally uniform distribution, and unnecessary amount of information has been sacrificed for marginal gains in smoothness over Figure \ref{fig:abs_coefs_combined}(c).
+Such a large blur is unlikely to reduce the discretization error since other factors discussed lated contribute to discretization error as well.
 \begin{figure}[H]
   \centering
-  \vspace{-3em}
-  \includegraphics[width=5in]{kelp_dist_smooth_blur}
-  \caption{Over-blurring kelp distribution with $\sigma_b=\SI{10}{\m}$ causes it to lose a great deal of spatial resolution. This should be avoided.}
-  \label{fig:kelp_dist_smooth_blur}
+  \includegraphics[width=6in]{abs_coefs_combined}
+  \caption{$z$--slices of several absorption coefficient distributions from kelp distributions with varying parameters. The norm of the gradient is depicted with contours. (a) $\eta v_w=90$, $\sigma_l=\sigma_b=0$. Unrealistically sharp distribution shows kite--shaped character. (b) $\eta v_w=10$, $\sigma_b=0$, $\sigma_l=\SI{1}{\m}$. More realistic kelp distribution, but still has large derivatives near the origin. (c) $\eta v_w=10$, $\sigma_b=\SI{0.4}{\m}$, $\sigma_l=\SI{1}{\m}$. Moderate Gaussian blur slightly reduces derivatives near the origin. (d) $\eta v_w=10$, $\sigma_b=\SI{2}{\m}$, $\sigma_l=\SI{1}{\m}$. Overblurred distribution; should be avoided.}
+  \label{fig:abs_coefs_combined}
 \end{figure}

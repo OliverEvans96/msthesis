@@ -18,6 +18,7 @@ The domain of the radiative transfer equation is embedded in five dimensions: th
 The numbers of grid cells in each dimension are denoted $n_x$, $n_y$, $n_z$,
 $n_\theta$, and $n_\phi$, with uniform spacings $dx$, $dy$, $dz$, $d\theta$, and
 $d\phi$ between adjacent grid points.
+Note that $n_\phi$ must be even in order to avoid perfectly horizontal rays, as discussed in Section \ref{sec:ray_notation} and Appendix \ref{chap:grid_details}.
 
 The following indices are assigned to each dimension:
 \begin{align*}
@@ -69,7 +70,7 @@ Refer to Appendix \ref{chap:grid_details} for a more rigorous discussion of the 
 
 \section{Kelp Distribution}
 
-\subsection{Super-Individuals}
+\subsection{Super--Individuals}
 \label{sec:si}
 
 Rather than model each kelp frond, subsets of the population, called super-individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
@@ -88,7 +89,7 @@ lengths using the formulas
 We then assume that frond lengths are normally distributed in each depth layer
 with mean $\mu_k$ and standard deviation $\sigma_k$.
 
-\subsection{Integration of Distributions}
+\subsection{Integration of Population Distributions}
 The computational crux of calculating the kelp distribution is to evaluate \eqref{eqn:integrate_p2d} by integrating $P_{2D}(\theta_f, l)$ from \eqref{eqn:p2d} over the occupancy region $R_s(\theta, s)$, defined by \eqref{eqn:rs_th} and \eqref{eqn:rs_l}, for every point $(\theta,s)$ in the $xy$--domain.
 To recap, the population distribution is
 \begin{align*}
