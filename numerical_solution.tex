@@ -3,7 +3,7 @@
 In this chapter, the mathematical details involved in the numerical solution of the equations described in Chapters \ref{chap:kelp} and \ref{chap:light} are presented.
 Two solution algorithms are used: finite difference and numerical asymptotics.
 Both algorithms require a discrete spatial--angular grid, described in Section \ref{sec:grid}.
-In the finite difference algorithm, the continuuum differential equation is approximated at every point in the grid.
+In the finite difference algorithm, the continuum differential equation is approximated at every point in the grid.
 This forms a large sparse system of linear equations which must be solved simultaneously with an iterative method.
 The computational cost for this approach is high in terms of CPU usage, and especially in its memory requirement.
 
@@ -69,7 +69,7 @@ The functions $\hat{p}(l,m)$, $\hat{l}(p)$, and $\hat{m}(p)$ are mappings betwee
 Refer to Appendix \ref{chap:grid_details} for a more rigorous discussion of the discrete spatial--angular grid.
 
 \section{Kelp Distribution}
-In order to determine the appropriate spatial dependence for the absorption coefficient to use in the radiative transfer equation, the spatial kelp distribution, described by \eqref{eqn:kelp_pk} and its tributaries, is calculated at every poin t in space.
+In order to determine the appropriate spatial dependence for the absorption coefficient to use in the radiative transfer equation, the spatial kelp distribution, described by \eqref{eqn:kelp_pk} and its tributaries, is calculated at every point t in space.
 Several computational details related to the kelp distribution are worth mentioning, from the determination of input parameters to algorithmic instructions for the required numerical integration.
 
 \subsection{Super--Individuals}
@@ -482,7 +482,7 @@ Similarly, for downwelling light at the lowest depth layer, we have
 For each spatial-angular grid cell, one of the above equations is applied.
 The equation applied at each grid cell involves adjacent radiance values due to the discretized derivatives.
 Thus, a coupled system of linear equations is produced, which can be written as a sparse matrix equation, $\mathbb{AX=B}$.
-In the coefficient matrix $\mathbb{A}$, each row is asociated with the grid cell at which the discretized equation was evaluated.
+In the coefficient matrix $\mathbb{A}$, each row is associated with the grid cell at which the discretized equation was evaluated.
 Each column is the coefficient of the radiance at a particular spatial--angular grid cell.
 
 In principle, the order of the equations, i.e., the order of the rows and columns of the coefficient matrix, is not important

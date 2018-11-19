@@ -230,11 +230,11 @@ These estimates are plotted in Figure \ref{fig:mem_solve}, and listed numericall
 \section{Grid Size and Discretization Error}
 \label{sec:grid_size}
 The size of the spatial--angular grid is an important choice that must be made in order to balance numerical accuracy with computational cost.
-Since both the numerical asymptotics and finite difference algorithms are second order methods, the discretization error is prortional to the square of the grid spacing, in both the spatial and angular domains.
-In this section, a realistic simulaton is performed on many grids, and the discretization error of each is estimated via Richardson Extrapolation, as described in Section \ref{sec:generalized_re}.
+Since both the numerical asymptotics and finite difference algorithms are second order methods, the discretization error is proportional to the square of the grid spacing, in both the spatial and angular domains.
+In this section, a realistic simulation is performed on many grids, and the discretization error of each is estimated via Richardson Extrapolation, as described in Section \ref{sec:generalized_re}.
 These error estimates allow the spatial and angular components of discretization to be isolated; rules of thumb for both grid spacings are enabled by this analysis.
 
-\subsection{Error Estimatation}
+\subsection{Error Estimation}
 A set of simulations is run for a range of spatial and angular grid sizes with optical properties from Petzold's coastal California waters (HAOCE11), listed in Table \ref{tab:petzold}.
 Grid sizes of $n_s=32,48,64,72$ and $n_a=4,8,10,12$ are considered; one simulation is run for every combination of these values.
 The average irradiance over the whole domain is calculated for each simulation, which is used as the scalar metric for comparing solutions on disparate grids.
@@ -249,7 +249,7 @@ All parameters aside from grid resolution are held constant, so discretization e
 \end{figure}
 
 Notice that in Figure \ref{fig:gs_avg_irrad_lines}, the average irradiance is linear in squared grid spacing for each slice in the resolution space, which 
-This pattern holds for both the finite difference and numerical asymptotics algorithms, indicating that all of the grid sizes considered are within the aymptotic region of both methods, since the observed convergence order matches the theoretical order.
+This pattern holds for both the finite difference and numerical asymptotics algorithms, indicating that all of the grid sizes considered are within the asymptotic region of both methods, since the observed convergence order matches the theoretical order.
 This demonstrates that the average irradiance is planar over the whole two--dimensional squared--resolution space, as shown by the parallel linear contours in Figure \ref{fig:gs_avg_irrad_contourf}.
 
 
@@ -288,7 +288,7 @@ The total discretization error for a potential grid can be found by taking the s
 For example, take the asymptotics algorithm with the grid $n_s=60$, $n_a=20$.
 The asymptotics curves are orange, with the dashed line showing the angular component error and the solid line showing the spatial component.
 The angular discretization error for this particular grid looks to be about \SI{2e-1}{\W\per\m\squared}, while the spatial discretization error is about \SI{3e-2}{\W\per\m\squared}.
-In this case, the spatial grid is unnecessarily fine, since the angular discretization error dominantes by almost an order of magnitude.
+In this case, the spatial grid is unnecessarily fine, since the angular discretization error dominates by almost an order of magnitude.
 In general, the components of grid size should be chosen to produce roughly similar discretization errors so as to avoid unnecessary computation.
 
 From the other perspective, consider an overall target error of $\bar{\varepsilon}=\SI{2e-2}{\W\per\m\squared}$.
