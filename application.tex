@@ -1,8 +1,8 @@
 \chapter{PRACTICAL APPLICATION}
 \label{chap:application}
 
-This chapter deals with the practical considerations when applying the previously discussed numerical algorithms to simulate the light field for realistic scenarios of kelp growing in ocean waters.
-This is chapter is the culmination of this thesis: the spatial kelp distribution model of Chapter \Rom{\ref{chap:kelp}} and the radiative transfer model of Chapter \Rom{\ref{chap:light}} are combined using the numerical algorithms described in Chapter \Rom{\ref{chap:numerical}} and verified in Chapter \Rom{\ref{chap:model_analysis}} and applied to a realistic scenario
+This chapter deals with practical considerations when applying the previously discussed numerical algorithms to simulate the light field for realistic scenarios of kelp growing in ocean waters.
+This chapter is the culmination of this thesis: the spatial kelp distribution model of Chapter \Rom{\ref{chap:kelp}} and the radiative transfer model of Chapter \Rom{\ref{chap:light}} are combined using the numerical algorithms described in Chapter \Rom{\ref{chap:numerical}} and verified in Chapter \Rom{\ref{chap:model_analysis}} and applied to a realistic scenario.
 
 The computational code must be supplied with appropriate physical parameters to emulate the particular seaweed under consideration and the optical properties of the surrounding aquatic medium.
 Further, the choice of algorithm between numerical asymptotics and finite difference must be made based on the physical situation under consideration, the computational resources available, and the desired level of accuracy in the computed light field.
@@ -105,7 +105,7 @@ To emulate the holdfast, the string should be tied tightly around the vertical r
 giving the frond a preferred orientation from which it has to bend.
 The preferred directions should be more or less evenly distributed.
 A camera should be mounted directly over the vertical rope, pointed straight down.
-If possible, a fluorescent dye could be applied to the tip of the each frond to make their orientation more easily discernible in the recording.
+If possible, a fluorescent dye could be applied to the tip of the each frond to make their orientations more easily discernible in the recording.
 Turn on the flume to several current speeds, recording a video or many snapshots for each.
 If the fluorescent dye is applied, then a simple peak--finding image processing algorithm can be applied to locate the frond tips.
 By preprocessing the image to a gray scale such that the color of the dye has the highest intensity,
@@ -248,7 +248,7 @@ All parameters aside from grid resolution are held constant, so discretization e
   \label{fig:gs_avg_irrad_contourf}
 \end{figure}
 
-Notice that in Figure \ref{fig:gs_avg_irrad_lines}, the average irradiance is linear in squared grid spacing for each slice in the resolution space, which 
+Notice that in Figure \ref{fig:gs_avg_irrad_lines}, the average irradiance is linear in squared grid spacing for each slice in the resolution space.
 This pattern holds for both the finite difference and numerical asymptotics algorithms, indicating that all of the grid sizes considered are within the asymptotic region of both methods, since the observed convergence order matches the theoretical order.
 This demonstrates that the average irradiance is planar over the whole two--dimensional squared--resolution space, as shown by the parallel linear contours in Figure \ref{fig:gs_avg_irrad_contourf}.
 
@@ -279,8 +279,8 @@ where
 \end{align}
 
 By evaluating this plane at $ds=0$, $da=0$, the extrapolated continuum value of average irradiance is found.
-The generalized Richardson extrapolation plane is shifted down by the continuum value to construct a model for predict discretization error as a function of grid resolution.
-The intersections of this model plane with the $ds=0$ and $da=0$ planes are the isolated angular and spatial components of discretization error respectively.
+The generalized Richardson extrapolation plane is shifted down by the continuum value to construct a model to predict discretization error as a function of grid resolution.
+The intersections of this model plane with the $ds=0$ and $da=0$ planes are the isolated angular and spatial components of discretization error, respectively.
 These isolated components of discretization error are shown in Figure \ref{fig:gs_predicted_err} for both algorithms.
 This figure allows for quick estimation of the grid size necessary to achieve a given error threshold.
 The total discretization error for a potential grid can be found by taking the sum of the component errors for the algorithm in question.
@@ -291,7 +291,7 @@ The angular discretization error for this particular grid looks to be about \SI{
 In this case, the spatial grid is unnecessarily fine, since the angular discretization error dominates by almost an order of magnitude.
 In general, the components of grid size should be chosen to produce roughly similar discretization errors so as to avoid unnecessary computation.
 
-From the other perspective, consider an overall target error of $\bar{\varepsilon}=\SI{2e-2}{\W\per\m\squared}$.
+From the other perspective, consider an overall discretization error criterion of $\bar{\varepsilon}=\SI{2e-2}{\W\per\m\squared}$.
 This can be achieved by any grid whose spatial and angular error components sum to less than $\bar{\varepsilon}$, but for simplicity, set both component thresholds to $\bar{\varepsilon_s}=\bar{\varepsilon_a}=\SI{1e-2}{\W\per\m\squared}$.
 By visual inspection of Figure \ref{fig:gs_predicted_err}, this seems to suggest $n_s=92$, $n_a=22$ for the asymptotics algorithm, or $n_s=42$, $n_a=20$ for the finite difference algorithm.
 
@@ -302,7 +302,7 @@ By visual inspection of Figure \ref{fig:gs_predicted_err}, this seems to suggest
   \label{fig:gs_predicted_err}
 \end{figure}
 
-It is important to note that the error analysis in this section has been performed only for a single set of optical properties (HAOCE11).
+It is important to note that the error analysis in this section has been performed for only a single set of optical properties (HAOCE11).
 Optical properties are sure to have some effect on grid convergence, as they affect the derivatives of the absorption field the solution, thereby impacting the accuracy of quadrature on a particular grid.
 Furthermore, only $n=0$ was tested for the asymptotics algorithm.
 Discretization may compound for higher--order approximations.
@@ -342,7 +342,7 @@ Figure \ref{fig:asym_err_vs_ab} shows a different slice of the simulation result
 Here, $n=0$ is held constant while $a_w$ and $b$ are plotted on the $x$ and (log) $y$ axes, with average error plotted on the (log) color scale.
 Note that mean error does not depend only on $b$.
 Rather, errors are largest for waters with low absorption and high scattering, and lowest for low scattering, high absorption.
-The clear pattern in the variation of error over the $a_w$--$b$ domain indicates that a third parameter can be calculated sufficiently from $a_w$ and $b$ which is sufficient to determine the accuracy of the approximation.
+The clear pattern in the variation of error over the $a_w$--$b$ domain indicates that a third parameter can be calculated sufficiently from $a_w$ and $b$, which is sufficient to determine the accuracy of the approximation.
 
 \begin{figure}[H]
   \centering
@@ -445,7 +445,7 @@ Thus, waters characterized below this threshold are worth considering for soluti
 \begin{figure}[H]
   \centering
   \includegraphics[width=5.5in]{asym_err_vs_xi_all_n_fit_all}
-  \caption{All data from the right column of \ref{fig:asym_err_data_xi_model} on a single plot demonstrates a characteristic $\xi=\xi^*$ above which the asymptotic series diverges. This observation permits a simple model for predicting truncation error.}
+  \caption{All data from the right column of \ref{fig:asym_err_data_xi_model} on a single plot demonstrates a characteristic $\xi=\xi^*$ above which the asymptotic series approach is inappropriate. This observation permits a simple model for predicting truncation error.}
   \label{fig:asym_err_vs_xi_all_n_fit_all}
 \end{figure}
 
@@ -472,7 +472,7 @@ which is equivalent almost everywhere to
 \begin{figure}[H]
   \centering
   \includegraphics[width=5.75in]{asym_err_model_vs_ab_all_n}
-  \caption{Predicted truncation error for a range of $a_w$ and $b$ values. $n$ varies over plot rows. Linear--linear scale on the left, log--log scale on the right. The asymptotic series converges only for $(a_w,b)$ values to the right of the $\xi^*$ contour.}
+  \caption{Predicted truncation error for a range of $a_w$ and $b$ values. $n$ varies over plot rows. Linear--linear scale on the left, log--log scale on the right. The asymptotic series is appropriate only for $(a_w,b)$ values to the right of the $\xi^*$ contour.}
   \label{fig:asym_err_model_vs_ab_all_n}
 \end{figure}
 
@@ -569,7 +569,7 @@ This tendency for scattering to insulate the upper region of the water may prove
 \subsection{Comparison: Total Radiant Flux}
 Figure \ref{fig:compare_models_haoce11_flux} shows the total radiant flux in Watts predicted by each model, calculated by integrating each depth--dependent light field over the vertical domain, \textit{weighted by the frond area density} (frond area per vertical meter).
 While not exactly analogous, total radiant flux can be regarded as a rough proxy for the amount of photosynthesis occurring in the entire kelp population at all depths.
-Reducing the entire light field to an interpretable scalar is quite useful, as it summarizes magnitude of the difference between the four light models.
+Reducing the entire light field to an interpretable scalar is quite useful, as it summarizes the magnitude of the difference between the four light models.
 
 The radiant flux predicted by the 3D average irradiance is just 13\% of the flux disregarding kelp, and 57\% of the simple kelp flux.
 Meanwhile, the perceived irradiance predicts only 3\% the flux of the no--kelp model and 11\% the flux of the simple kelp model.
