@@ -94,7 +94,8 @@ Of course, it is necessary to construct $u$ and any coefficient functions in $D$
 
 Also, $u$ must satisfy any constraints imposed by the algorithm such as hard--coded boundary conditions or acceptable coefficient ranges.
 Finally, the chosen functions should have small derivatives so that convergence can be achieved for reasonable grid sizes.
-Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) such as the Python package Sympy \ref{meurer_sympy:_2017} to symbolically compute the source term.
+Since these functions may need to be fairly complicated in order to achieve full generality while meeting the necessary constraints, it is advisable to use a \textit{Computer Algebra System} (CAS) such as the Python package Sympy \cite{meurer_sympy:_2017} to symbolically compute the source term.
+
 
 \subsection{Discretization Error Analysis}
 Once an exact solution is known, code verification is performed by demonstrating that the discretization error of the code matches the theoretical order of accuracy of the algorithm.
@@ -136,7 +137,7 @@ Then, we use the geometric mean to describe the spatial and angular resolution, 
 
 This reduces the dimensionality of the resolution space to two, but it would be preferable to deal only with a single variable.
 Therefore, the finite difference verification is performed by holding $n_a=8$, and varying $n_s$ between 4 and 64.
-As shown in Figure \ref{fig:fd_mms}, second order convergence is observed, demonstrating that the code is free of coding mistakes which would affect the convergence properties of the algorithm.
+As shown in Figure \ref{fig:fd_mms}, second order convergence is observed, demonstrating that the code is free of coding mistakes affecting the convergence properties of the algorithm.
 
 \begin{figure}[h]
   \centering

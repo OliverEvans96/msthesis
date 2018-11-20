@@ -29,7 +29,7 @@ Given here is a table of parameter values found in the literature which are used
 A few comments are in order.
 No values were available for the absorptance of \textit{Saccharina latissima}, but a value for \textit{Macrocystis pyrifera} was found.
 The surface irradiance from \cite{broch_modelling_2012} was given in terms of photons per second,
-and was converted to \SI{}{\W\per\m\squared} according to \eqref{eqn:watts_photons}.
+and was converted to \SI{}{\W\per\m\squared} according to the approximate relation \eqref{eqn:watts_photons}.
 
 \begin{table}[h]
   \centering
@@ -177,7 +177,7 @@ This is not intended to discourage parallelism, only to represent it accurately;
 
 The choice of algorithm has a significant impact on computation time.
 The finite difference method relies on an iterative method for solving the linear system.
-It runs until an error criterion is satisfied for the matrix equation, and therefore the exact number of computations is not known ahead of time.
+It runs until an error criterion is satisfied, and therefore the exact number of computations is not known ahead of time.
 On the other hand, the numerical asymptotics algorithm is a direct method that performs a predetermined number of calculations.
 The computation time of the latter is therefore more predictable.
 
@@ -547,8 +547,8 @@ Both quantities are plotted with error bands calculated via Richardson extrapola
 The calculation was performed for all combinations of $n_s=32,48,64,72$ and $n_a=6,8,10$, and the average and perceived irradiances calculated from those solutions were cubically interpolated at many $z$ values.
 Then, the standard 2D Richardson extrapolation procedure was applied independently for each $z$, using the interpolated irradiance value at that $z$ as the scalar to extrapolate, as described in Section \ref{sec:generalized_re}.
 The plotted curves are the irradiances from the $72\times 10$ grid.
-The error bands are three times the estimated error in order to make the estimate conservative, as recommended by \cite{roache_perspective_1994}.
-For a detailed procedure for error reporting in numerical simulations, see \cite{noauthor_procedure_2008}
+The error bands are three times the estimated error in order to make the estimate conservative, as recommended by \cite{roache_perspective:_1994}.
+For a detailed procedure for error reporting in numerical simulations, see \cite{noauthor_procedure_2008}.
 
 \subsection{Comparison: Irradiance Curves}
 First, note that the no--kelp model predicts the highest light levels throughout the domain, as should be expected since it ignores the dominant source of attenuation.
@@ -564,7 +564,7 @@ From this point of view, it seems that the other two light models significantly 
 
 Note that the 3D model does not predict the lowest light fields everywhere; the average irradiance is observed to be larger than the no--kelp irradiance in the second plot in Figure \ref{fig:compare_models_haoce11_both}.
 This is due to the effect of scattering shifting light from lower in the domain closer to the surface.
-This tendency for scattering to insulate the upper region of the water may prove to be important in understanding how photosynthesis near the ocean's surface differs from photosynthesis at greater depths.
+This tendency for scattering to insulate the upper region of the water may prove to be important in understanding how photosynthesis near the ocean's surface differs from photosynthesis at depth.
 
 \subsection{Comparison: Total Radiant Flux}
 Figure \ref{fig:compare_models_haoce11_flux} shows the total radiant flux in Watts predicted by each model, calculated by integrating each depth--dependent light field over the vertical domain, \textit{weighted by the frond area density} (frond area per vertical meter).
@@ -580,7 +580,7 @@ The large degree of these differences in model predictions highlight the importa
 \begin{figure}[H]
   \centering
   \includegraphics[width=5.75in]{compare_models_haoce11_both}
-  \caption{Average irradiance and perceived irradiance from finite difference compared to simpler light models for the case of coastal California water (HAOCE11) with realistic kelp growth. Frond lengths over depth are shown on the right--hand axis. Discretization error is shown by error bands for perc. irrad. and avg. irrad. Note the different scales in the two plots.}
+  \caption{Average irradiance and perceived irradiance from finite difference compared to simpler light models for the case of coastal California water (HAOCE11) with realistic kelp growth. Frond lengths over depth are shown on the right--hand axis. Discretization error is shown by error bands for perceived irradiance and average irradiance. Note the different scales in the two plots.}
   \label{fig:compare_models_haoce11_both}
 \end{figure}
 
