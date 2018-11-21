@@ -1,4 +1,6 @@
-Welcome to my Master's Thesis! Check out main.pdf for the final document!
+# Modeling the Light Field in Macroalgae Aquaculture
+
+Welcome to my Master's Thesis! Check out [OliverEvansMSThesisFinal.pdf](OliverEvansMSThesisFinal.pdf) for the final document!
 
 Abstract:
 > A mathematical model is developed to describe the light field in
