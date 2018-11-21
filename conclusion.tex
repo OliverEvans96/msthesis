@@ -1,21 +1,21 @@
 \chapter{CONCLUSION}
 \label{chap:conclusion}
 
-This thesis presents a model for the light field in a vertical--rope kelp farming operation, emphasizing the effect of the seaweed itself on the overall light field.
-A three--dimensional model for the spatial distribution of the seaweed is developed, which then informs the absorption field of the combined seaweed--water medium.
+This thesis presents a model for the light field in a vertical-rope kelp farming operation, emphasizing the effect of the seaweed itself on the overall light field.
+A three-dimensional model for the spatial distribution of the seaweed is developed, which then informs the absorption field of the combined seaweed-water medium.
 This absorption field is then used as a coefficient in the monochromatic radiative transfer equation, which calculates the full light field over all positions and angles in the domain, accounting for both attenuation and scattering in the medium.
 
 Two numerical solution techniques are presented: finite difference and numerical asymptotics.
 The finite difference approach is applicable to any type of water, although it can be prohibitively expensive in terms of CPU time, and even more so in terms of memory usage.
-On the other hand, the numerical asymptotics algorithm is much cheaper computationally by both measures, though it is only accurate for low--scattering scenarios.
+On the other hand, the numerical asymptotics algorithm is much cheaper computationally by both measures, though it is only accurate for low-scattering scenarios.
 Within the appropriate range of optical properties of the aquatic medium, the accuracy and computation time of the solution can be tuned by choosing the number of terms to include in the asymptotic series.
 
-When compared to simpler one--dimensional models for the light field, the model presented in this thesis is found to predict lower light levels.
-This is expected, as the full three--dimensional model considers self--shading due to the kelp in greater detail than the others.
-Further, the average irradiance as a function of depth predicted by the three--dimensional model is found to agree fairly well with a simpler model for kelp shading.
+When compared to simpler one-dimensional models for the light field, the model presented in this thesis is found to predict lower light levels.
+This is expected, as the full three-dimensional model considers self-shading due to the kelp in greater detail than the others.
+Further, the average irradiance as a function of depth predicted by the three-dimensional model is found to agree fairly well with a simpler model for kelp shading.
 However, the average irradiance considers areas of low shading far from the kelp which are irrelevant to photosynthesis.
 When the light field is examined only in the regions where kelp is actually growing, much less light is predicted.
-This indicates that simpler models may be overestimating the amount of light available for photosynthesis, which would, in light--limited situations involving high kelp density or low nutrient concentration, predict unrealistically large overall biomass yields in a time--dependent kelp growth simulation.
+This indicates that simpler models may be overestimating the amount of light available for photosynthesis, which would, in light-limited situations involving high kelp density or low nutrient concentration, predict unrealistically large overall biomass yields in a time-dependent kelp growth simulation.
 
 \section{Model Summary}
 The following is a summary of the primary assumptions used in the formulation of the model.
@@ -39,24 +39,24 @@ The assumptions are vast simplifications from the real system, and leave plenty 
 %\section{Summary of Results}
 
 \section{Future Work}
-As with any scientific or mathematical investigation, many new opportunities for exploration have arisen from the development of this model, including improvements to the mathematical model itself, improvements to its numerical solution, and its application to answer real--world questions about kelp cultivation.
+As with any scientific or mathematical investigation, many new opportunities for exploration have arisen from the development of this model, including improvements to the mathematical model itself, improvements to its numerical solution, and its application to answer real-world questions about kelp cultivation.
 Certainly, the exploration of any of the ideas presented here will lead to many more opportunities for future inquiry and so on \textit{ad infinitum}, as is the nature of knowledge creation.
 \subsection{Model Improvements}
 Many aspects of the model have room for future improvement.
-The most pressing is probably the development of a model for long--lines, which
+The most pressing is probably the development of a model for long-lines, which
 is more popular in practice than the vertical lines studied here.
-The implementation of long--lines may prove to be closely related to allowing non--horizontal frond orientation.
+The implementation of long-lines may prove to be closely related to allowing non-horizontal frond orientation.
 This could be improved in a straightforward way by including some
 probability distribution for the angular elevation as a function of current speed,
 similar to the study performed in \citep{norvik_design_2017}.
 
 The cost of implementing polar rotation is that depth layers are no longer isolated.
-Rather than integrating the two dimensional length--orientation distribution from
+Rather than integrating the two dimensional length-orientation distribution from
 Section \ref{sec:dist_2d} to calculate the spatial kelp distribution,
 it would be necessary to perform a triple integral which includes the elevation distribution.
 Since frond elevation and azimuthal orientation are both related to current velocity,
 the assumption of independent distributions would have to be abandoned, as mentioned at the end of Section \ref{sec:dist_2d}.
-Considering non--kite frond shapes, as well as out--of--plane bending may also improve the spatial description of the seaweed, though would pose major implementation challenges.
+Considering non-kite frond shapes, as well as out-of-plane bending may also improve the spatial description of the seaweed, though would pose major implementation challenges.
 
 Improved parameter estimation is also important, especially the frond alignment coefficient $\eta$.
 Better values for the frond absorptance $A_k$ and thickness $f_t$ would also be advantageous.
@@ -68,9 +68,9 @@ In reality, kelp and water have different scattering properties, which should be
 This poses an additional challenge for the numerical asymptotics solution, as the asymptotic expansion must be taken in terms of a scalar parameter.
 Perhaps the maximum value $\bar{b}$ of the scattering field $b(\vec{x}, \bar{b})$ could be used, which of course would require that $b$ be expanded in terms of $\bar{b}$ as is currently done with $L$ and $\sigma$ in Equations \eqref{eqn:Lasym} and \eqref{eqn:sigasym} respectively.
 
-Also, it is important to note that in reality, photosynthesis is a frequency--dependent process, and a frequency--dependent light model may therefore significantly improve seasonal growth predictions.
+Also, it is important to note that in reality, photosynthesis is a frequency-dependent process, and a frequency-dependent light model may therefore significantly improve seasonal growth predictions.
 This suggests that inelastic (a.k.a. Raman) scattering also be considered, whereby light changes not only direction but also frequency during a scattering event.
-Of course, frequency--dependence adds another dimension to the already five--dimensional simulation, which may push a numerical solution beyond the capability of modern computers.
+Of course, frequency-dependence adds another dimension to the already five-dimensional simulation, which may push a numerical solution beyond the capability of modern computers.
 
 Finally, a major outstanding task is the experimental validation of the model presented in this thesis.
 Chapter \Rom{\ref{chap:model_analysis}} deals with ensuring that the numerical algorithms presented here \textit{solve the equations right}, but it remains to be shown whether they \textit{solve the right equations}.
@@ -79,7 +79,7 @@ Comparison with experimental data is an essential step in developing and refinin
 \subsection{Numerical Improvements}
 Aside from improvements of the mathematical model, plenty of improvements to the numerical solution are possible.
 Perhaps the most important and achievable such improvement the following specific modification to the numerical asymptotics algorithm which is likely to speed up the solution by several orders of magnitude.
-At present, the numerical asymptotics algorithm considers each spatial--angular grid point, determines the ray path back to its intersection with the domain boundary, and solves Equation \eqref{eqn:asymptotics_ode_n} via Equation \eqref{eqn:discrete_ray_integral} over the full ray path in order to determine the effects of absorption and scattering since the previous term in the asymptotic series.
+At present, the numerical asymptotics algorithm considers each spatial-angular grid point, determines the ray path back to its intersection with the domain boundary, and solves Equation \eqref{eqn:asymptotics_ode_n} via Equation \eqref{eqn:discrete_ray_integral} over the full ray path in order to determine the effects of absorption and scattering since the previous term in the asymptotic series.
 Rather than integrate the full ray for each grid point, it may be possible to implement a much cheaper local algorithm which solves Equation \eqref{eqn:asymptotics_ode_n} only between adjacent grid cells.
 At present, computation time is a far greater bottleneck than memory usage for the asymptotic approximation.
 If this algorithmic improvement indeed speeds up the computation considerably, it would make solutions feasible on much larger grids than are currently within reach.
@@ -89,20 +89,20 @@ However, this does not actually involve an algorithmic improvement, nor does it 
 Rather, it involves distributing the computational load between computers in a way that is not currently implemented.
 As mentioned in Section \ref{sec:iterative_solution}, the finite difference linear system is presently solved by the multithreaded GMRES algorithm provided by the LIS package.
 While multithreading can only achieve parallelism within a single process on a single machine, LIS also makes available MPI implementations of its parallel algorithms.
-MPI is a protocol which facilitates work--sharing between processes either on the same machine or over a network.
+MPI is a protocol which facilitates work-sharing between processes either on the same machine or over a network.
 Therefore, using the MPI environment permits the coefficient matrix to be divided and stored in a distributed fashion on several nodes within a cluster, which, depending on the computational resources available, is likely to drastically increase the grid sizes available for computation.
-However, network communication is often significantly slower than inter--thread communication.
-Therefore, unless a high--speed fiber--optic network is used, the MPI environment is likely to require a sacrifice in terms of computation time for the sake of the increased memory capacity.
+However, network communication is often significantly slower than inter-thread communication.
+Therefore, unless a high-speed fiber-optic network is used, the MPI environment is likely to require a sacrifice in terms of computation time for the sake of the increased memory capacity.
 None of this has yet been explored in the context of this project, and is ripe for exploration in future work.
 
 Another potential improvement, though not likely to have as significant of an impact as the two above, is to restructure the angular grid to use a more accurate quadrature, which would reduce the necessary number of angular grid points to achieve a particular level of accuracy, and therefore reduce the required computation time and memory allocation.
-Among the possible options are the Lebedev grid and ``spherical t--design''\cite{an_numerical_2016,beckmann_local_2014,beentjes_quadrature_nodate}.
+Among the possible options are the Lebedev grid and ``spherical $t$-design''\cite{an_numerical_2016,beckmann_local_2014,beentjes_quadrature_nodate}.
 In fact, many other numerical algorithms altogether are available for solving the radiative transfer equation, including finite element methods and Monte Carlo methods among others. % \citep{FEM} \citep{MC} \citep{other,rte,methods}.
 
 \subsection{Application to Seaweed Cultivation}
 The final and perhaps most interesting and useful avenue for future work is the application of the 3D light model developed in this thesis to answer real questions about seaweed cultivation.
 While there are many ways in which the model and its numerical solution can be improved, a working implementation is now available, and should be taken advantage of!
-In particular, this light model is well--suited for use in a time--dependent growth model such as \cite{broch_modelling_2012}, as discussed in Section \ref{sec:simulation_context}.
+In particular, this light model is well-suited for use in a time-dependent growth model such as \cite{broch_modelling_2012}, as discussed in Section \ref{sec:simulation_context}.
 For example, one line of questioning which naturally arises related to light modeling is ``How does the placement of kelp cultivation ropes affect the potential biomass cultivation potential of a given area?
 What is the optimal rope spacing to maximize said production?''
 These type of questions are particularly natural to investigate with this light model, as the use of periodic boundary equates domain width and rope spacing.

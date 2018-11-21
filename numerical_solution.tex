@@ -2,7 +2,7 @@
 \label{chap:numerical}
 In this chapter, the mathematical details involved in the numerical solution of the equations described in Chapters \ref{chap:kelp} and \ref{chap:light} are presented.
 Two solution algorithms are used: finite difference and numerical asymptotics.
-Both algorithms require a discrete spatial--angular grid, described in Section \ref{sec:grid}.
+Both algorithms require a discrete spatial-angular grid, described in Section \ref{sec:grid}.
 In the finite difference algorithm, the continuum differential equation is approximated at every point in the grid.
 This forms a large sparse system of linear equations which must be solved simultaneously with an iterative method.
 The computational cost for this approach is high in terms of CPU usage, and especially in its memory requirement.
@@ -11,7 +11,7 @@ Meanwhile, the numerical asymptotics algorithm is not as robust, but is signific
 \section{Discrete Grid}
 \label{sec:grid}
 
-The following is a description of the spatial--angular grid used in the numerical implementation of this model.
+The following is a description of the spatial-angular grid used in the numerical implementation of this model.
 It is assumed that all simulated quantities are constant over the interior of a grid cell.
 Other legitimate choices of grids exist; this one was chosen for its relative simplicity.
 
@@ -31,7 +31,7 @@ It is convenient, however, to use a single index $p$ to refer to directions $\ve
 Then, the center of a generic grid cell will be denoted as
 $(x_i, y_j, z_k, \vec{\omega}_p)$, and the boundaries between adjacent grid cells
 will be referred to as \textit{edges}.
-One--indexing is employed throughout this document (i.e., array elements are counted starting at 1, not 0).
+One-indexing is employed throughout this document (i.e., array elements are counted starting at 1, not 0).
 
 \begin{figure}[H]
   \centering
@@ -42,7 +42,7 @@ One--indexing is employed throughout this document (i.e., array elements are cou
 
 Each spatial grid cell is the Cartesian product of $x$, $y$, and $z$ intervals of width $dx$, $dy$, and $dz$ respectively,
 as shown in Figure \ref{fig:spatial_grid}.
-The three--dimensional interval centered at $(x_i, y_j, z_k)$ is denoted $X_{ijk}$, and has volume $\abs{X_{ijk}}=dx\,dy\,dz$.
+The three-dimensional interval centered at $(x_i, y_j, z_k)$ is denoted $X_{ijk}$, and has volume $\abs{X_{ijk}}=dx\,dy\,dz$.
 Also, note that no grid center is located on the plane $z=0$; the surface radiance boundary condition is treated separately.
 
 \begin{figure}[H]
@@ -64,20 +64,20 @@ $p\leq\nomega/2$ refers to the northern hemisphere, and $p>\nomega/2$ refers to 
 Further, the symbol $\Omega_p$ is used to refer to the two dimension angular interval centered at $\vec{\omega}_p$.
 The solid angle subtended by $\Omega_p$ is denoted $\abs{\Omega_p}$.
 The functions $\hat{p}(l,m)$, $\hat{l}(p)$, and $\hat{m}(p)$ are mappings between the two sets of angular indices.
-Refer to Appendix \ref{chap:grid_details} for a more rigorous discussion of the discrete spatial--angular grid.
+Refer to Appendix \ref{chap:grid_details} for a more rigorous discussion of the discrete spatial-angular grid.
 
 \section{Kelp Distribution}
 In order to determine the appropriate spatial dependence for the absorption coefficient to use in the radiative transfer equation, the spatial kelp distribution, described by \eqref{eqn:kelp_pk} and its tributaries, is calculated at every point in space.
 Several computational details related to the kelp distribution are worth mentioning, from the determination of input parameters to algorithmic instructions for the required numerical integration.
 
-\subsection{Super--Individuals}
+\subsection{Super-Individuals}
 \label{sec:si}
-Rather than model each kelp frond, subsets of the population, called super--individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
-Specifically, at each depth $k$, there are $S_k$ super--individuals, indexed by $q$.
-Super--individual $q$ has a frond area $A_{kq}$ and represents $S_{kq}$ individual fronds.
+Rather than model each kelp frond, subsets of the population, called super-individuals, are modeled explicitly, and are considered to represent many identical individuals, as in \citep{scheffer_super-individuals_1994}.
+Specifically, at each depth $k$, there are $S_k$ super-individuals, indexed by $q$.
+Super-individual $q$ has a frond area $A_{kq}$ and represents $S_{kq}$ individual fronds.
 
-From \eqref{eqn:length_from_area}, the frond length of the super--individual is $l_{kq} = \sqrt{2A_{kq}f_r}$.
-Given the super--individual data, we calculate the mean $\mu$ and standard deviation $\sigma$ frond
+From \eqref{eqn:length_from_area}, the frond length of the super-individual is $l_{kq} = \sqrt{2A_{kq}f_r}$.
+Given the super-individual data, we calculate the mean $\mu$ and standard deviation $\sigma$ frond
 lengths using the formulas
 \begin{align}
   \mu_k &= \frac{\ds \sum_{q=1}^{S_k} l_{kq}}{\ds \sum_{q=1}^{S_k} S_{kq}},
@@ -89,7 +89,7 @@ We then assume that frond lengths are normally distributed in each depth layer
 with mean $\mu_k$ and standard deviation $\sigma_k$.
 
 \subsection{Integration of Population Distributions}
-The computational crux of calculating the kelp distribution is to evaluate \eqref{eqn:integrate_p2d} by integrating $P_{2D}(\theta_f, l)$ from \eqref{eqn:p2d} over the occupancy region $R_s(\theta, s)$, defined by \eqref{eqn:rs_th} and \eqref{eqn:rs_l}, for every point $(\theta,s)$ in the $xy$--domain.
+The computational crux of calculating the kelp distribution is to evaluate \eqref{eqn:integrate_p2d} by integrating $P_{2D}(\theta_f, l)$ from \eqref{eqn:p2d} over the occupancy region $R_s(\theta, s)$, defined by \eqref{eqn:rs_th} and \eqref{eqn:rs_l}, for every point $(\theta,s)$ in the $xy$-domain.
 To recap, the population distribution is
 \begin{align*}
 	P_{2D}(\theta_f,l) &= P_{\theta_f}(\theta_f) \cdot P_l(l), \\
@@ -102,11 +102,11 @@ and the occupancy region for $(\theta, s)$ is $R_s(\theta, s) \ni (\theta_f, l)$
 	&l > l_{\min}(\theta,s).
 \end{align*}
 
-To compute the integral, we symbolically convert the two--dimensional integral to a one--dimensional integral in terms of the error function
+To compute the integral, we symbolically convert the two-dimensional integral to a one-dimensional integral in terms of the error function
 \begin{equation}
   \erf(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2}\, dt,
 \end{equation}
-which is a built--in function in most programming languages, including Fortran.
+which is a built-in function in most programming languages, including Fortran.
 So, we evaluate
 \begin{align*}
 	\tilde{P}_k(\theta, s) &= \int_{R_s(\theta,s)}P_{2D}(\theta_f,l)\, d\theta_f\, dl \\
@@ -141,13 +141,13 @@ The substitution $u=(l-\mu_l)/\sqrt{2\sigma_l^2};\; du=dl/\sqrt{2\sigma_l^2}$ pr
 
 Note that the above integrand can be explicitly evaluated at any value of $\theta_f$, and is not restricted to values on a discrete grid.
 The integral is then evaluated numerically using a quadrature rule of any chosen degree.
-At present, a Gauss--Legendre quadrature with degree 101 is applied.
+At present, a Gauss-Legendre quadrature with degree 101 is applied.
 If the quadrature degree is chosen too low (e.g. 5), the resulting distribution is marked by numerical artifacts including discontinuities.
 Since the kelp calculation is orders of magnitude faster than the light field calculation, there is no issue with choosing a high quadrature degree.
 
 \subsection{Gaussian Convolution}
 In order to blur the kelp distribution as described in Section \ref{sec:gaussian_blur}, $P_k(x, y, z)$ is first calculated without blurring according to Equations \eqref{eqn:integrate_p2d} and \eqref{eqn:kelp_pk} at every point $(x_i, y_j)$ in each depth layer, which yields a matrix $P_{ij}^k = P_k(x_i, y_j, z)$.
-Then, the discrete convolution of $P_{ij}^k$ with the Gaussian kernel $K(x, y; \sigma_b)$ from Equation \eqref{eqn:gaussian_kernel} is numerically computed by the same process used to post--process pixelated image with a Gaussian blur.
+Then, the discrete convolution of $P_{ij}^k$ with the Gaussian kernel $K(x, y; \sigma_b)$ from Equation \eqref{eqn:gaussian_kernel} is numerically computed by the same process used to post-process pixelated image with a Gaussian blur.
 
 Notice first that the integral from Equation \eqref{eqn:gaussian_blur} has infinite extent.
 For numerical computation, a discrete grid with finite bounds must be chosen.
@@ -170,7 +170,7 @@ The kernel is then evaluated at the quadrature points to form the matrix
   K_{i'j'} = K\left(x'_{i'}, y'_{j'}; \sigma_b\right).
 \end{equation*}
 Note that the continuous $K(x, y; \sigma_b)$ is normalized only on the infinite plane;
-the discrete $K_{ij}$ must therefore be re--normalized on the finite grid as
+the discrete $K_{ij}$ must therefore be re-normalized on the finite grid as
 \begin{equation*}
   K_{i'j'} = \frac{K_{i'j'}}{\sum_{ij} K_{ij}}.
 \end{equation*}
@@ -187,15 +187,15 @@ the convolved kelp distribution $P_{ij}^{kb}$ is evaluated as
   &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K_{i'j'} P_k\left(x_{\delta_x(i,i')}, y_{\delta_y(j,j')}, z\right) \\
   &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K_{i'j'} P_{\delta_x(i,i'), \delta_y(j,j')}^k.
 \end{align*}
-That is, at each grid point $(x_i, y_j)$, a weighted sum of periodic--adjacent values is taken according to the Gaussian kernel in order to perform the blur.
+That is, at each grid point $(x_i, y_j)$, a weighted sum of periodic-adjacent values is taken according to the Gaussian kernel in order to perform the blur.
 
 
 
 \section{Quadrature Rules}
 As a prerequisite to algorithm development, a few key integrals are calculated here.
-Since it is assumed that all quantities are constant within a spatial--angular grid cell,
+Since it is assumed that all quantities are constant within a spatial-angular grid cell,
 the midpoint rule is employed for both spatial and angular integration.
-Presented here is a basic derivation of the formulas for integration in the spatial--angular grid.
+Presented here is a basic derivation of the formulas for integration in the spatial-angular grid.
 Further details are found in Appendix \ref{chap:ray_tracing}.
 
 \subsection{Spatial Quadrature}
@@ -260,7 +260,7 @@ Therefore, the radiance gain due to scattering into $\vec{\omega}_p$ from all ot
 \label{sec:num_asymptotics}
 The asymptotic approximations \eqref{eqn:asymptotics_soln_0} and \eqref{eqn:asymptotics_soln_n} to the radiative transfer equation \eqref{eqn:rte} are evaluated numerically as follows.
 Given a position $\vec{x}$ and direction $\vec{\omega}$, a path through the discrete grid can be constructed using the ray tracing algorithm described in Appendix \ref{chap:ray_tracing}.
-Let $\nu=1,\ldots,N\nobreak-\nobreak1$ index the spatial grid cells traversed (wholly or partially) by the ray, and define the \textit{path--length characteristic function}
+Let $\nu=1,\ldots,N\nobreak-\nobreak1$ index the spatial grid cells traversed (wholly or partially) by the ray, and define the \textit{path-length characteristic function}
 \begin{equation*}
   \mathcal{X}^l_\nu(s) = \begin{cases}
     1, & s_\nu \leq s < s_{\nu+1}, \\
@@ -322,7 +322,7 @@ Thus, the numerical solution to \eqref{eqn:asymptotics_soln_0} is given by
 \end{align}
 
 \section{Finite Difference}
-While the asymptotic solution is valid in the case of low scattering, a more general solution is obtained via finite difference, whereby the derivatives and integrals in the integro--partial differential equation are discretized to differences and sums and evaluated at each grid cell to construct a linear system of equations whose solution approximates that of the analytical equation.
+While the asymptotic solution is valid in the case of low scattering, a more general solution is obtained via finite difference, whereby the derivatives and integrals in the integro-partial differential equation are discretized to differences and sums and evaluated at each grid cell to construct a linear system of equations whose solution approximates that of the analytical equation.
 The price of a general solution, is greatly increased computational cost, both in terms of memory and CPU usage.
 
 \subsection{Discretization}
@@ -441,7 +441,7 @@ Likewise, for the bottom boundary condition, we have
     - &\sum_{p'=1}^{n_{\vec{\omega}}} \beta_{pp'} L_{ijkp'} = \sigma_{ijkp}
   \end{aligned}
 \end{equation*}
-Now, for upwelling light at the first depth layer (non--BC), we apply FD2.
+Now, for upwelling light at the first depth layer (non-BC), we apply FD2.
 \begin{equation*}
   \begin{aligned}
     \sigma_{ijkp} &= \frac{L_{i+1,jkp}-L_{i-1,jkp}}{2dx}\sin\hat{\phi}_p\cos\hat{\theta}_p \\
@@ -477,10 +477,10 @@ For each spatial-angular grid cell, one of the above equations is applied.
 The equation applied at each grid cell involves adjacent radiance values due to the discretized derivatives.
 Thus, a coupled system of linear equations is produced, which can be written as a sparse matrix equation, $\mathbb{AX=B}$.
 In the coefficient matrix $\mathbb{A}$, each row is associated with the grid cell at which the discretized equation was evaluated.
-Each column is the coefficient of the radiance at a particular spatial--angular grid cell.
+Each column is the coefficient of the radiance at a particular spatial-angular grid cell.
 
 In principle, the order of the equations, i.e., the order of the rows and columns of the coefficient matrix, is not important
-so long as consistency is maintained with the solution vector and right--hand side.
+so long as consistency is maintained with the solution vector and right-hand side.
 In practice, some procedure is necessary for constructing an ordered list of the multidimensional grid cells.
 One option, employed here, is to use a block structure where dimensions are nested within one another.
 An ordering for the dimensions is chosen, from outermost to innermost.
@@ -501,7 +501,7 @@ With this storage scheme in mind, the coefficients of the discretized equation a
 \end{equation*}
 of the matrix $\mathbb{A}$.
 Since the same ordering is used for rows and columns of the coefficient matrix $\mathbb{A}$, $L_{ijkp}$ is located at position $r_{ijkp}$ of the solution vector $\mathbb{X}$,
-and the right--hand side associated with that grid cell, if any, is also stored at position $r_{ijkp}$ of the right--hand side vector $\mathbb{B}$.
+and the right-hand side associated with that grid cell, if any, is also stored at position $r_{ijkp}$ of the right-hand side vector $\mathbb{B}$.
 
 Also relevant is the total size of the system and of the sparse matrices necessary to store.
 The sizes of $\mathbb{A}$, $\mathbb{X}$, and $\mathbb{B}$ are the number of grid cells, which is just $n_xn_yn_z\nomega$.
@@ -547,7 +547,7 @@ Because of the large number of dimensions (three spatial, two angular), the matr
 even for modest grid sizes.
 Direct methods such as Gaussian elimination, QR factorization, and singular value decomposition are therefore infeasible due to memory requirements.
 We therefore turn to iterative solvers.
-Many such solvers are available, including GMRES \cite{saad_gmres:_1985}, LGMRES \cite{baker_technique_2005}, IDR \cite{sonneveld_idrs:_2008}, and BI--CGSTAB \cite{van_der_vorst_bi-cgstab:_1992}.
+Many such solvers are available, including GMRES \cite{saad_gmres:_1985}, LGMRES \cite{baker_technique_2005}, IDR \cite{sonneveld_idrs:_2008}, and BI-CGSTAB \cite{van_der_vorst_bi-cgstab:_1992}.
 
 For the code in this thesis, a parallel implementation of GMRES provided by a Fortran package called LIS (Library of Iterative Solvers) \cite{nishida_experience_2010} is employed.
 LIS provides several execution environments: multithreading, multiprocessing, and MPI (Message Passing Interface) \cite{message_passing_interface_forum_mpi:_1993}.

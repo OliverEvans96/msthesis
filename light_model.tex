@@ -2,7 +2,7 @@
 \label{chap:light}
 
 Now that the spatial kelp distribution has been modeled, the radiative transfer equation is introduced, which is used to calculate the light field.
-An asymptotic series centered at the case of no scattering is developed, which forms the basis for the faster and less memory--intensive of the two solution algorithms presented in Chapter \Rom{\ref{chap:numerical}}.
+An asymptotic series centered at the case of no scattering is developed, which forms the basis for the faster and less memory-intensive of the two solution algorithms presented in Chapter \Rom{\ref{chap:numerical}}.
 
 \section{Optical Definitions}
 Before introducing the radiative transfer equation, it is necessary to discuss some basic radiometric quantities of interest which characterize the light field, as well as inherent optical properties which describe the medium of propagation.
@@ -10,7 +10,7 @@ It is necessary to begin by saying that the study of light is riddled with diffe
 
 From a physics point of view, light is a form of electromagnetic radiation which carries energy determined exclusively by its wavelength.
 \textit{Radiometric units} thus describe the transfer of energy, measured in Watts, with quantities such as radiance, irradiance, and radiant flux to describe various types of energy transfer.
-These quantities come in frequency--dependent and frequency--integrated varieties, depending on the context.
+These quantities come in frequency-dependent and frequency-integrated varieties, depending on the context.
 From the standpoint of human perception, the importance of light is not in the raw energy that it transfers, but the degree to which it facilitates vision from a physiological perspective.
 
 Therefore, \textit{Photometric units} take all of the quantities from radiometry, rename them, and weight them by a \textit{luminosity function} which describes frequency dependence of the human eye's sensitivity to light.
@@ -79,7 +79,7 @@ of radiance per unit length due to scattering, and is assumed to be constant ove
 Scattered light is not lost from the light field, it simply changes direction.
 
 The volume scattering function (VSF) $\beta(\Delta): [-1, 1] \to \RR^+$ (units sr$^{-1}$) defines the probability of light scattering at any given angle from its source, where $\Delta=\cos\vartheta$ is the cosine of the angle between the initial and final directions.
-Formally, given two directions $\vec{\omega}$ and $\vec{\omega}'$, $\beta(\vec{\omega} \cdot \vec{\omega}')$ is the probability density of light scattering from $\vec{\omega}$ into $\vec{\omega}'$ (or vice--versa).
+Formally, given two directions $\vec{\omega}$ and $\vec{\omega}'$, $\beta(\vec{\omega} \cdot \vec{\omega}')$ is the probability density of light scattering from $\vec{\omega}$ into $\vec{\omega}'$ (or vice-versa).
 Now, since a single direction subtends no solid angle, the probability of scattering occurring exactly from $\vec{\omega}$ to $\vec{\omega}'$ is 0.
 Rather, we say that the probability of radiance being scattered from a direction $\omega$ into an element of solid angle $\Omega$ is $\int_\Omega \beta(\vec{\omega} \cdot \vec{\omega}')\, d\vec{\omega}'$.
 
@@ -188,7 +188,7 @@ Letting $\vec{x_s}$ be a point on the surface of the domain and $\vec{x_b}$ a po
   L(\vec{x_b}, \vec{\omega}) &= 0 \mbox { if } \vec{\omega} \cdot \hat{z} < 0.
 \end{align*}
 
-\section{Low--Scattering Approximation}
+\section{Low-Scattering Approximation}
 \label{sec:symbolic_asymptotics}
 In waters where absorption dominates scattering, an asymptotic series in terms of the scattering coefficient $b$ can be constructed.
 The physical interpretation of the asymptotic series is that each term represents a discrete scattering event.
@@ -310,7 +310,7 @@ Hence,
     &+ \int_0^s \exp\left(-\int_{s'}^s \tilde{a}(s'')\, ds''\right) \tilde\sigma_0(s')\, ds'.
   \label{eqn:asymptotics_soln_0}
 \end{align}
-Then, we convert back from path length $s$ to the spatial coordinate $\vec{x}$ by evaluating the one--dimensional solution at the end of the ray path.
+Then, we convert back from path length $s$ to the spatial coordinate $\vec{x}$ by evaluating the one-dimensional solution at the end of the ray path.
 That is,
 \begin{equation*}
   L_0(\vec{x}, \vec{\omega}) = u_0(\tilde{s}).
