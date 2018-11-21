@@ -2,11 +2,10 @@
 \label{chap:application}
 
 This chapter deals with practical considerations when applying the previously discussed numerical algorithms to simulate the light field for realistic scenarios of kelp growing in ocean waters.
-This chapter is the culmination of this thesis: the spatial kelp distribution model of Chapter \Rom{\ref{chap:kelp}} and the radiative transfer model of Chapter \Rom{\ref{chap:light}} are combined using the numerical algorithms described in Chapter \Rom{\ref{chap:numerical}} and verified in Chapter \Rom{\ref{chap:model_analysis}} and applied to a realistic scenario.
+In this chapter, the spatial kelp distribution model of Chapter \Rom{\ref{chap:kelp}} and the light model of Chapter \Rom{\ref{chap:light}} are implemented as described in Chapter \Rom{\ref{chap:numerical}} and verified in Chapter \Rom{\ref{chap:model_analysis}} and applied to a realistic scenario.
 
 The computational code must be supplied with appropriate physical parameters to emulate the particular seaweed under consideration and the optical properties of the surrounding aquatic medium.
-Further, the choice of algorithm between numerical asymptotics and finite difference must be made based on the physical situation under consideration, the computational resources available, and the desired level of accuracy in the computed light field.
-Lastly, algorithm--specific parameters must also be tuned according to these considerations.
+Further, the choice of algorithm between numerical asymptotics and finite difference must be made, and algorithm-specific parameters must be chosen, based on the physical situation under consideration, the computational resources available, and the desired level of accuracy in the computed light field.
 
 Guidelines are presented in this chapter to aid the user in making these decisions, and the performance of the model is discussed.
 Finally, comparison is made to simpler light models, and specific differences are noted.
@@ -29,7 +28,7 @@ Given here is a table of parameter values found in the literature which are used
 A few comments are in order.
 No values were available for the absorptance of \textit{Saccharina latissima}, but a value for \textit{Macrocystis pyrifera} was found.
 The surface irradiance from \cite{broch_modelling_2012} was given in terms of photons per second,
-and was converted to \SI{}{\W\per\m\squared} according to the approximate relation \eqref{eqn:watts_photons}.
+and was converted to \SI{}{\W\per\m\squared} according to the approximate relationship in Equation \eqref{eqn:watts_photons}.
 
 \begin{table}[h]
   \centering
@@ -65,8 +64,8 @@ While a simpler linear model is used for the simulations in this thesis, it is r
 \begin{table}[h]
   \centering
   \caption{Field measurement data of optical properties in the ocean \cite{petzold_volume_1972}.
-    The site names used in the original paper are used: AUTEC -- Bahamas, HAOCE -- Coastal southern California, NUC -- San Diego Harbor.
-    Absorption, scattering, and attenuation coefficients ($a,b,c$) are given, and their ratios.
+    The site names used in the original paper are used. AUTEC: Bahamas; HAOCE: Coastal southern California; NUC: San Diego Harbor.
+    Absorption, scattering, and total attenuation coefficients ($a$, $b$, and $c=a+b$) and their ratios are given.
   }
   \begin{tabular}{lrrrrr}
     \toprule
@@ -93,7 +92,7 @@ While a simpler linear model is used for the simulations in this thesis, it is r
 \end{table}
 
 \subsection{Frond Alignment Coefficient}
-The \textit{frond alignment coefficient}, $\eta$, describes the dependence of frond alignment on current speed.
+The \textit{frond alignment coefficient}, $\eta$, describes the dependence of frond alignment on current speed, as mentioned in Section \ref{sec:dist}.
 To the author's knowledge, no such parameter is available in the literature.
 However, similar measurements have been made in the MACROSEA project by Norvik \cite{norvik_design_2017} to describe
 the dependence of the elevation angle of the frond as a function of current speed.
@@ -126,7 +125,7 @@ Specifically, the ocean model can provide current speed and direction over depth
 The position of the sun and irradiance just below the surface of the water can also be provided by the ocean model, which is used to generate the surface radiance boundary condition.
 The ocean model should also provide an absorption coefficient for each depth layer, which may vary due to nutrient concentrations and biological specimens such as phytoplankton.
 The kelp growth model is expected to provide super--individual data describing the population in each depth layer.
-Then, \eqref{eqn:si_mean} and \eqref{eqn:si_std} are used to calculate length and orientation distributions, as described in Section \ref{sec:si}.
+Then, Equations \eqref{eqn:si_mean} and \eqref{eqn:si_std} are used to calculate length and orientation distributions, as described in Section \ref{sec:si}.
 
 Presumably, the ocean model uses a spatial grid much coarser than the grid required for the light model.
 For example, SINMOD \cite{wassmann_modelling_2006} uses a minimum horizontal spatial resolution of \SI{32}{\m}, whereas a grid resolution on the order of centimeters is more appropriate for the light model.
@@ -155,8 +154,9 @@ The depth--dependent mean kelp frond length is chosen to be
     \mu_l(z) = l_{\max}\frac{3z^2 \exp(-z) + 1/2}{12\exp(-2) + 1/2},
 \end{equation}
 which has a local maximum of $\mu_l(2)=l_{\max}$.
-The value $l_{\max}=\SI{6}{\m}$ is used for the sake of agreement with \cite{norvik_design_2017}.
+The value $l_{\max}=\SI{6}{\m}$ is used for the sake of agreement with \cite{norvik_design_2017}, and the vertical number density of fronds is taken to be $\rho_n=120$ individuals per meter, as in \cite{broch_modelling_2012}.
 The kelp frond length standard deviations are chosen to be the constant function $\sigma_l(z) = \SI{1}{\m}$.
+The periodic horizontal domain is $\SI{10}{\m} \times \SI{10}{\m}$, yielding a horizontal rope density of $D=\SI{0.01}{ropes\per\m\squared}$
 Also, the current angles are held constant over depth at $\theta_w(z)=0$, as is the current speed $v_w=\SI{1}{\m\per\s}$ with $\eta=\SI{1}{\s\per\m}$.
 For the light field, $\vec{\omega}_s=\hat{z}$ (sunlight from directly above) and $D_s=1\, \mbox{rad}^{-1}$ are used.
 
@@ -167,7 +167,7 @@ The impact of the choice of algorithm and parameters on both factors is explored
 \subsection{CPU Time}
 Computation time is a significant consideration, especially when using the light model in the context of a time--dependent kelp growth simulation where it will be called repeatedly.
 The computational demand can be lessened by updating the light model only a few times per day rather than every time step.
-Still, accuracy must be balanced with reasonable resource consumption; if the light model is taking as much time as all of the other aspects combined, any accuracy gained from the light field computation is likely being lost elsewhere in the model.
+Still, accuracy must be balanced with reasonable resource consumption. If the light model is taking as much time as all of the other aspects combined, any accuracy gained from the light field computation is likely being lost elsewhere in the model.
 
 Also, both algorithms are parallelized using OpenMP \cite{message_passing_interface_forum_mpi:_1993}, so increasing the parallelism decreases the computation time, though it does not reduce the overall resource consumption.
 Further, some sections of the code are necessarily serial, which reduces the effective parallelism to some degree.
@@ -190,7 +190,7 @@ Figure \ref{fig:compute_time_violin} shows CPU time for 32 cores for both asympt
 \begin{figure}[H]
   \centering
   \includegraphics[width=5in]{compute_time_violin}
-  \caption{Computation time required for numerical asymptotics and finite difference algorithms over a range of spatial grid sizes using 32 CPUs. Only five grid sizes are shown, with the finite difference and numerical asymptotic algorithm for $n=0,\ldots,3$ terms shown for each grid. The horizontal offset within each grid size is only for visual clarity. Note the large range in compute times --- small simulations take fractions of a second while large grids take upwards of a half--hour.}
+  \caption{Computation time required for numerical asymptotics and finite difference algorithms over a range of spatial grid sizes using $n_a=10$ and 32 CPUs. Only five grid sizes are shown, with the finite difference shown in gray and numerical asymptotic algorithm for $n=0,\ldots,3$ terms in color for each grid. The horizontal offset within each grid size is only for visual clarity. Note the large range in compute times --- small simulations take fractions of a second while large grids take upwards of a half--hour.}
   \label{fig:compute_time_violin}
 \end{figure}
 
@@ -231,7 +231,7 @@ These estimates are plotted in Figure \ref{fig:mem_solve}, and listed numericall
 \label{sec:grid_size}
 The size of the spatial--angular grid is an important choice that must be made in order to balance numerical accuracy with computational cost.
 Since both the numerical asymptotics and finite difference algorithms are second order methods, the discretization error is proportional to the square of the grid spacing, in both the spatial and angular domains.
-In this section, a realistic simulation is performed on many grids, and the discretization error of each is estimated via Richardson Extrapolation, as described in Section \ref{sec:generalized_re}.
+In this section, a realistic simulation (as described in Section \ref{sec:standalone_context}) is performed on many grids, and the discretization error of each is estimated via Richardson Extrapolation, as described in Section \ref{sec:generalized_re}.
 These error estimates allow the spatial and angular components of discretization to be isolated; rules of thumb for both grid spacings are enabled by this analysis.
 
 \subsection{Error Estimation}
@@ -241,26 +241,22 @@ The average irradiance over the whole domain is calculated for each simulation, 
 The average irradiances for each simulation are plotted in Figures \ref{fig:gs_avg_irrad_contourf} and \ref{fig:gs_avg_irrad_lines} as functions of the squared grid spacings $ds^2$ and $da^2$, given by Equations \eqref{eqn:ds} and \eqref{eqn:da} with $\xmax-\xmin = \ymax-\ymin = \SI{10}{\m}$.
 All parameters aside from grid resolution are held constant, so discretization error is the only source of variation within each plot.
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
   \includegraphics[width=6in]{gs_avg_irrad_contourf}
   \caption{Average irradiance plotted against squared resolution for a variety of grid sizes for finite difference and numerical asymptotics with $n=0$. The linear contours demonstrate that both methods are second order in both resolution parameters.}
   \label{fig:gs_avg_irrad_contourf}
 \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=6in]{gs_avg_irrad_lines}
+  \caption{Average irradiance versus squared resolution. Each line is a 1D projection from Figure \ref{fig:gs_avg_irrad_lines}. Predicted error values are marked with ``x''s, and observed error values with circles. Isolated spatial and angular components of discretization error are plotted with a dashed line on the left and right columns respectively.}
+  \label{fig:gs_avg_irrad_lines}
+\end{figure}
 
 Notice that in Figure \ref{fig:gs_avg_irrad_lines}, the average irradiance is linear in squared grid spacing for each slice in the resolution space.
 This pattern holds for both the finite difference and numerical asymptotics algorithms, indicating that all of the grid sizes considered are within the asymptotic region of both methods, since the observed convergence order matches the theoretical order.
 This demonstrates that the average irradiance is planar over the whole two--dimensional squared--resolution space, as shown by the parallel linear contours in Figure \ref{fig:gs_avg_irrad_contourf}.
-
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=6in]{gs_avg_irrad_lines}
-  \caption{Average irradiance plotted against squared resolution. Each line is a one--dimensional projection from Figure \ref{fig:gs_avg_irrad_lines}. Predicted error values are marked with ``x''s, and observed error values with circles. Isolated spatial and angular components of discretization error are plotted with a dashed line on the left and right columns respectively.}
-  \label{fig:gs_avg_irrad_lines}
-\end{figure}
-
-
 
 \subsection{Error Prediction}
 The continuum value for the average irradiance is estimated via Richardson extrapolation by fitting a plane through the scalar irradiances in squared--resolution space, as described in Section \ref{sec:generalized_re}.
@@ -269,13 +265,15 @@ The excellent agreement between the prediction and observation is a testament to
 
 Specifically, the discretization error for each algorithm is found to be
 \begin{align}
-  \varepsilon_{\mbox{FD}}(ds, da) &= c_{11} ds^2 + c_{12} da^2, \\
-  \varepsilon_{\mbox{asym}}(ds, da) &= c_{21} ds^2 + c_{22} da^2,
-\end{align}
-where
-\begin{align}
-  c_{11} &= 0.180, & C_{12} &= 0.183, \\
-  c_{21} &= -0.851, & C_{22} &= 0.247.
+  \begin{aligned}
+    \varepsilon_{\mbox{FD}}(ds, da) &= c_{11} ds^2 + c_{12} da^2, \\
+    \varepsilon_{\mbox{asym}}(ds, da) &= c_{21} ds^2 + c_{22} da^2,
+  \end{aligned}
+\shortintertext{where}
+  \begin{aligned}
+    c_{11} &= 0.180, & C_{12} &= 0.183, \\
+    c_{21} &= -0.851, & C_{22} &= 0.247.
+  \end{aligned}
 \end{align}
 
 By evaluating this plane at $ds=0$, $da=0$, the extrapolated continuum value of average irradiance is found.
@@ -292,13 +290,13 @@ In this case, the spatial grid is unnecessarily fine, since the angular discreti
 In general, the components of grid size should be chosen to produce roughly similar discretization errors so as to avoid unnecessary computation.
 
 From the other perspective, consider an overall discretization error criterion of $\bar{\varepsilon}=\SI{2e-2}{\W\per\m\squared}$.
-This can be achieved by any grid whose spatial and angular error components sum to less than $\bar{\varepsilon}$, but for simplicity, set both component thresholds to $\bar{\varepsilon_s}=\bar{\varepsilon_a}=\SI{1e-2}{\W\per\m\squared}$.
+This can be achieved by any grid whose spatial and angular error components sum to less than $\bar{\varepsilon}$, but for simplicity, set both component thresholds to $\bar{\varepsilon}_s=\bar{\varepsilon}_a=\SI{1e-2}{\W\per\m\squared}$.
 By visual inspection of Figure \ref{fig:gs_predicted_err}, this seems to suggest $n_s=92$, $n_a=22$ for the asymptotics algorithm, or $n_s=42$, $n_a=20$ for the finite difference algorithm.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=6in]{gs_predicted_err}
-  \caption{Predictions for isolated spatial and angular components of discretization error as a function of grid size for both numerical algorithms. Once a target error threshold has been chosen, this figure can be used to estimate the grid sizes that each algorithm would require. The total discretization error is the sum of the spatial and angular parts.}
+  \includegraphics[width=5.75in]{gs_predicted_err}
+  \caption{Predictions for isolated spatial and angular components of discretization error as a function of grid size for both algorithms. This figure can be used to estimate the grid sizes that each algorithm would require to meet a given error criterion. The total discretization error is the sum of the spatial and angular parts.}
   \label{fig:gs_predicted_err}
 \end{figure}
 
@@ -324,17 +322,17 @@ A spatial--angular grid size of $72 \times 10$ is used for all calculations.
 Each asymptotics calculation is compared to the finite difference calculation with the same optical properties, and a pointwise error is calculated.
 Figure \ref{fig:asym_err_vs_b_a01} shows this type of comparison for a single value of $a_w$, varying $b$.
 As discussed in Section \ref{sec:num_asym_mms}, the order $n$ approximation converges with roughly order $n+1$.
-However, the Figure shows that this trend does not continue indefinitely as $b$ decreases.
-This is because although the truncation error is decreasing, the discretization error remains constant.
-Therefore, no results with this grid size will show errors below about \SI{0.07}{\W\per\m\squared}.
-As a result, simulations with errors below this threshold are discarded in order to gain insight into trends in truncation error.
+However, the figure shows that this trend does not continue indefinitely as $b$ decreases.
+This is because although truncation error decreases as $b \to 0$, discretization error remains constant.
+Because of this, no results with this grid size show errors below about \SI{0.07}{\W\per\m\squared}.
+Simulations with errors below this threshold are therefore discarded in order to isolate trends in the truncation error.
 
 \newcommand\rdfigwidth{4.5in}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\rdfigwidth]{asym_err_vs_b_a01}
-  \caption{Average pointwise difference in irradiance between finite difference and asymptotics solutions for several values of $b$ and $n$ with constant $a=0.1$ in a realistic kelp scenario using a $72\times 10$ grid. Proper convergence of truncation error is observed between $b=0.2$ and $b=0.5$. Below $b=0.2$, discretization error dominates. Above $b=0.5$, the asymptotic series diverges.}
+  \caption{Average pointwise difference in irradiance between finite difference and asymptotics solutions for several values of $b$ and $n$ with constant $a=0.1$ in a realistic kelp scenario using a $72\times 10$ grid. Proper convergence of truncation error is observed between $b=0.1$ and $b=0.6$. Below $b=0.1$, discretization error dominates. Above $b=0.6$, the asymptotic series diverges.}
   \label{fig:asym_err_vs_b_a01}
 \end{figure}
 
@@ -342,11 +340,11 @@ Figure \ref{fig:asym_err_vs_ab} shows a different slice of the simulation result
 Here, $n=0$ is held constant while $a_w$ and $b$ are plotted on the $x$ and (log) $y$ axes, with average error plotted on the (log) color scale.
 Note that mean error does not depend only on $b$.
 Rather, errors are largest for waters with low absorption and high scattering, and lowest for low scattering, high absorption.
-The clear pattern in the variation of error over the $a_w$--$b$ domain indicates that a third parameter can be calculated sufficiently from $a_w$ and $b$, which is sufficient to determine the accuracy of the approximation.
+The clear pattern in the variation of error over the $a_w$--$b$ domain indicates that a third parameter can be calculated from $a_w$ and $b$, which is sufficient to determine the accuracy of the approximation.
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=\rdfigwidth]{asym_err_vs_ab}
+  \includegraphics[width=4.75in]{asym_err_vs_ab}
   \caption{Average pointwise difference in irradiance between finite difference and asymptotics solutions for several values of $b$ and $a$ with constant $n=0$ in a realistic kelp scenario using a $72\times 10$ grid. Note that truncation error is smallest for low--scattering, high--absorption cases, and largest for high--scattering, low absorption.}
   \label{fig:asym_err_vs_ab}
 \end{figure}
@@ -354,30 +352,30 @@ The clear pattern in the variation of error over the $a_w$--$b$ domain indicates
 Figure \ref{fig:best_n_data_vs_ab} shows a similar view of the simulation results as Figure \ref{fig:asym_err_vs_ab}, except that now, the different approximation orders are considered for each set of optical properties, and the order with the lowest error is found.
 The order of the best approximation is shown for each case, and the error incurred by that approximation is shown on the color axis.
 In the upper left corner, the most difficult cases are shown.
-In this region, the zeroth order approximation is most accurate, showing that additional terms cause the solution to diverge.
-After a brief transition region, the third order approximation is most accurate, in agreement with Figure \ref{fig:asym_err_vs_b_a01}.
+In this region, the leading order approximation is most accurate, showing that additional terms cause the solution to diverge.
+After a brief transition region, the three-term approximation is most accurate, in agreement with Figure \ref{fig:asym_err_vs_b_a01}.
 
-Note that for low scattering, high absorption waters where the error is lowest, the second order approximation seems to perform better than the third order.
+Note that for low scattering, high absorption waters where the error is lowest, the $n=2$ approximation seems to perform better than $n=3$.
 As mentioned previously, this is because a lower bound on the total error is imposed by the discretization error, as suggested by Figure \ref{fig:asym_err_vs_b_a01}.
-In fact, the second and third order approximations are nearly identical; the former is only slightly better, and no conclusions about truncation error should be drawn from this part of the figure.
+In fact, the the two approximations are nearly identical; the former is only slightly better, and no conclusions about truncation error should be drawn from this part of the figure.
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=\rdfigwidth]{best_n_data_vs_ab}
+  \includegraphics[width=4.75in]{best_n_data_vs_ab}
   \caption{The best asymptotics solution for each $(a_w,b)$. The value of $n$ used is written in each cell. For high--scattering cases, the $n>0$ terms diverge, so $n=0$ is the best approximation. For most cases, $n=3$ is the best. For very low--scattering cases, discretization error masks the truncation error trend.}
   \label{fig:best_n_data_vs_ab}
 \end{figure}
 
 In actual usage, one is concerned not with finding the best approximation, but rather the cheapest one which meets some error threshold.
-Figure \ref{fig:min_n_data_vs_ab} shows the smallest value of $n$ observed to meet discretization error targets of at most $\bar{\varepsilon}=\SI{1.0}{\W\per\m\squared}$ and $\bar{\varepsilon}=\SI{0.1}{\W\per\m\squared}$ in the left and right columns with the actual average error incurred shown on the color axis.
+Figure \ref{fig:min_n_data_vs_ab} shows the smallest value of $n$ observed to meet discretization error targets of at most $\bar{\varepsilon}=\SI{1.0}{\W\per\m\squared}$ and $\bar{\varepsilon}=\SI{0.1}{\W\per\m\squared}$ in the left and right columns respectively, with the actual average error incurred shown on the color axis.
 In both cases, there are some optical properties for which the error threshold cannot be met for any $n$.
 This is represented by an ``X'' in the figure, and the error of the leading order approximation is shown in color.
 Note that as $\bar\varepsilon$ is decreased, the error threshold cannot be satisfied for a larger set of optical properties, and where it is achievable, more scattering terms are required.
 
-\begin{figure}[H]
+\begin{figure}[h]
   \centering
   \includegraphics[width=6in]{min_n_data_vs_ab}
-  \caption{For each $(a_w,b)$, the smallest value of $n$ which satisfies the error criterion shown above is printed in the cell. ``X'' denotes an optical situation in which the criterion cannot be met since adding further terms makes the solution less accurate, not more. As seen on the left the $n=0$ solution suffices for large error criteria.}
+  \caption{For each $(a_w,b)$, the smallest value of $n$ which satisfies the error criterion shown above is printed in the cell. ``X'' denotes an optical situation in which the criterion cannot be met since adding further terms makes the solution less accurate, not more. As seen on the left, the $n=0$ solution usually suffices for moderate error criteria.}
   \label{fig:min_n_data_vs_ab}
 \end{figure}
 
@@ -388,12 +386,12 @@ On a log--log--log scale, the simplicity of the relationship among these three q
 Holding $b$ constant, a log--log linear relationship is apparent between the error $\varepsilon$ and the absorption coefficient $a_w$.
 Meanwhile, holding $a_w$ constant, log--uniform increases in $b$ cause log--uniform increases in $\varepsilon$.
 That is, $\ln\varepsilon$ seems to increase linearly with $\ln b$ and decrease linearly with $\ln a$.
-Restated, it seems that $\varepsilon \propto \left({b^{c_1}}\right/\left({a_w^{c_2}}\right)$.
+Restated, it seems that $\varepsilon \propto b^{d_1}/a_w^{d_2}$.
 
 Then, by fitting a plane to the observed values in $(\ln a_w, \ln b, \ln \varepsilon)$ space, a continuous model can be derived for $\varepsilon(a_w, b)$.
-Performing this procedure separately for each $n$ value yields values of $c_1$ and $c_2$ which appear to be independent of $n$.
-Remarkably, the fit for each order of approximation yields $c_1=3/4$, $c_2=1/2$ to within a few percent variation.
-The black ``x''s in Figure \ref{fig:asym_err_data_xi_model} are the predictions of this model, setting $c_1=3/4$ and $c_2=1/2$ explicitly.
+Performing this procedure separately for each $n$ value yields values of $d_1$ and $d_2$ which appear to be independent of $n$.
+Remarkably, the fit for each order of approximation yields $d_1=3/4$, $d_2=1/2$ to within a few percent variation.
+The black ``x''s in Figure \ref{fig:asym_err_data_xi_model} are the predictions of this model, setting $d_1=3/4$ and $d_2=1/2$ explicitly.
 The accuracy of the prediction suggests the definition of a third parameter, as mentioned in Section \ref{sec:iop_study_raw},
 \begin{equation}
   \label{eqn:xi}
@@ -404,13 +402,6 @@ In the right column of Figure \ref{fig:asym_err_data_xi_model}, $\varepsilon$ is
 Notice that all of the results collapse onto a single line.
 Thus, for the sake of understanding the usefulness of the asymptotic series in approximating the true light field, $\xi$ can be used as a single variable to characterize all waters.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5.5in]{asym_err_data_xi_model}
-  \caption{Truncation error plotted against $a_w$ and $\xi$ for each $n$. Simulations dominated by discretization error have been discarded. The right column shows that $\xi$ sufficiently characterizes an optical situation for the sake of predicting truncation error of the asymptotic approximation. Predicted values, marked with ``x''s, are very accurate.}
-  \label{fig:asym_err_data_xi_model}
-\end{figure}
-
 In Figure \ref{fig:asym_err_vs_xi_all_n_fit_all}, $\varepsilon$ is plotted as a function of $\xi$ for all combinations of $a_w$, $b$, and $n$, effectively combining the right column of Figure \ref{fig:asym_err_data_xi_model} on a single plot.
 For each $n$, the log--log plot displays a clear linear relationship, similar to the pattern seen previously in Figures \ref{fig:asym_err_vs_b_a01} and \ref{fig:mms_asym_b_conv}.
 However, this figure abstracts that pattern over both $a_w$ and $b$, whereas previously it was seem only for $b$.
@@ -418,10 +409,18 @@ Note that the convergence curves for all lines appear to roughly intersect at a 
 That point, denoted $(\xi^*, \varepsilon^*)$, represents a bifurcation in the convergence behavior of the numerical asymptotics algorithm.
 For waters with $\xi < \xi^*$, accuracy improves with additional terms, whereas for with $\xi > \xi^*$, additional terms decrease accuracy.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5.75in]{asym_err_data_xi_model}
+  \caption{Truncation error versus $a_w$ and $\xi$ for each $n$. Simulations dominated by discretization error have been discarded. The right column shows that $\xi$ sufficiently characterizes an optical situation for the sake of predicting truncation error of the asymptotic approximation. Errors predicted by Equation \eqref{eqn:eps_n} are marked with ``x''s.}
+  \label{fig:asym_err_data_xi_model}
+\end{figure}
+
+
 In order to systematically determine $(\xi^*, \varepsilon^*)$, the log--log convergence curve of order $n+1$ is assumed to have slope $n+1$, which is approximately true, at least for $\xi<\xi^*$.
 Further, it is assumed that there is a single point where all of these curves intersect.
 This point fully specifies the convergence curves, all other free parameters having been eliminated by the previous assumptions.
-Thus, the error for the order $n$ approximation satisfies
+Thus, the error for the order $n$ approximation is assumed to satisfy
 \begin{equation}
   \label{eqn:ln_eps_n}
   \ln\left(\varepsilon_n(\xi)\right) - \ln\varepsilon^* = (n+1)\left(\ln\xi - \ln\xi^*\right),
@@ -432,7 +431,7 @@ or equivalently,
   \varepsilon_n(\xi) = \varepsilon^* \left(\frac{\xi}{\xi^*}\right)^{n+1}.
 \end{equation}
 
-Then, a residual function is constructed which accumulates squared differences between the fit functions and their corresponding data points, weighting all squared errors by $1/\varepsilon$ in order to deem the runs with lower errors more important since errors diverge for large $\xi$ values and do not fit the linear function quite as well.
+Then, a residual function is constructed which accumulates squared differences between the fit functions and their corresponding data points, weighting all squared errors by $1/\varepsilon$ in order to deem the simulations with lower errors more important since errors diverge for large $\xi$ values and do not fit the linear function quite as well.
 A numerical optimization algorithm is then used to search the two dimensional parameter space for the minimizers of the residual, which produces the point $(\xi^*, \varepsilon^*)$.
 This procedure yields the result
 \begin{align}
@@ -453,7 +452,7 @@ The determination of $\xi^*$ and $\varepsilon^*$ marks the construction of a sim
 Figure \ref{fig:asym_err_model_vs_ab_all_n} shows the predictions of this model for several values of $a_w$, $b$, and $n$, with $\varepsilon$ plotted on the color axis.
 Note that $\xi^*$ is a contour in $(a_w, b)$ space, and is marked on the figure with a dashed white line.
 $\xi<\xi^*$ is the region to the lower right of the threshold, and $\xi>\xi^*$ is the region to the upper left.
-Also keep in mind that this model and its predictions deal only with truncation error, and that discretization error distorts the actual solution accuracy, as seen in Figures \ref{fig:asym_err_vs_b_a01} and \ref{fig:best_n_data_vs_ab}.
+Also note that this model and its predictions deal only with truncation error, and that discretization error distorts the actual solution accuracy, as seen in Figures \ref{fig:asym_err_vs_b_a01} and \ref{fig:best_n_data_vs_ab}.
 
 
 This model can now be used to produce general guidelines for the choice of $n$ given a desired error.
@@ -469,13 +468,6 @@ which is equivalent almost everywhere to
   \bar{n} = \floor\left(\frac{\ln\bar{\varepsilon} - \ln\varepsilon^*}{\ln\xi - \ln\xi^*}\right).
 \end{equation}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5.75in]{asym_err_model_vs_ab_all_n}
-  \caption{Predicted truncation error for a range of $a_w$ and $b$ values. $n$ varies over plot rows. Linear--linear scale on the left, log--log scale on the right. The asymptotic series is appropriate only for $(a_w,b)$ values to the right of the $\xi^*$ contour.}
-  \label{fig:asym_err_model_vs_ab_all_n}
-\end{figure}
-
 
 Figure \ref{fig:nbar_model_vs_ab_3eps} shows $\bar{n}$ up to $\bar{n}=3$ for $\bar{\varepsilon}=0.1$, $\bar{\varepsilon}=0.05$, and $\bar{\varepsilon}=0.01$.
 The $\xi^*$ contour is plotted.
@@ -485,17 +477,23 @@ To summarize this analysis, once an error threshold $\bar{\varepsilon}$ is chose
 If $\xi^*(a_w, b) > \xi^*$, then the finite difference algorithm should be used if possible.
 If memory or computation time requires the numerical asymptotics algorithm to be used, then the $n=0$ approximation should be used, effectively ignoring scattering in order to avoid a diverging solution.
 
-If $\bar{n}>3$ (i.e., the gray region between $\xi^*$ and $\bar{n}=3$), it is theoretically possible to achieve the desired accuracy in this region by continuing to add terms, however, this is not recommended since the closer $\xi$ is to $\xi^*$, the more likely it is that higher order terms will cause the solution to diverge due to some unexpected deviation in the actual performance of the algorithm from the theoretical error model presented here.
-As a compromise, $n=2$ or $n=3$ could be used in this region to balance the severity of divergence in the case of failure with the improved accuracy of the solution in the case of successful convergence.
-Finally, in any of the easier regions defined by $\bar{n} \leq 3$, the optimal trade--off between accuracy and computation time is achieved by using $n=\bar{n}(a_w, b)$.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5.75in]{asym_err_model_vs_ab_all_n}
+  \caption{Predicted truncation error for a range of $a_w$ and $b$ values. $n$ varies over plot rows. Linear--linear scale on the left, log--log scale on the right. The asymptotic series is appropriate only for $(a_w,b)$ values to the right of the $\xi^*$ contour.}
+  \label{fig:asym_err_model_vs_ab_all_n}
+\end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=5.5in]{nbar_model_vs_ab_3eps}
-  \caption{Recommended $n=\bar{n}$ value as a function of $(a_w,b)$ to achieve the truncation error criteria $\bar{\varepsilon}=0.1,0.5,1.0\SI{}{W\per\m\squared}$ for the three plot rows.}
+  \includegraphics[width=5.75in]{nbar_model_vs_ab_3eps}
+  \caption{Recommended $n=\bar{n}$ value as a function of $(a_w,b)$ to achieve the truncation error criteria $\bar{\varepsilon}=0.1$, $0.5$, and $1.0\,\SI{}{W\per\m\squared}$ for the three plot rows.}
   \label{fig:nbar_model_vs_ab_3eps}
 \end{figure}
 
+If $\bar{n}>3$ (i.e., the gray region between $\xi^*$ and $\bar{n}=3$), it is theoretically possible to achieve the desired accuracy in this region by continuing to add terms, however, this is not recommended since the closer $\xi$ is to $\xi^*$, the more likely it is that higher order terms will cause the solution to diverge due to some unexpected deviation in the actual performance of the algorithm from the theoretical error model presented here.
+As a compromise, $n=2$ or $n=3$ could be used in this region to balance the severity of divergence in the case of failure with the improved accuracy of the solution in the case of successful convergence.
+Finally, in any of the easier regions defined by $\bar{n} \leq 3$, the optimal trade--off between accuracy and computation time is achieved by using $n=\bar{n}(a_w, b)$.
 
 \section{Comparison to Other Light Models}
 
@@ -506,7 +504,7 @@ Whether the insight gained from the more complex model is worth the computationa
 \subsection{Simpler Models}
 The first model is the simplest conceivable light model --- exponential attenuation with a constant absorption coefficient $a=a_w$.
 That is, the simplest solution is to ignore the kelp entirely.
-Of course, a depth--dependent absorption coefficient is likely to be used in a real simulation, but for the sake of the comparison, a constant $a_w$ is used.
+Of course, a depth--dependent absorption coefficient is likely to be used in a real simulation, but for the sake of the comparison, a constant $a_w$ is maintained.
 The irradiance in this case is simply
 \begin{equation}
   I(z) = \exp\left(-a_w z \right).
@@ -520,7 +518,7 @@ The model is described by
   k_{\mbox{kelp}}(z) &= -\ln(1-A_k(1-(1-AD)^{\rho_f(z)})),
   \label{eqn:exp_kelp_k}
 \end{align}
-where $A_k$ is the kelp absorptance, $D$ is the number of vertical kelp ropes per horizontal \SI{}{\m\squared}, $A(z)$ is the average area of the kelp fronds per meter vertical rope, and $\rho_f$ is the number of kelp fronds per vertical meter of rope.
+where $A_k=0.7$ is the kelp absorptance, $D=0.01$ ropes/m$^2$ is the number of vertical kelp ropes per ocean surface area, $A(z)$ is the average area of the kelp fronds per meter vertical rope, and $\rho_f=120$ fronds/m is the number of kelp fronds per vertical meter of rope.
 Then,
 \begin{equation}
   D = \frac{1}{\left(\xmax-\xmin\right) \left(\ymax-\ymin\right)},
@@ -559,7 +557,7 @@ In the $z=2$ region where the most kelp is present, though, the 3D model predict
 However, between $z=3$ and $z=4$, the light in the 3D kelp model attenuates more slowly than the 1D model, perhaps because light is able to penetrate the water in regions where the kelp is not present, and the multitude of angles in which the light travels allow some of the rays to reach even the lower depths without being absorbed by the kelp.
 
 The perceived irradiance is clearly much lower than the average irradiance and the other models.
-This makes sense, as the light is dimmest in the regions of highest kelp density, and the perceived irradiance weights these regions the highest, practically ignoring the edges of the domain where light is absorbed only by the water; these regions skew the average irradiance upward; they are not actually representative of the light field where photosynthesis is occurring.
+This makes sense, as the light is dimmest in the regions of highest kelp density, and the perceived irradiance weights these regions the highest, practically ignoring the edges of the domain where light is absorbed only by the water; these regions skew the average irradiance upward, and are not actually representative of the light field where photosynthesis is occurring.
 From this point of view, it seems that the other two light models significantly overestimate the amount of light available where it actually of interest.
 
 Note that the 3D model does not predict the lowest light fields everywhere; the average irradiance is observed to be larger than the no--kelp irradiance in the second plot in Figure \ref{fig:compare_models_haoce11_both}.
@@ -567,27 +565,27 @@ This is due to the effect of scattering shifting light from lower in the domain 
 This tendency for scattering to insulate the upper region of the water may prove to be important in understanding how photosynthesis near the ocean's surface differs from photosynthesis at depth.
 
 \subsection{Comparison: Total Radiant Flux}
-Figure \ref{fig:compare_models_haoce11_flux} shows the total radiant flux in Watts predicted by each model, calculated by integrating each depth--dependent light field over the vertical domain, \textit{weighted by the frond area density} (frond area per vertical meter).
+Figure \ref{fig:compare_models_haoce11_flux} shows the total radiant flux in Watts predicted by each model, calculated by integrating each depth--dependent light field over the vertical domain, \textit{weighted by the frond area density} (total frond area per vertical meter).
 While not exactly analogous, total radiant flux can be regarded as a rough proxy for the amount of photosynthesis occurring in the entire kelp population at all depths.
 Reducing the entire light field to an interpretable scalar is quite useful, as it summarizes the magnitude of the difference between the four light models.
 
 The radiant flux predicted by the 3D average irradiance is just 13\% of the flux disregarding kelp, and 57\% of the simple kelp flux.
 Meanwhile, the perceived irradiance predicts only 3\% the flux of the no--kelp model and 11\% the flux of the simple kelp model.
 Even among the 3D models, using the perceived irradiance predicts 19\% the flux of the average irradiance.
-Calculating the perceived irradiance is possible only because the full spatial kelp distribution is known.
+Calculating the perceived irradiance is possible only because the 3D spatial kelp distribution is known, which is a unique feature of this model.
 The large degree of these differences in model predictions highlight the importance of considering this spatial distribution.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=5.75in]{compare_models_haoce11_both}
-  \caption{Average irradiance and perceived irradiance from finite difference compared to simpler light models for the case of coastal California water (HAOCE11) with realistic kelp growth. Frond lengths over depth are shown on the right--hand axis. Discretization error is shown by error bands for perceived irradiance and average irradiance. Note the different scales in the two plots.}
-  \label{fig:compare_models_haoce11_both}
-\end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=6in]{compare_models_haoce11_flux}
   \caption{Total radiant flux in Watts through kelp predicted by each model. The magnitude of the differences highlight the importance of considering the three--dimensional spatial kelp distribution.}
   \label{fig:compare_models_haoce11_flux}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=5.75in]{compare_models_haoce11_both}
+  \caption{Average irradiance and perceived irradiance from finite difference compared to simpler light models for the case of coastal California water (HAOCE11) with realistic kelp growth. Frond lengths over depth are shown on the right--hand axis. Estimated discretization error is shown by error bands for perceived irradiance and average irradiance. Note the different scales in the two plots.}
+  \label{fig:compare_models_haoce11_both}
 \end{figure}
 

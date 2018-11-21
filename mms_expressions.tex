@@ -8,16 +8,12 @@ The functions chosen to meet the above conditions are
     \alpha \left(\sin{\left (\phi + \theta \right )} + 1\right) \nonumber\\
     &\quad\cdot \left(z \left(\sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )}\right) + 1\right) \nonumber\\
     &\quad\cdot \left(- \gamma + z + \frac{\tanh{\left (\left(b + 1\right) \left(\gamma - z\right) \right )}}{\tanh{\left (\gamma \left(b + 1\right) \right )}}\right),
-  \label{eqn:mms_sol_expr}
-\end{align}
-\begin{equation}
-  a(x, y, z) = \sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )} + \tanh{\left (- \gamma + z \right )} + 5,
-  \label{eqn:mms_abs_expr}
-\end{equation}
-\begin{equation}
-  \beta(\Delta) = \frac{\Delta + 1}{4 \pi},
+  \label{eqn:mms_sol_expr} \\
+  a(x, y, z) &= \sin{\left (\frac{2 \pi x}{\alpha} \right )} + \sin{\left (\frac{2 \pi y}{\alpha} \right )} + \tanh{\left (- \gamma + z \right )} + 5,
+  \label{eqn:mms_abs_expr} \\
+  \beta(\Delta) &= \frac{\Delta + 1}{4 \pi},
   \label{eqn:mms_vsf_expr}
-\end{equation}
+\end{align}
 where $\alpha=x_{max}-x_{min}=y_{max}-y_{min}$ is the domain width, and $\gamma=z_{max}-z_{min}$ is the domain depth.
 Using the python package Sympy \cite{meurer_sympy:_2017}, the boundary conditions and source function are calculated to be
 \begin{align}

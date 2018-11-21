@@ -46,7 +46,7 @@ Consider the rectangular domain
   \ymin &\leq y \leq \ymax, \\
   \zmin &\leq z \leq \zmax.
 \end{align*}
-For all three dimensional analysis, we use the absolute coordinate system defined in Figure \ref{fig:3dcoords}.
+For all three dimensional analysis, we use the absolute coordinate system depicted in Figure \ref{fig:3dcoords}.
 The vectors $\vec{x}=(x,y,z)$ and $\vec{\omega}=(\sin\phi\cos\theta, \sin\phi\sin\theta, \cos\phi)$ are also used throughout.
 Also, the notation $\hat{x}$, $\hat{y}$, $\hat{z}$ is used for the Cartesian unit vectors.
 
@@ -118,11 +118,11 @@ Define the ratios
 These ratios are assumed to be constant among the entire population, so that all fronds are geometrically similar.
 Thus, the shape of the frond can be fully specified by $l$, $f_r$, and $f_s$;
 it is possible to redefine $w$, $f_a$ and $f_b$ from the preceding formulas as
-\begin{align*}
+\begin{align}
 	w &= \frac{l}{f_r}, \\
 	f_a &= \frac{lf_s}{1+f_s}, \\
 	f_b &= \frac{l}{1+f_s}.
-\end{align*}
+\end{align}
 The angle $\alpha$, half of the angle at the base corner, is also noteworthy.
 From the above equations, it follows that
 \begin{equation*}
@@ -141,21 +141,21 @@ It is useful to convert between frond length and surface area, which can be done
 \label{sec:dist}
 In any given depth layer, the distribution of frond lengths is assumed to be normal, with mean $\mu_l$ and standard deviation $\sigma_l$.
 That is, it has the probability density function (PDF)
-\begin{equation*}
+\begin{equation}
   P_l(l) = \frac{1}{\sqrt{2\pi\sigma_l^2}}\exp\left(-\frac{(l-\mu_l)^2}{2\sigma_l^2}\right).
-\end{equation*}
+\end{equation}
 
 It is further assumed that frond orientation angle varies according to the von Mises distribution, which is the periodic analogue of the normal distribution, defined on $[-\pi,\pi]$ rather than $(-\infty,\infty)$.
 The von Mises distribution has two parameters, $\mu$ and $\kappa$, which shift and sharpen its peak respectively, as shown in Figure \ref{fig:vonmises}.
 $\kappa$ is analogous to $1/\sigma$ in the normal distribution.
 In the absence of current, the frond angles are distributed uniformly, while as current velocity increases, they become increasingly likely to align parallel to the current, depending on the stiffness of the frond and stipe.
-Assuming a linear relationship between the current velocity and the steepness of the angular distribution, define the \textit{frond alignment coefficient} $\eta$, with units of inverse velocity(\SI{}{\s\per\m}).
+Assuming a linear relationship between the current velocity and the steepness of the angular distribution, define the \textit{frond alignment coefficient} $\eta$, with units of inverse velocity (\SI{}{\s\per\m}).
 Then, use $\mu = \theta_w$ and $\kappa = \eta v_w$ as the von Mises distribution parameters.
 Note that $\theta_w$ and $v_w$ vary over depth, while $\eta$ is assumed constant for the population.
 Then, the PDF for the von Mises frond angle distribution is
-\begin{equation*}
+\begin{equation}
 	P_{\theta_f}(\theta_f) = \frac{\exp\left(\eta v_w\cos(\theta_f-\theta_w)\right)}{2\pi I_0(\eta v_w)},
-\end{equation*}
+\end{equation}
 where $I_0(x)$ is the modified Bessel function of the first kind of order 0.
 Notice that unlike the normal distribution, the von Mises distribution approaches a \textit{non--zero} uniform distribution as $\kappa$ approaches 0, so
 \begin{equation*}
@@ -165,7 +165,7 @@ Notice that unlike the normal distribution, the von Mises distribution approache
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=6in]{vonmises}
-	\captionof{figure}{von Mises distribution for a variety of parameters.}
+	\captionof{figure}{The von Mises distribution for a variety of parameters.}
 	\label{fig:vonmises}
 \end{figure}
 
@@ -179,7 +179,7 @@ That is,
 	\label{eqn:ind_prob}
 	P(A \cap B) = P(A)P(B).
 \end{equation*}
-Then the probability of frond length $l$ and frond angle $\theta_f$ coinciding is
+Therefore, the probability of frond length $l$ and frond angle $\theta_f$ coinciding is
 \begin{equation}
   \label{eqn:p2d}
 	P_{2D}(\theta_f,l) = P_{\theta_f}(\theta_f) \cdot P_l(l).
@@ -190,7 +190,7 @@ In Figure \ref{fig:kelp_sample}, 50 samples are drawn from this distribution and
 
 It is important to note that if $P_{\theta_f}$ were dependent on $l$, the above definition of $P_{2D}$ would no longer be valid.
 For example, it might be more realistic to say that larger fronds are less likely to bend towards the direction of the current.
-In this case, \eqref{eqn:ind_prob} would no longer hold, and it would be necessary to use the more general Bayes' Theorem
+In this case, \eqref{eqn:ind_prob} would no longer hold, and it would be necessary to use the more general Bayes' Theorem,
 \begin{equation*}
 	P(A \cap B) = P(A)P(B|A) = P(B)P(B|A),
 \end{equation*}
@@ -218,13 +218,13 @@ This is made possible by the simple kite--shape fronds, and would be considerabl
 To determine under what conditions a frond will occupy a given point, we begin by
 describing the shape of the frond in Cartesian coordinates and then convert to polar coordinates.
 Of primary interest are the edges connected to the frond tip.
-For convenience, we will use a rotated polar coordinate system $(\theta',s)$ such that the line connecting the base to the tip points in the $+y$ direction ($\theta=\pi/2$), with the base at $(0,0)$.
+For convenience, we will use a rotated polar coordinate system $(\theta',s)$ such that the line connecting the base to the tip points in the $+y$ direction ($\theta'=\pi/2$), with the base at $(0,0)$.
 Denote the Cartesian analogue of this coordinate system as $(x',y')$ which is related to $(\theta',s)$ by
 \begin{align*}
 	x' &= s\cos\theta' \\
 	y' &= s\sin\theta' \\
 	s &= \sqrt{x'^2+y'^2}, \\
-	\theta' &= \atantwo(y, x).
+	\theta' &= \atantwo(y', x').
 \end{align*}
 
 \subsection{Functional Description of Frond Edge}
@@ -254,7 +254,7 @@ To generalize to a frond pointed at an angle $\theta_f$, we introduce the coordi
 Then, for a frond pointed at the arbitrary angle $\theta_f$, the function for the outer edges can be written as
 \begin{equation}
 	\label{eqn:rf_abs}
-	s_f(\theta;l) = s_f'\left(\theta - \theta_f + \frac{\pi}{2} \right).
+	s_f(\theta;l) = s_f'\left(\theta - \theta_f + \frac{\pi}{2}; l \right).
 \end{equation}
 Similarly, define
 \begin{equation}
@@ -268,7 +268,7 @@ Combining these conditions with the size and orientation distributions from \ref
 allows a spatial distribution of the kelp fronds to be calculated.
 
 Consider a fixed frond of length $l$ at an angle $\theta_f$. The point
-$(\theta,s)$ is occupied by the frond if
+$(\theta,s)$ lies within the frond if
 \begin{align*}
 	\left|\theta_f - \theta \right| < \alpha
   \mbox{ and }
@@ -335,10 +335,10 @@ In a three dimensional context, the number of fronds is more likely to be specif
 \end{equation}
 Then, since the point $\vec{x}$ has a probability $P_k(\vec{x})$ of being occupied by kelp and a probability $(1-P_k(\vec{x}))$ of being occupied by the surrounding aquatic medium,
 the effective absorption coefficient can be calculated as
-\begin{equation*}
+\begin{equation}
   \label{eqn:abs_field}
   a(\vec{x}) = P_k(\vec{x})a_k + (1-P_k(\vec{x}))a_w,
-\end{equation*}
+\end{equation}
 where $a_k$ is the absorption coefficient of the kelp alone, and $a_w$ is the absorption coefficient of the water and its dissolved and suspended contents.
 
 \begin{figure}[h]
@@ -349,7 +349,7 @@ where $a_k$ is the absorption coefficient of the kelp alone, and $a_w$ is the ab
 \end{figure}
 
 \section{Discontinuity at the Rope}
-While the above model of the kelp distribution is straightforward to evaluate, it does have a significant numerical difficulty in its application.
+While the above model of the kelp distribution is straightforward to evaluate, it does have a noteworthy numerical difficulty in its application.
 Since the length and orientations are both continuous in the polar coordinates $s>0$ and $\theta$, the resulting kelp density and effective absorption coefficient are as well.
 However, they are not necessarily continuous in Cartesian coordinates.
 In the case of no water current, $v_w=0$, the flat von Mises distribution produces a continuous solution at the origin.
@@ -360,12 +360,12 @@ Hence, there is in general a discontinuity in the kelp distribution at the origi
 This is not appealing numerically since the algorithms used in this thesis to solve the differential equation describing the light field are based on interpolation on a discrete Cartesian grid.
 According to Taylor's theorem, the error incurred by performing such interpolation is bounded by a constant multiple of the appropriate maximum derivative of the interpolated function over the domain.
 If the derivatives of the absorption coefficient are unbounded, then so too is the discretization error in the final solution.
-That is, the solution is not guaranteed to converge.
+That is, convergence is not guaranteed in the fine-grid limit.
 
 Luckily, there is a straightforward solution, which is to post--process the spatial kelp distribution with a Gaussian blur in the $x$ and $y$ dimensions.
 This is achieved via convolution of the solution with a 2D Gaussian kernel centered at the origin.
 Any blur whatsoever is sufficient to bound the derivatives, and the larger the blur radius, the smaller they become.
-Obviously, as the blur radius is increased, the kelp distribution tends toward a constant and no longer captures any information about the $xy$ distribution of the kelp.
+Obviously, as the blur radius is increased, the kelp distribution tends toward a constant and no longer captures any information about the $x \nbd y$ distribution of the kelp.
 Therefore, a small blur radius should be used.
 
 \subsection{One dimensional Gaussian Blur}
@@ -386,7 +386,7 @@ A blur is applied by convolving the function with the kernel according to the fo
   \tilde{H}(x) &= (k*H)(x) = \int_{-\infty}^{\infty}H(\tau)k(x-\tau;\sigma_b)\, d\tau \\
   &= \int_{0}^{\infty}k(x-\tau;\sigma_b)\, d\tau.
 \end{align*}
-The substitution $u=\tau=x,\, du=d\tau$ yields
+The substitution $u=\tau-x,\, du=d\tau$ yields
 \begin{equation*}
   \tilde{H}(x) = \int_{-x}^\infty k(u;\sigma_b)\, du.
 \end{equation*}
@@ -417,7 +417,7 @@ Hence, the blurred solution is
   \label{eqn:gaussian_blur}
   P_k^b(x, y, z) = \int_{-\infty}^\infty \int_{-\infty}^\infty K(x', y', z; \sigma_b) P_k(x-x', y-y', z)\, dx'\, dy'.
 \end{equation}
-A physical interpretation of this Gaussian blurring is that $P_k^b$ is the time--averaged kelp distribution, assuming that the rope is allowed to move horizontally, and $k(x, y; \sigma)$ is the PDF of the rope's location distribution.
+A physical interpretation of this Gaussian blurring is that $P_k^b$ is the time--averaged kelp distribution, assuming that the rope is allowed to move horizontally, and $K(x, y; \sigma)$ is the PDF of the rope's location distribution.
 This interpretation is a bit incongruous with the rest of the model since there is no other explicit mention of time--averaging; while the frond length and position distributions can be thought of as continuous approximations to the population distribution at a single point in time, this idea does not apply to the rope's position, since there is only one rope.
 
 \subsection{Absorption Coefficient Plots}
@@ -435,17 +435,17 @@ This sharp distribution requires excessively large numerical grids to approximat
 In Figure \ref{fig:abs_coefs_combined}(b), the current velocity has been reduced, and a nonzero standard deviation has been given to the frond distribution.
 With a variety of frond lengths, the edges are no longer as clearly defined, although the general character of the distribution is sensible --- the kelp is most dense near the rope in the direction of the current.
 However, note that there remains a small neighborhood of sharp derivatives encompassing the origin.
-Such a distribution may still cause numerical difficulties for the numerical algorithm.
+Such a distribution may still cause numerical difficulties for the algorithm.
 
 Figure \ref{fig:abs_coefs_combined}(c) is similar to Figure \ref{fig:abs_coefs_combined}(b), except it has been post--processed with a moderate Gaussian blur of radius \SI{40}{cm}, not so large that it significantly distorts the shape of the distribution, but sufficient to remove the discontinuity in the origin.
 Such a kelp distribution is ideal, as it balances accuracy with ease of numerical approximation.
 
 In Figure \ref{fig:abs_coefs_combined}(d), too large of a blur has been applied; the character of the Gaussian kernel has overwhelmed that of the kelp distribution.
-While this may still provide a better spatial description of the kelp than a fully horizontally uniform distribution, and unnecessary amount of information has been sacrificed for marginal gains in smoothness over Figure \ref{fig:abs_coefs_combined}(c).
+While this may still provide a better spatial description of the kelp than a fully horizontally uniform distribution, an unnecessary amount of information has been sacrificed for marginal gains in smoothness over Figure \ref{fig:abs_coefs_combined}(c).
 Such a large blur is unlikely to reduce the discretization error since other factors discussed later contribute to discretization error as well.
 \begin{figure}[H]
   \centering
   \includegraphics[width=6in]{abs_coefs_combined}
-  \caption{$z$--slices of several absorption coefficient distributions from kelp distributions with varying parameters. The norm of the gradient is depicted with contours. (a) $\eta v_w=90$, $\sigma_l=\sigma_b=0$. Unrealistically sharp distribution shows kite--shaped character. (b) $\eta v_w=10$, $\sigma_b=0$, $\sigma_l=\SI{1}{\m}$. More realistic kelp distribution, but still has large derivatives near the origin. (c) $\eta v_w=10$, $\sigma_b=\SI{0.4}{\m}$, $\sigma_l=\SI{1}{\m}$. Moderate Gaussian blur slightly reduces derivatives near the origin. (d) $\eta v_w=10$, $\sigma_b=\SI{2}{\m}$, $\sigma_l=\SI{1}{\m}$. Over--blurred distribution; should be avoided.}
+  \caption{$z$--slices of several absorption coefficient distributions from kelp distributions with varying parameters. The norm of the gradient is depicted with contours. (a) $\eta v_w=90$, $\sigma_l=\sigma_b=0$. Unrealistically sharp distribution shows kite--shaped character. (b) $\eta v_w=10$, $\sigma_b=0$, $\sigma_l=\SI{1}{\m}$. More realistic kelp distribution, but still has large derivatives near the origin. (c) $\eta v_w=10$, $\sigma_b=\SI{0.4}{\m}$, $\sigma_l=\SI{1}{\m}$. Moderate Gaussian blur bounds derivatives near the origin. (d) $\eta v_w=10$, $\sigma_b=\SI{2}{\m}$, $\sigma_l=\SI{1}{\m}$. Over--blurred distribution; should be avoided.}
   \label{fig:abs_coefs_combined}
 \end{figure}

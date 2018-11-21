@@ -24,7 +24,7 @@ Mathematical models accurate enough to be useful are usually difficult or imposs
 Therefore, either mathematical simplifications or numerical approximations, or both, may be employed in order to obtain a solution.
 For example, in the low--scattering solution presented in Section \ref{sec:symbolic_asymptotics}, the exact solution is expanded in a Taylor Series, from which only the first few terms are used, with the rest discarded.
 The error resulting from using a finite number of terms from an infinite series is referred to as \textit{truncation error}.
-Truncation error is ordered, as an arbitrary number of terms can be used to better approximate the true solution.
+Truncation error is ordered for a convergent series, as an arbitrary number of terms can be used to better approximate the true solution.
 When a continuous equation is solved numerically, it is necessary to compute the solution on a finite number of discrete points rather than on the complete domain.
 The error incurred by doing so is called \textit{discretization error}.
 Discretization error is also ordered, as arbitrarily fine grids can be chosen in order to better approximate the continuum solution.
@@ -40,9 +40,9 @@ There are two aspects to building confidence in numerical codes, specifically th
 Verification deals with \textit{solving the equations right}, while validation deals with \textit{solving the right equations} \cite{roache_verification_1998}.
 Validation involves comparison with experimental evidence in order to determine that governing equations
 accurately describe physical phenomenon, and that their solutions match observation.
-That is, it is the process of checking that modeling errors are sufficiently small to model the system as accurately as necessary.
+In other words, it is the process of checking that modeling errors are sufficiently small to model the system as accurately as necessary.
 Validation is an ongoing process; as new experimental data become available, the equations can be solved under appropriate conditions in an attempt to replicate the new observations \cite{roache_building_2004}.
-Verification, however, is a purely mathematical exercise, and has nothing to do with the physical system being modeled.
+Verification, however, is a purely mathematical exercise, and has nothing to do with the physical system being modeled \cite{roache_code_2002}.
 It deals only with the agreement between an equation and its numerical solution produced by a particular implementation of an algorithm.
 It involves checking that ordered sources of numerical error (truncation and discretization errors) decrease as expected when additional computations are performed.
 Unlike validation, verification is something to be started and finished.
@@ -61,19 +61,22 @@ For realistic conditions, however, a second stage of verification is employed: \
 In this phase, a specific calculation of interest is performed, and the error is \textit{estimated} since it cannot be measured explicitly when the exact solution is not available.
 This is generally done by repeating the calculation for several grid sizes, as above, then using a technique called Richardson Extrapolation to estimate the limiting solution as the grid spacing approaches zero.
 This estimated limiting solution is then compared to the actual numerical solutions.
-Since the solutions are known on different grids, they cannot be compared pointwise without interpolation.
-Rather, a single scalar calculated from some integral of the solution is often used as a simple measure of the global order of accuracy. %TODO: CITE 2008_Procedure
 
-\section{Code Verification: Method of Manufactured Solutions}
+Since the solutions are known on different grids, they cannot be compared pointwise without interpolation.
+Rather, a single scalar calculated from some integral of the solution is often used as a simple measure of the global order of accuracy \cite{noauthor_procedure_2008}.
+However, the procedure may also be used to estimate discretization for a variable over the entire domain (e.g. for error bars on a plot) by interpolating the variable from each grid at a predetermined set of points, and applying Richardson extrapolation independently at each interpolated point.
+Of course, the order of the interpolation should be greater than the order of the algorithm under consideration to avoid reducing the observed order of convergence.
+
+\section{Method of Manufactured Solutions}
 
 The most obvious way to obtain an analytical solution to compare to a numerical solution is by choosing a simple case where the PDE can be solved explicitly, perhaps through separation of variables or by reducing it to an ODE.
 This is referred to as the method of exact solutions (MES).
 However, such simple cases usually result in such a loss of generality that they become useless in testing the complicated aspects of the solution algorithm.
 In order to verify that a code will work in an interesting case, every term in the equation must be exercised during the verification process.
-An alternative process, the method of manufactured solutions (MMS), retains arbitrary generality in the equations while making analytical solutions readily available.
+An alternative process, the method of manufactured solutions (MMS), retains arbitrary generality in the equations while making analytical solutions readily available \cite{salari_code_2000}.
 Of course, there is a trade--off: the solutions are not physically realistic.
-However, this is not an issue; as stated previously, \textit{verification is a purely mathematical endeavor}.
-Determining that a code solves an equation correctly is unrelated to physical realism.
+However, this is not an issue; as stated previously, \textit{verification is a purely mathematical endeavor} \cite{roache_code_2002}.
+Whether a code solves an equation correctly is unrelated to physical realism.
 
 The method of manufactured solutions is performed as follows.
 Consider a differential equation
@@ -100,17 +103,16 @@ Since these functions may need to be fairly complicated in order to achieve full
 \subsection{Discretization Error Analysis}
 Once an exact solution is known, code verification is performed by demonstrating that the discretization error of the code matches the theoretical order of accuracy of the algorithm.
 Numerical calculations are computed on a sequence of discrete grids from coarse to fine, and errors are calculated by evaluating the exact solution pointwise.
-Then, some norm (usually $l_1$, $l_2$, or $l_\infty$) of the discretization error is calculated for each grid.
+Then, the norm of the discretization error is calculated for each grid.
 To verify an algorithm of order $p$ with grid resolution $h$, it should be shown that the norm of the pointwise error is approximately proportional to $h^p$.
 
-This effect occurs only for small grid resolutions, when the first nonzero term in the error series dominates the others.
-If large grid spacings are used, then order $p$ convergence may not be observed even in a correct implementation since higher order error terms will overpower the order $p$ term.
-The range of small grid spacings for which the lowest order term dominates is known as the \textit{asymptotic range} (a.k.a. ``the sweet spot'').
-If the verification procedure shows that the implementation does not demonstrate the theoretical order of accuracy of the algorithm, this is most likely \cite{roache_verification_1998-1} an indication that either a coding mistake is present or the asymptotic range has not been achieved.
+This behavior is observed only when the grid spacing is within a neighborhood of zero called the \textit{asymptotic range} \cite{roache_perspective:_1994} (a.k.a. ``the sweet spot'').
+Outside of this neighborhood, order $p$ convergence may not be observed even in a correct implementation since higher order error terms will overpower the order $p$ term.
+If the observed convergence order does not match the theoretical order, it is either because a coding mistake is present or the asymptotic range has not been achieved \cite{roache_verification_1998-1}.
 
 \subsection{Synthetic Data}
 \label{sec:synthetic_data}
-In order to perform code verification for the radiative transfer equation, it is necessary to first choose a manufactured solution $L(\vec{x}, \vec{\omega})$ for radiance, as well as coefficient functions for the absorption coefficient $a(\vec{x})$ and volume scattering function $\beta(\vec{\omega}\cdot\vec{\omega'})$.
+In order to perform code verification for the radiative transfer equation, a manufactured solution $L(\vec{x}, \vec{\omega})$ for radiance, as well as coefficient functions for the absorption coefficient $a(\vec{x})$ and volume scattering function $\beta(\vec{\omega}\cdot\vec{\omega'})$, must be chosen \textit{a priori}.
 Together, the chosen solution and coefficient functions are referred to as \textit{synthetic data}.
 The code developed for this thesis imposes the following conditions on the manufactured solution:
 \begin{enumerate}
@@ -126,8 +128,7 @@ The actual expressions chosen for the synthetic data are quite unwieldy, and are
 \subsection{Finite Difference Verification}
 Since second order finite difference formulas are used, once the asymptotic range for grid spacing has been achieved, decreasing it further should result in the discretization error approaching zero quadratically.
 The radiative transfer equation involves five discretized variables: $(x,y,x,\theta,\phi)$.
-A five dimensional resolution space is nontrivial to characterize, so we define generic spatial and angular resolutions for the sake of reducing dimensionality,
-Let $n_s = n_x = n_y = n_z$ and $n_a = n_\theta = n_\phi$.
+A five dimensional resolution space is nontrivial to characterize, so we define the generic spatial and angular grid sizes $n_s = n_x = n_y = n_z$ and $n_a = n_\theta = n_\phi$ for the sake of reducing dimensionality.
 Then, we use the geometric mean to describe the spatial and angular resolution, as
 \begin{align}
   ds &= (dx\, dy\, dz)^{1/3}, \label{eqn:ds}\\
@@ -151,9 +152,9 @@ As shown in Figure \ref{fig:fd_mms}, second order convergence is observed, demon
 For the numerical asymptotics algorithm, both discretization error and truncation error are present.
 Therefore, the solutions are not expected to converge to the true solution by increasing the grid size.
 Neither is it guaranteed that increasing the number of terms will lead to convergence to the true solution.
-However, while the discretization error is not verifiable in that sense, the truncation error \textit{is}.
-That is, since the $n$--term asymptotic solution is a numerical approximation to the $n$--term Taylor series, the norm of the pointwise error should decrease with order $n+1$ as $b \to 0$.
+However, since the $n$--term asymptotic solution is a numerical approximation to the $n$--term Taylor series, the norm of the pointwise error should decrease with order $n+1$ as $b \to 0$.
 As with discretization error, this can only be observed within some asymptotic range of small $b$ values since higher order error terms dominate the truncation error for large values of $b$.
+However, once $b$ is sufficiently small, the truncation error is smaller than the discretization error, and no further improvement results from decreasing $b$ further.
 
 Figure \ref{fig:mms_asym_b_conv} demonstrates the convergence of the asymptotic solution as $b \to 0$.
 The first three approximations are reasonably close, to demonstrating order $n+1$ convergence, but the $n=3$ approximation converges slower than expected.
@@ -161,7 +162,7 @@ It is unclear whether this is due to a coding mistake, the effect of discretizat
 \begin{figure}[h]
   \centering
   \includegraphics[width=5in]{mms_asym_b_conv}
-  \caption{Code verification for the numerical asymptotics solution via the Method of Manufactured Solutions. A range of $b$ values are run, using 0 - 3 terms in the asymptotic series. The legend shows the number of terms ($n$) and the observed convergence order ($m$) for each solution.}
+  \caption{Code verification for the numerical asymptotics solution via the Method of Manufactured Solutions. A range of $b$ values are run, using 0--3 terms in the asymptotic series. The legend shows the number of terms ($n$) and the observed convergence order ($m$) for each solution.}
   \label{fig:mms_asym_b_conv}
 \end{figure}
 
@@ -171,14 +172,14 @@ This type of error reporting is crucial for accurately communicating the trustwo
 
 \subsection{Richardson Extrapolation}
 Richardson extrapolation is a technique for estimating the continuum value of a scalar functional derived from a solution to a differential equation by using values of the scalar obtained from numerical solutions on several different grids.
-The technique was developed by Richardson in 1912 with an application paper related to a stresses on a dam, and is also known as $h^2$ extrapolation since it was originally applied to a second order method.
+The technique was developed by Richardson in 1912 with an application paper \cite{richardson_approximate_1910} related to a stresses on a dam, and is also known as $h^2$ extrapolation since it was originally applied to a second order method.
 The basic concept is as follows.
 
 Let the scalar of interest be called $\phi$ and the grid spacing $h$.
 Denote the exact solution as
-\begin{equation}
+\begin{equation*}
   \phi_e = \lim_{h \to 0} \phi(h),
-\end{equation}
+\end{equation*}
 The crux of the technique is to assume that discretization error can be written as a linear combination of powers of $h$, as in a Taylor series.
 That is,
 \begin{equation}
@@ -232,4 +233,4 @@ For a grid which has several resolution parameters $h_1, h_2, \ldots, h_n$ (e.g.
 \begin{equation*}
   \phi \approx \phi_e + g_{21} h_1^2 + g_{22} h_2^2 + \ldots + g_{2n} h_n^2.
 \end{equation*}
-Hence, fitting a plane or hyper--plane through several points in $(h_1^2, h_2^2, \ldots, h_n^2, \phi)$ space similarly produces $\phi_e$ as the $\phi$--intercept.
+Hence, fitting a hyper--plane through several points in $(h_1^2, h_2^2, \ldots, h_n^2, \phi)$ space similarly produces $\phi_e$ as the $\phi$--intercept.

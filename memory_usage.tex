@@ -11,7 +11,7 @@ These values are listed in Table \ref{tab:mem_store}.
 Since the matrix is sparse, the indices of the elements must also be stored.
 Due to the large number of elements involved, long integers must be used as indices, which also require 8 bytes to store.
 The exact amount of memory required depends on the storage scheme, which in this case is the Compressed Sparse Row (CSR) format provided by LIS \cite{nishida_experience_2010}.
-Furthermore, the iterative method required to calculate a solution to the matrix equation.
+Furthermore, the iterative method required to calculate a solution to the matrix equation allocates additional working arrays.
 From personal experience, the memory requirement for LIS solution via GMRES, restarted every 100 iterations, is well--estimated by multiplying the values in Table \ref{tab:mem_store} by 5.
 These solution memory estimates are listed in Table \ref{tab:mem_solve}.
 

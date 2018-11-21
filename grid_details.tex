@@ -58,7 +58,7 @@ It is also useful to define the edges between angular grid cells as
 \begin{figure}[h]
   \centering
   \includegraphics[width=.75\linewidth]{angular_grid_plots}
-  \caption{Angular grid}
+  \caption{Angular grid cell centers and edges.}
   \label{fig:angular_grid_plots}
 \end{figure}
 
@@ -66,7 +66,7 @@ Note that while $\theta$ has its final edge following its final center, this is
 not the case for $\phi$, as seen in Figure \ref{fig:angular_grid_plots}.
 Because angles are indexed by a single integer $p$, there is a one--to--one relationship between
 an integer $p$ and a pair $(l,m)$.
-The relationships are as follows:
+The relationships are
 \begin{align*}
   \hat{l}(p) &= \mbox{mod1}(p, n_\theta), \\
   \hat{m}(p) &= \ceil(p/n_\theta) + 1, \\

@@ -37,7 +37,7 @@ increasing rays and 0 for decreasing rays in each dimension
   \sigma_y = (\delta_y+1)/2, \\
   \sigma_z = (\delta_z+1)/2,
 \end{align}
-simply to keep track of the ray direction.
+simply as a boolean value to track of the ray direction.
 
 For this algorithm, we keep two sets of indices. $(i,j,k)$ indexes the grid
 cell, and is used for extracting physical quantities from each cell along
@@ -69,7 +69,6 @@ For each grid cell, we check the path lengths
 required to cross the next $x$, $y$, and $z$ edge--planes.
 Then, we move to the next grid cell in whichever dimension
 is crossed soonest.
-
 As each cell is traversed, the absorption coefficient and effective source are saved for use in the ray integral for the numerical calculation of the asymptotic approximation.
 For full implementation details, see the \texttt{traverse\_ray} subroutine in \texttt{asymptotics.f90} in Appendix \ref{chap:fortran}.
 

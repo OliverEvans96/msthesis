@@ -19,17 +19,17 @@ This indicates that simpler models may be overestimating the amount of light ava
 
 \section{Model Summary}
 The following is a summary of the primary assumptions used in the formulation of the model.
-The assumptions are vast simplifications from the real system, and leave room for future improvement.
+The assumptions are vast simplifications from the real system, and leave plenty of room for future improvement.
 \begin{itemize}
-  \item All fronds in the population are congruent kites of equal thickness.
+  \item All fronds in the population are congruent kites of equal, uniform thickness.
   \item Fronds are perfectly flat and horizontal.
   \item Fronds emanate from an infinitely thin, perfectly vertical rope, with no stipe.
   \item Population frond lengths are normally distributed in each depth layer.
   \item Fronds are oriented according to a von Mises distribution whose sharpness is proportional to current velocity and independent of frond length.
-  \item The absorption coefficient of the aquatic medium is constant within a depth layer.
-  \item All fronds have the same absorptance.
-  \item The scattering coefficient is constant everywhere and equal for both kelp and water.
-  \item Only the volumetric optical effects, not surface effects, of the kelp are considered.
+  \item The absorption coefficient of the aquatic medium depends only on depth.
+  \item All fronds in the population have the same absorptance.
+  \item The scattering coefficient is constant and equal for both kelp and water.
+  \item Only volumetric optical effects, not surface effects, are considered.
   \item Frequency dependence is neglected.
 \end{itemize}
 
@@ -105,7 +105,7 @@ While there are many ways in which the model and its numerical solution can be i
 In particular, this light model is well--suited for use in a time--dependent growth model such as \cite{broch_modelling_2012}, as discussed in Section \ref{sec:simulation_context}.
 For example, one line of questioning which naturally arises related to light modeling is ``How does the placement of kelp cultivation ropes affect the potential biomass cultivation potential of a given area?
 What is the optimal rope spacing to maximize said production?''
-These type of questions are particularly natural to investigate with this light model, as the use of periodic boundary equates domain width with rope spacing.
+These type of questions are particularly natural to investigate with this light model, as the use of periodic boundary equates domain width and rope spacing.
 
 Also, as mentioned in Chapter \Rom{\ref{chap:introduction}}, the growth of seaweed near WWTP ocean outfalls has been proposed for nutrient remediation of the aquatic ecosystem.
 One concern which arises from this proposal is whether the optical conditions near the WWTP are suitable for kelp cultivation.

@@ -6,6 +6,7 @@ Both algorithms require a discrete spatial--angular grid, described in Section \
 In the finite difference algorithm, the continuum differential equation is approximated at every point in the grid.
 This forms a large sparse system of linear equations which must be solved simultaneously with an iterative method.
 The computational cost for this approach is high in terms of CPU usage, and especially in its memory requirement.
+Meanwhile, the numerical asymptotics algorithm is not as robust, but is significantly faster and does not require the allocation of large arrays. 
 
 \section{Discrete Grid}
 \label{sec:grid}
@@ -21,14 +22,11 @@ $d\phi$ between adjacent grid points.
 Note that $n_\phi$ must be even in order to avoid perfectly horizontal rays, as discussed in Section \ref{sec:ray_notation} and Appendix \ref{chap:grid_details}.
 
 The following indices are assigned to each dimension:
-\begin{align*}
-  x &\to i, \\
-  y &\to j, \\
-  z &\to k, \\
-  \theta &\to l, \\
-  \phi &\to m.
-\end{align*}
-
+  $x \to i$,
+  $y \to j$,
+  $z \to k$,  
+  $\theta \to l$,
+  $\phi \to m$.
 It is convenient, however, to use a single index $p$ to refer to directions $\vec{\omega}$ rather than referring to $\theta$ and $\phi$ separately.
 Then, the center of a generic grid cell will be denoted as
 $(x_i, y_j, z_k, \vec{\omega}_p)$, and the boundaries between adjacent grid cells
@@ -69,7 +67,7 @@ The functions $\hat{p}(l,m)$, $\hat{l}(p)$, and $\hat{m}(p)$ are mappings betwee
 Refer to Appendix \ref{chap:grid_details} for a more rigorous discussion of the discrete spatial--angular grid.
 
 \section{Kelp Distribution}
-In order to determine the appropriate spatial dependence for the absorption coefficient to use in the radiative transfer equation, the spatial kelp distribution, described by \eqref{eqn:kelp_pk} and its tributaries, is calculated at every point t in space.
+In order to determine the appropriate spatial dependence for the absorption coefficient to use in the radiative transfer equation, the spatial kelp distribution, described by \eqref{eqn:kelp_pk} and its tributaries, is calculated at every point in space.
 Several computational details related to the kelp distribution are worth mentioning, from the determination of input parameters to algorithmic instructions for the required numerical integration.
 
 \subsection{Super--Individuals}
@@ -98,7 +96,7 @@ To recap, the population distribution is
   P_l(l) &= \frac{1}{\sqrt{2\pi\sigma_l^2}}\exp\left(\frac{-(l-\mu_l)^2}{2\sigma_l^2}\right), \\
 	P_{\theta_f}(\theta_f) &= \frac{\exp\left(\eta v_w\cos(\theta_f-\theta_w)\right)}{2\pi I_0(\eta v_w)},
 \end{align*}
-and the occupancy region for $(\theta, s)$ is $R_s(\theta, s) = (\theta_f, l)$ such that
+and the occupancy region for $(\theta, s)$ is $R_s(\theta, s) \ni (\theta_f, l)$ such that
 \begin{align*}
 	\theta - \alpha &< \theta_f < \theta + \alpha, \\
 	&l > l_{\min}(\theta,s).
@@ -149,12 +147,12 @@ Since the kelp calculation is orders of magnitude faster than the light field ca
 
 \subsection{Gaussian Convolution}
 In order to blur the kelp distribution as described in Section \ref{sec:gaussian_blur}, $P_k(x, y, z)$ is first calculated without blurring according to Equations \eqref{eqn:integrate_p2d} and \eqref{eqn:kelp_pk} at every point $(x_i, y_j)$ in each depth layer, which yields a matrix $P_{ij}^k = P_k(x_i, y_j, z)$.
-Then, the discrete convolution of $P_{ij}^k$ with the Gaussian $K(x, y; \sigma_b)$ from Equation \eqref{eqn:gaussian_kernel} is numerically computed by the same process used to post--process pixelated image with a Gaussian blur.
+Then, the discrete convolution of $P_{ij}^k$ with the Gaussian kernel $K(x, y; \sigma_b)$ from Equation \eqref{eqn:gaussian_kernel} is numerically computed by the same process used to post--process pixelated image with a Gaussian blur.
 
 Notice first that the integral from Equation \eqref{eqn:gaussian_blur} has infinite extent.
 For numerical computation, a discrete grid with finite bounds must be chosen.
 Specifically, an array of uniformly spaced quadrature points ($x'_{i'}, y'_{j'}$) is chosen for the integration variables $x'$ and $y'$ with spacings $dx$ and $dy$ to match the existing grid.
-In order to capture the large majority of the Gaussian distribution, the number of quadrature points is each dimension is chosen to be
+In order to capture up to two standard deviations of the Gaussian distribution, the number of quadrature points is each dimension is chosen to be
 \begin{equation}
   n_K = 2r_K+1,
 \end{equation}
@@ -164,7 +162,7 @@ where
 \end{equation}
 Then, the quadrature points are
 \begin{align*}
-  x'_{i'} = (i'-r_K)dx, \quad i'=1,\ldots,n_k,
+  x'_{i'} = (i'-r_K)dx, \quad i'=1,\ldots,n_k, \\
   y'_{j'} = (j'-r_K)dy, \quad j'=1,\ldots,n_k.
 \end{align*}
 The kernel is then evaluated at the quadrature points to form the matrix
@@ -174,7 +172,7 @@ The kernel is then evaluated at the quadrature points to form the matrix
 Note that the continuous $K(x, y; \sigma_b)$ is normalized only on the infinite plane;
 the discrete $K_{ij}$ must therefore be re--normalized on the finite grid as
 \begin{equation*}
-  K_{i'j'} = \frac{K_{i'j'}}{\sum_{i',j'} K_{i'j'}}.
+  K_{i'j'} = \frac{K_{i'j'}}{\sum_{ij} K_{ij}}.
 \end{equation*}
 Then, letting
 \begin{align*}
@@ -185,9 +183,9 @@ the convolved kelp distribution $P_{ij}^{kb}$ is evaluated as
 \begin{align*}
   P_{ij}^{kb} &= P_k^b(x_i, y_j, z; \sigma_b) \\
   &= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} K(x', y', z; \sigma_b) P_k(x_i-x', y_j-y', z)\, dx'\, dy' \\
-  &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K\left(x'_{i'}, y'_{j'}, z; \sigma_b\right) P_k\left(x_i-x'_{i'}, y_j-y'_{j'}, z\right) \\
-  &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K\left(x'_{i'}, y'_{j'}, z; \sigma_b\right) P_k\left(x_{\delta_x(i,i')}, y_{\delta_y(j,j')}, z\right) \\
-  &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K\left(x'_{i'}, y'_{j'}, z; \sigma_b\right) P_{\delta_x(i,i'), \delta_y(j,j')}^k.
+  &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K_{i'j'} P_k\left(x_i-x'_{i'}, y_j-y'_{j'}, z\right) \\
+  &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K_{i'j'} P_k\left(x_{\delta_x(i,i')}, y_{\delta_y(j,j')}, z\right) \\
+  &= dx\, dy\, \sum_{i'=1}^{n_k} \sum_{j'=1}^{n_k} K_{i'j'} P_{\delta_x(i,i'), \delta_y(j,j')}^k.
 \end{align*}
 That is, at each grid point $(x_i, y_j)$, a weighted sum of periodic--adjacent values is taken according to the Gaussian kernel in order to perform the blur.
 
@@ -275,7 +273,6 @@ Then, the piecewise constant representations of the path absorption coefficient 
   \tilde{g}_n(s) &= \sum_{\nu=1}^{N-1}\tilde{g}_{n\nu}\mathcal{X}^l_\nu(s), \\
   \tilde{a}(s) &= \sum_{\nu=1}^{N-1}\tilde{a}_{\nu}\mathcal{X}^l_\nu(s).
 \end{align*}
-
 Given $s$, the index of the next edge crossing is
 \begin{equation*}
   \hat{\nu}(s) = \min\left\{ \nu \in \{1,\ldots,N\} : s_\nu>s \right\},
@@ -333,54 +330,51 @@ The price of a general solution, is greatly increased computational cost, both i
 
 For the spatial interior of the domain, we use the second order central difference formula (CD2) to approximate the derivatives, which is
 \begin{equation*}
-    f'(x) = \frac{f(x+dx)-f(x-dx)}{2dx} + \mathcal{O}(dx^3).
+    f'(x) = \frac{f(x+dx)-f(x-dx)}{2dx} + \mathcal{O}(dx^2).
 \end{equation*}
 
 When applying the PDE on the upper or lower boundary, we use the forward and backward difference (FD2 and BD2) formulas respectively.
 The forward difference is given by
 \begin{equation*}
     \label{eqn:FD2}
-    f'(x) = \frac{-3f(x)+4f(x+dx)-f(x+2dx)}{2dx} + \mathcal{O}(\varepsilon^3),
+    f'(x) = \frac{-3f(x)+4f(x+dx)-f(x+2dx)}{2dx} + \mathcal{O}(dx^2),
 \end{equation*}
 and the backward difference by
 \begin{equation*}
     \label{eqn:BD2}
-    f'(x) = \frac{3f(x)-4f(x-dx)+f(x-2dx)}{2dx} + \mathcal{O}(\varepsilon^3).
+    f'(x) = \frac{3f(x)-4f(x-dx)+f(x-2dx)}{2dx} + \mathcal{O}(dx^2).
 \end{equation*}
 
-For the upper and lower boundaries, we need an asymmetric finite difference
-method since the distance between grid centers in the $z$ direction is $dz$, whereas the distance to the surface is $dz/2$.
-In general, the Taylor Series of a function $f$ about $x$ is
-\begin{equation*}
-  f(x+\varepsilon) = \sum_{n=1}^\infty \frac{f^{(n)}(x)}{n!} \varepsilon^n. \\
-\end{equation*}
-
-Truncating after the first few terms, we have
-\begin{equation}
-  \label{eqn:afd1}
-  f(x+\varepsilon)  = f(x) + f'(x)\varepsilon + \frac{f''(x)}{2}\varepsilon^2 + \mathcal{O}(\varepsilon^3).
-\end{equation}
-
-Similarly, replacing $\varepsilon$ with $-\varepsilon/2$ we have
-\begin{equation}
-  \label{eqn:afd2}
-  f(x-\frac{\varepsilon}{2}) = f(x) - \frac{f'(x)\varepsilon}{2} + \frac{f''(x)\varepsilon^2}{8} + \mathcal{O}(\varepsilon^3).
-\end{equation}
-
-Rearranging \eqref{eqn:afd1} produces
-\begin{equation}
-  \label{eqn:afd3}
-  f''(x)\varepsilon^2 = 2f(x+\varepsilon) - 2f(x) - 2f'(x)\varepsilon + \mathcal{O}(\varepsilon^3).
-\end{equation}
-
-Combining \eqref{eqn:afd2} with \eqref{eqn:afd3} gives
+  For the upper and lower boundaries, an asymmetric finite difference
+  formula is required since the distance between grid centers in the $z$ direction is $dz$, whereas the distance to the surface is $dz/2$.
+  In general, the Taylor Series of a function $f$ about $x$ is written as
+  \begin{equation*}
+    f(x+\varepsilon) = \sum_{n=1}^\infty \frac{f^{(n)}(x)}{n!} \varepsilon^n. \\
+  \end{equation*}
+  Truncating after the first few terms, we have
+  \begin{equation}
+    \label{eqn:afd1}
+    f(x+\varepsilon)  = f(x) + f'(x)\varepsilon + \frac{f''(x)}{2}\varepsilon^2 + \mathcal{O}(\varepsilon^3).
+  \end{equation}
+  Similarly, replacing $\varepsilon$ with $-\varepsilon/2$ we have
+  \begin{equation}
+    \label{eqn:afd2}
+    f(x-\frac{\varepsilon}{2}) = f(x) - \frac{f'(x)\varepsilon}{2} + \frac{f''(x)\varepsilon^2}{8} + \mathcal{O}(\varepsilon^3).
+  \end{equation}
+  Rearranging \eqref{eqn:afd1} produces
+  \begin{equation}
+    \label{eqn:afd3}
+    f''(x)\varepsilon^2 = 2f(x+\varepsilon) - 2f(x) - 2f'(x)\varepsilon + \mathcal{O}(\varepsilon^3).
+  \end{equation}
+  Combining \eqref{eqn:afd2} with \eqref{eqn:afd3} gives
 \begin{align*}
   \varepsilon f'(x) &= 2f(x) - 2f(x-\frac{\varepsilon}{2}) + \frac{f''(x)\varepsilon^2}{4} + \mathcal{O}(\varepsilon^3) \\
   &= 2f(x) - 2f(x-\frac{\varepsilon}{2}) + \left[ \frac{f(x+\varepsilon)}{2} - \frac{f(x)}{2} - \frac{f'(x)\varepsilon}{2} \right] + \mathcal{O}(\varepsilon^3) \\
-  &= \frac{3}{2}f(x) - 2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{2} - \frac{f'(x)}{2} + \mathcal{O}(\varepsilon^3) \\
- \Rightarrow \quad \frac{3}{2}\varepsilon f'(x) &= \frac{3}{2}f(x) - 2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{2} + \mathcal{O}(\varepsilon^3) \\
+  &= \frac{3}{2}f(x) - 2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{2} - \frac{f'(x)}{2} + \mathcal{O}(\varepsilon^3). \\
+  \shortintertext{Hence,}
+ \frac{3}{2}\varepsilon f'(x) &= \frac{3}{2}f(x) - 2f(x-\frac{\varepsilon}{2}) + \frac{f(x+\varepsilon)}{2} + \mathcal{O}(\varepsilon^3).
 \end{align*}
-Then, dividing by $3/2\, \varepsilon$ gives
+Then, dividing by $3\varepsilon/2$ gives
 \begin{equation}
   f'(x) = \frac{-4f(x-\frac{\varepsilon}{2}) + 3f(x) + f(x+\varepsilon)}{3\varepsilon} + \mathcal{O}(\varepsilon^2).
 \end{equation}
@@ -511,11 +505,26 @@ and the right--hand side associated with that grid cell, if any, is also stored 
 
 Also relevant is the total size of the system and of the sparse matrices necessary to store.
 The sizes of $\mathbb{A}$, $\mathbb{X}$, and $\mathbb{B}$ are the number of grid cells, which is just $n_xn_yn_z\nomega$.
-Most of these elements, though, are zero since spatial derivatives only involve adjacent spatial grid cells and the scattering integral only involves angles within a single spatial grid cell.
+Most of these elements, though, are zero, since spatial derivatives only involve adjacent spatial grid cells and the scattering integral only involves angles within a single spatial grid cell.
 Therefore, by saving only the locations and values of nonzero elements in the coefficient matrix, a considerable amount of storage space is saved.
 Table \ref{tab:nonzero} shows a breakdown of the number of distinct radiance values involved in each application of the discretized equations from Section \ref{sec:difference_equations}, as well as the number of times that each of the equations appears in the matrix.
 
-\begin{table}[H]
+By multiplying the first column of Table \ref{tab:nonzero} by the second and summing over the rows, the total number of nonzero matrix elements is calculated to be
+\begin{align}
+  N_\mathbb{A} &= (\nomega+6) \cdot n_xn_y(n_z-2)\nomega \nonumber\\
+    &+   (\nomega+5) \cdot n_xn_y\nomega
+    +   (\nomega+6) \cdot n_xn_y\nomega \nonumber\\
+  %&= n_x n_y \nomega \left[(\nomega+6)(n_z-2+1)+\nomega+5 \right] \nonumber\\
+  %&= n_x n_y \nomega \left[(\nomega+6)(n_z-1)+\nomega+5 \right] \nonumber\\
+  &=  n_x n_y \nomega \left[n\omega n_z -\nomega + 6n_z - 6 + \nomega + 5 \right] \nonumber\\
+    &=  n_x n_y \nomega \left[n_z(\nomega+6)-1\right].
+    \label{eqn:nnz}
+\end{align}
+For example, a $10 \times 10 \times 10 \times 10 \times 10$ grid involves 7,207,800 matrix elements, while a $20 \times 20 \times 20 \times 20 \times 20$ grid requires 1,065,583,200 elements to be stored!
+Clearly, the grid must be kept reasonably small in order to be solved by modern computers.
+Also, note that in the absence of an explicit source term $\sigma(\vec{x}, \vec{\omega})$, $\mathbb{B}$ only has nonzero entries for the downwelling surface grid cells, of which there are $n_x n_y \nomega/2$.
+
+\begin{table}[h]
   \centering
   \caption{Breakdown of nonzero matrix elements by derivative case.}
   \begin{tabular}{p{\linewidth/3}p{\linewidth/3}p{\linewidth/3}}
@@ -531,21 +540,6 @@ Table \ref{tab:nonzero} shows a breakdown of the number of distinct radiance val
   \end{tabular}
   \label{tab:nonzero}
 \end{table}
-
-By multiplying the first column of Table \ref{tab:nonzero} by the second and summing over the rows, the total number of nonzero matrix elements is calculated to be
-\begin{align}
-  N_\mathbb{A} &= (\nomega+6) \cdot n_xn_y(n_z-2)\nomega \nonumber\\
-    &+   (\nomega+5) \cdot n_xn_y\nomega
-    +   (\nomega+6) \cdot n_xn_y\nomega \nonumber\\
-  &= n_x n_y \nomega \left[(\nomega+6)(n_z-2+1)+\nomega+5 \right] \nonumber\\
-  &= n_x n_y \nomega \left[(\nomega+6)(n_z-1)+\nomega+5 \right] \nonumber\\
-  &=  n_x n_y \nomega \left[n\omega n_z -\nomega + 6n_z - 6 + \nomega + 5 \right] \nonumber\\
-    &=  n_x n_y \nomega \left[n_z(\nomega+6)-1\right]
-    \label{eqn:nnz}
-\end{align}
-For example, a $10 \times 10 \times 10 \times 10 \times 10$ grid involves 7,207,800 matrix elements, while a $20 \times 20 \times 20 \times 20 \times 20$ grid requires 1,065,583,200 numbers to be stored!
-Clearly, the grid must be kept reasonably small in order to be solved by modern computers.
-Also, note that in the absence of an explicit source term $\sigma(\vec{x}, \vec{\omega})$, $\mathbb{B}$ only has nonzero entries for the downwelling surface grid cells, of which there are $n_x n_y \nomega/2$.
 
 \subsection{Iterative Solution}
 \label{sec:iterative_solution}

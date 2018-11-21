@@ -32,9 +32,9 @@ The project includes both cultivators and scientists, working to develop a preci
 A fundamental aspect of this endeavor is the development of mathematical models to describe the growth of kelp.
 The development of mathematical models enables insight into a system which would be otherwise difficult or impossible to obtain.
 For example, imagine that a company is interested in a new IMTA site, and is looking for a suitable location.
-Running simulations to predict the potential productivity of each area would be of great assistance in choosing the best site.
+Running simulations to predict the potential productivity for each site would help determine the best one.
 Similarly, if a new cultivation technique is under consideration, simulation can estimate its viability without
-having to deploy it on a large scale and risk failure or avoidable inefficiency.
+deploying it on a large scale and risking failure or avoidable inefficiency.
 
 Recently, a growth model \cite{broch_modelling_2012} for \textit{S. latissima} has been produced and integrated into the SINMOD \cite{wassmann_modelling_2006} hydrodynamic and ecosystem model of SINTEF.
 This kelp model considers factors such as temperature, nutrient concentration, light availability, and water current.
@@ -64,9 +64,9 @@ The author takes into account respiration, frond decay, and sub--canopy light at
 Light attenuation is represented with a simple exponential model, and self--shading appears as an added term in the decay coefficient.
 The author does not consider radial or angular dependence on shading.
 Jackson also expands Anderson's definition of canopy shading, treating the canopy not as a single layer, but as 0, 1, or 2 discrete layers, each composed of individual fronds.
-While this is a significant improvement over Anderson's light model, it is still rather simplistic.
+While this is a significant improvement over Anderson's light model, it is still rather simple.
 
-Both Anderson's and Jackson's model were carried out by numerically solving a system of differential equations over small time intervals.
+Both Anderson's and Jackson's models were carried out by numerically solving a system of differential equations by integrating over small time steps.
 In 1990, M.A. Burgman and V.A. Gerard developed a stochastic population model \cite{burgman_stage-structured_1990}.
 This approach functions by dividing kelp plants into groups based on size and age and generating random numbers to determine how the population distribution over these groups changes over time based on measured rates of growth, death, decay, light availability, etc.
 In the same year, Nyman et. al. \cite{nyman_macrocystis_1990} published a similar model alongside a Markov chain model, and compared the results with experimental data collected in New Zealand.
@@ -74,7 +74,7 @@ In the same year, Nyman et. al. \cite{nyman_macrocystis_1990} published a simila
 In 1996 and 1998 respectively, P. Duarte and J.G. Ferreira used the size--class approach to create a more general model of macroalgae growth, and Yoshimori et. al. created a differential equation model of \textit{Laminaria religiosa} with specific emphasis on temperature dependence of growth rate \cite{duarte_model_1997,yoshimori_mathematical_1998}.
 These were some of the first models of kelp growth that did not specifically relate to \textit{Macrocystis pyrifera} (``giant kelp'').
 
-The model developed by Broch et. al. at SINTEF \cite{broch_modelling_2012, broch_modelling_2013, handa_seasonal_2013} uses a super--individual approach, whereby a small number of individual kelp fronds are explicitly simulated at several discrete depth layers.
+The model developed by Broch et. al. at SINTEF \cite{broch_modelling_2013, broch_modelling_2012, handa_seasonal_2013} uses a super--individual approach, whereby a small number of individual kelp fronds are explicitly simulated at several discrete depth layers.
 Each super--individual is assumed to represent a certain number of actual individuals in the population.
 The number of individuals represented by each super--individual may change over the course of the simulation due to population loss.
 The super--individual approach has the advantage of capturing some of the dynamics at the individual scale, while compromising full detail for the sake of reduced computational cost.
@@ -103,7 +103,7 @@ Both the full finite difference solution and the asymptotic approximation are th
 Chapter \Rom{\ref{chap:model_analysis}} is an in--depth discussion of sources of error in both solution procedures.
 The concepts of verifying codes in general as well as specific calculations are discussed.
 Exact discretization errors are calculated via the method of manufactured solutions in order to demonstrate
-that the methods exhibit convergence properties which build confidence in their correctness.
+that the methods exhibit their theoretical convergence properties, which builds confidence in the correctness of their implementations.
 A method for estimating errors for realistic cases is also developed.
 
 Next, Chapter \Rom{\ref{chap:application}} surveys practical considerations to keep in mind when applying the algorithms in real situations.

@@ -27,7 +27,7 @@ One of the most fundamental quantities in optics is radiant flux $\Phi$, which h
 Considering an element of surface area $A$, the energy \textit{density} moving through the surface is called irradiance, denoted $I$, and has units energy per time.
 Note that the angle $\vartheta$ of the surface relative to the light source should also be considered for full detail. Assuming the surface to be flat and the light source to be distant (parallel rays), the flux through the surface is $\Phi=IA\cos\vartheta$.
 Further, the angular dependence of the light field must be considered.
-The radiance $L$, expresses this dependence, and is defined as the radiant flux per steradian per projected surface area perpendicular to the direction of propagation of the beam \cite{chandrasekhar_radiative_1960}.
+The radiance, $L$, expresses this dependence, and is defined as the radiant flux per steradian per projected surface area perpendicular to the direction of propagation of the beam \cite{chandrasekhar_radiative_1960}.
 That is,
 \begin{equation*}
 	L = \frac{d^2\Phi}{dA d\vec{\omega}},
@@ -38,32 +38,32 @@ Once the radiance $L$ is calculated everywhere, the irradiance is
   I(\vec{x}) = \int_{4\pi}L(\vec{x},\vec{\omega})\, d\vec{\omega},
 \end{equation*}
 This quantity is also called \textit{scalar irradiance} since it does not consider light through particular surface, but rather weights radiance from all directions equally \cite{kirk_light_1994}.
-For brevity, this quantity will be simply called irradiance here.
+For brevity, this quantity is simply called irradiance here.
 
-Irradiance can be approximately converted to PAR units of moles of photons (a mole of photons is also called an Einstein) per second, with the conversion \cite{mobley_light_1994} given by
+Irradiance can be approximately converted to PAR units of moles of photons (a mole of photons is also called an Einstein) per second, with the conversion being
 \begin{equation}
-  \SI{1}{\W} = \SI{4.2}{\micro\mole \,photons\per\second}.
+  \SI{1}{\W} = \SI{4.2}{\micro\mole \,photons\per\meter\squared\per\second}.
   \label{eqn:watts_photons}
 \end{equation}
-This is not an exact conversion, but has been found to be accurate to roughly $\pm10\%$ across a variety of waters.
+This is not an exact conversion, but has been found to be accurate to roughly $\pm10\%$ across a variety of waters \cite{mobley_light_1994}.
 
 \subsection{Perceived Irradiance}
 \label{sec:perceived_irrad}
 Assuming that the irradiance $I(\vec{x})$ is known,
 the average irradiance at a depth $z$ is calculated as
-\begin{equation*}
+\begin{equation}
   %\bar{I}_k = \frac{\sum_{ij}I_{ijk}}{n_x n_y},
   \bar{I}(z) = \frac{\iint I(x,y,z)\, dx\, dy}{\iint 1\, dx\, dy}.
-\end{equation*}
+\end{equation}
 More relevant, however, is the average irradiance perceived by the kelp.
 To calculate this value, the irradiance is weighted by the
 normalized spatial kelp distribution before taking the mean.
 Then, the average perceived irradiance at each depth is
-\newcommand{\Iperk}{\tilde{I}}
-\begin{equation*}
+\newcommand{\Iperk}{I_{\rm{perc}}}
+\begin{equation}
    %\Iperk = \frac{\sum_{ij}P_{ijk}I_{ijk}}{\sum_{ij}P_{ijk}}.
    \Iperk(z) = \frac{\iint P_k(x,y,z)I(x,y,z)\, dx\, dy}{\iint P_k(x,y,z)\, dx\, dy}.
-\end{equation*}
+\end{equation}
 The irradiance perceived by the kelp is expected to be lower than the average irradiance,
 since the kelp is more densely located at the center of the domain where the light field is reduced,
 whereas the simple average is influenced by regions of higher irradiance at the edges of the domain where kelp is not present.
@@ -94,7 +94,7 @@ so that for any $\omega$,
 i.e., the probability of light being scattered to some direction on the unit sphere is 1.
 
 \section{The Radiative Transfer Equation}
-We are now prepared to present the full details of radiative transfer equation, whose solution is the radiance in the medium as a function of position $x$ and angle $\vec{\omega}$.
+We are now prepared to present the full details of radiative transfer equation, whose solution is the radiance in the medium as a function of position $\vec{x}$ and angle $\vec{\omega}$.
 
 \subsection{Ray Notation}
 \label{sec:ray_notation}
@@ -130,11 +130,11 @@ Denote the radiance at $\vec{x}$ in the direction $\vec{\omega}$ by $L(\vec{x}, 
 As light travels along $\vec{l}(\vec{x}, \vec{\omega}, s)$, interaction with the
 medium produces four phenomena of interest:
 \begin{enumerate}
-  \item Radiance is decreased due to absorption;
+  \item Radiance is decreased due to absorption.
   \item Radiance is decreased due to scattering out of the path to other
-    directions;
+    directions.
   \item Radiance is increased due to scattering into the path from other
-      directions;
+      directions.
   \item Radiance is increased or decreased due to light sources or sinks.
 \end{enumerate}
 
@@ -195,7 +195,7 @@ The physical interpretation of the asymptotic series is that each term represent
 With the addition of each term, light from the previous term is scattered and attenuated from each point along the ray path.
 In reality, the scattering cannot be considered to occur in discrete events, but rather all scattering occurs simultaneously (on a macroscopic timescale).
 
-Since this is only an approximation, it is important to note that while the asymptotic series converges as $b \to 0$, it is not necessary that the series converges as the number of terms increases, although it may occur in certain cases.
+Since this is only an approximation, it is important to note that while the asymptotic series converges as $b \to 0$, it is not necessarily true that the series converges as the number of terms increases, although it may occur in certain cases.
 Especially in cases of large scattering, the asymptotic series diverges rapidly.
 The convergence properties of the algorithm are discussed in detail in Chapter \Rom{\ref{chap:model_analysis}}.
 
@@ -276,17 +276,17 @@ for $n > 0$.
 \label{sec:asymptotic_sol}
 
 Given $\vec{x}, \vec{\omega}$, consider the path $\vec{l}(\vec{x}, \vec{\omega}, s)$ from \eqref{eqn:ray_path} for $s \in [0, \tilde{s}]$.
-Denote the radiance, absorption coefficient, and source term along the path by
+Denote the leading order radiance, absorption coefficient, and source term along the path by
 \begin{align*}
-  \tilde{u_0}(s) = L(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}), \\
+  u_0(s) = L_0(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}), \\
   \tilde{a}(s) = a(\vec{l}(\vec{x}, \vec{\omega}, s)), \\
   \tilde\sigma_0(s) = \sigma_0(\vec{l}(\vec{x}, \vec{\omega}, s), \vec{\omega}).
 \end{align*}
-Then, the first equation from the asymptotic expansion, \eqref{eqn:asymptotics_0} and its associated boundary condition, \eqref{eqn:asymptotics_bc_0}, can be rewritten as the first order linear ordinary differential equation
+Then, the first equation from the asymptotic expansion, \eqref{eqn:asymptotics_0} and its associated boundary condition, \eqref{eqn:asymptotics_bc_0}, can be rewritten as the first order linear ordinary differential equation and inhomogeneous boundary condition,
 \begin{equation}
   \left\{
   \begin{aligned}
-  \tilde\sigma_0(s) &= \frac{du_0}{ds}(s) + \tilde{a}(s) u_0(s) \\
+  \tilde\sigma_0(s) &= \frac{du_0}{ds}(s) + \tilde{a}(s) u_0(s), \\
   u_0(0) &= f(\vec{\omega})H(\vec{\omega}\cdot\hat{z}),
   \end{aligned}
   \right.
@@ -307,7 +307,7 @@ Hence,
 \begin{align}
   u_0(s) &= \left[f(\vec{\omega})H(\vec{\omega}\cdot\hat{z}) + \int_0^s \exp\left(\int_0^{s'} \tilde{a}(s'')\, ds''\right) \tilde\sigma_0(s')\, ds'\right] \exp\left(-\int_0^s \tilde{a}(s')\, ds'\right) \nonumber\\
   &= \exp\left(-\int_0^s \tilde{a}(s')\, ds'\right) f(\vec{\omega})H(\vec{\omega}\cdot\hat{z}) \nonumber\\
-    &+ \int_0^s \exp\left(-\int_{s'}^s \tilde{a}(s'')\, ds''\right) \tilde\sigma_0(s')\, ds'
+    &+ \int_0^s \exp\left(-\int_{s'}^s \tilde{a}(s'')\, ds''\right) \tilde\sigma_0(s')\, ds'.
   \label{eqn:asymptotics_soln_0}
 \end{align}
 Then, we convert back from path length $s$ to the spatial coordinate $\vec{x}$ by evaluating the one--dimensional solution at the end of the ray path.
